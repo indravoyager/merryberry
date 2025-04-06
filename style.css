@@ -1,5 +1,5 @@
 body {
-    font-family: sans-serif;
+    font-family: "Times New Roman", Times, serif;
     margin: 0;
     display: flex;
     justify-content: center;
@@ -16,5 +16,4 @@ h1 {
     border-radius: 8px;
     cursor: pointer; /* Menandakan elemen ini interaktif */
     transition: color 0.3s ease; /* Efek transisi untuk warna teks h1 */
-    font-family: "Times New Roman", Times, serif;
 }
