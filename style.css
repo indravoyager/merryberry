@@ -7,7 +7,6 @@ body {
     min-height: 100vh;
     background-color: #f4f4f4; /* Warna latar belakang awal body */
     transition: background-color 0.3s ease, color 0.3s ease; /* Efek transisi */
-    text-decoration: none;
 }
 
 h1 {
@@ -17,4 +16,8 @@ h1 {
     border-radius: 8px;
     cursor: pointer; /* Menandakan elemen ini interaktif */
     transition: color 0.3s ease; /* Efek transisi untuk warna teks h1 */
+}
+
+a {
+  text-decoration: none;
 }
