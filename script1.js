@@ -1,19 +1,23 @@
-body {
-    font-family: sans-serif;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f4f4f4; /* Warna latar belakang awal body */
-    transition: background-color 0.3s ease, color 0.3s ease; /* Efek transisi */
-}
+const welcomeText = document.getElementById('welcome-text');
+const initialTextColor = getComputedStyle(welcomeText).color;
+const initialBackgroundColor = getComputedStyle(document.body).backgroundColor;
 
-h1 {
-    color: #333; /* Warna teks awal h1 */
-    font-size: 2.5em;
-    padding: 20px;
-    border-radius: 8px;
-    cursor: pointer; /* Menandakan elemen ini interaktif */
-    transition: color 0.3s ease; /* Efek transisi untuk warna teks h1 */
-}
+let mouseOverTimeout;
+let mouseOutTimeout;
+const delay = 300;
+
+welcomeText.addEventListener('mouseover', function() {
+    clearTimeout(mouseOutTimeout);
+    mouseOverTimeout = setTimeout(() => {
+        document.body.style.backgroundColor = initialTextColor;
+        welcomeText.style.color = initialBackgroundColor;
+    }, delay);
+});
+
+welcomeText.addEventListener('mouseout', function() {
+    clearTimeout(mouseOverTimeout);
+    mouseOutTimeout = setTimeout(() => {
+        document.body.style.backgroundColor = initialBackgroundColor;
+        welcomeText.style.color = initialTextColor;
+    }, delay);
+});
