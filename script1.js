@@ -1,20 +1,19 @@
 body {
     font-family: sans-serif;
+    margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    margin: 0;
-    background-color: #f0f0f0; /* Warna background awal */
-    transition: background-color 0.3s ease; /* Transisi untuk perubahan background */
+    background-color: #f4f4f4; /* Warna latar belakang awal body */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Efek transisi */
 }
 
-#merryberry {
-    font-size: 2em;
-    font-weight: bold;
-    color: #333; /* Warna teks awal */
+h1 {
+    color: #333; /* Warna teks awal h1 */
+    font-size: 2.5em;
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer; /* Menandakan elemen ini interaktif */
-    transition: color 0.3s ease; /* Transisi untuk perubahan warna teks */
+    transition: color 0.3s ease; /* Efek transisi untuk warna teks h1 */
 }
