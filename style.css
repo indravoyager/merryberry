@@ -17,12 +17,3 @@ h1 {
     cursor: pointer; /* Menandakan elemen ini interaktif */
     transition: color 0.3s ease; /* Efek transisi untuk warna teks h1 */
 }
-
-h2 {
-    color: #333; /* Warna teks awal h1 */
-    font-size: 2.5em;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer; /* Menandakan elemen ini interaktif */
-    transition: color 0.3s ease; /* Efek transisi untuk warna teks h1 */
-}
