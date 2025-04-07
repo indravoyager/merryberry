@@ -4,7 +4,7 @@ const initialBackgroundColor = getComputedStyle(document.body).backgroundColor;
 
 let mouseOverTimeout;
 let mouseOutTimeout;
-const delay = 300;
+const delay = 200;
 
 welcomeText.addEventListener('mouseover', function() {
     clearTimeout(mouseOutTimeout);
