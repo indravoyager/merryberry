@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/:path*",
-      "destination": "/idra.html"
+      "destination": "/404.html"
     }
   ]
 }
