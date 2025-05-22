@@ -1,20 +1,56 @@
-<!MENDING MAIN FESNUK>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merry Berry</title>
+    <title>Portofolio Ilustrator</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="https://static.wikia.nocookie.net/mudae/images/6/6c/Mari1.png" type="image/png">
-    <style>
-        a {
-            text-decoration: none;
-        }
-    </style>
 </head>
 <body>
-    <h1 id="welcome-text"><i>MerryBerry</i></h1>
-    </a>
+    <header>
+        <h1>Nama Ilustrator</h1>
+        <nav>
+            <ul>
+                <li><a href="#about">Tentang Saya</a></li>
+                <li><a href="#portfolio">Portofolio</a></li>
+                <li><a href="#contact">Kontak</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="about" class="container">
+            <h2>Tentang Saya</h2>
+            <p>Halo! Saya adalah seorang ilustrator dengan passion dalam menciptakan karya seni yang memukau. Saya fokus pada ilustrasi digital dan tradisional dengan berbagai gaya.</p>
+            <p>Silakan jelajahi portofolio saya untuk melihat beberapa karya terbaru saya.</p>
+        </section>
+
+        <section id="portfolio" class="container">
+            <h2>Portofolio</h2>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">Semua</button>
+                <button class="filter-btn" data-filter="digital">Digital</button>
+                <button class="filter-btn" data-filter="traditional">Tradisional</button>
+                <button class="filter-btn" data-filter="characters">Karakter</button>
+            </div>
+            <div class="gallery">
+                </div>
+        </section>
+
+        <section id="contact" class="container">
+            <h2>Kontak</h2>
+            <p>Tertarik untuk bekerja sama? Kamu bisa menghubungi saya melalui:</p>
+            <ul>
+                <li>Email: <a href="mailto:namakamu@email.com">namakamu@email.com</a></li>
+                <li>Instagram: <a href="https://instagram.com/namakamu" target="_blank">@namakamu</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Nama Ilustrator. Semua Hak Dilindungi.</p>
+    </footer>
+
     <script src="script.js"></script>
 </body>
 </html>
