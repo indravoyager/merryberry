@@ -6,76 +6,97 @@ document.addEventListener('DOMContentLoaded', function() {
     const illustrations = [
         {
             id: 1,
-            title: "Kota Malam",
-            description: "Ilustrasi digital pemandangan kota di malam hari.",
+            title: "Fantasi Hutan",
+            description: "Ilustrasi digital dengan nuansa magis.",
             category: "digital",
-            imageUrl: "https://via.placeholder.com/400x300/FF5733/FFFFFF?text=Ilustrasi+Kota+Malam" // Ganti dengan URL gambar aslimu
+            imageUrl: "https://via.placeholder.com/400x300/6A5ACD/FFFFFF?text=Fantasi+Hutan"
         },
         {
             id: 2,
-            title: "Potret Tradisional",
-            description: "Potret menggunakan media cat air.",
+            title: "Potret Klasik",
+            description: "Potret cat minyak dengan detail halus.",
             category: "traditional",
-            imageUrl: "https://via.placeholder.com/400x300/33FF57/FFFFFF?text=Potret+Tradisional" // Ganti dengan URL gambar aslimu
+            imageUrl: "https://via.placeholder.com/400x300/CD5C5C/FFFFFF?text=Potret+Klasik"
         },
         {
             id: 3,
-            title: "Karakter Fantasi",
-            description: "Desain karakter untuk game fantasi.",
+            title: "Desain Karakter Robot",
+            description: "Konsep karakter untuk dunia fiksi ilmiah.",
             category: "characters",
-            imageUrl: "https://via.placeholder.com/400x300/3357FF/FFFFFF?text=Karakter+Fantasi" // Ganti dengan URL gambar aslimu
+            imageUrl: "https://via.placeholder.com/400x300/4682B4/FFFFFF?text=Robot+Karakter"
         },
         {
             id: 4,
-            title: "Pemandangan Hutan",
-            description: "Ilustrasi digital pemandangan hutan yang damai.",
+            title: "Pemandangan Kota Futuristik",
+            description: "Ilustrasi digital kota masa depan.",
             category: "digital",
-            imageUrl: "https://via.placeholder.com/400x300/FF33A1/FFFFFF?text=Hutan+Damai" // Ganti dengan URL gambar aslimu
+            imageUrl: "https://via.placeholder.com/400x300/8A2BE2/FFFFFF?text=Kota+Futuristik"
         },
         {
             id: 5,
-            title: "Sketsa Pensil",
-            description: "Sketsa pensil detail wajah manusia.",
+            title: "Still Life Apel",
+            description: "Studi still life dengan media pensil warna.",
             category: "traditional",
-            imageUrl: "https://via.placeholder.com/400x300/A133FF/FFFFFF?text=Sketsa+Pensil" // Ganti dengan URL gambar aslimu
+            imageUrl: "https://via.placeholder.com/400x300/FFD700/000000?text=Still+Life+Apel"
+        },
+        {
+            id: 6,
+            title: "Hewan Lucu",
+            description: "Ilustrasi karakter hewan untuk anak-anak.",
+            category: "characters",
+            imageUrl: "https://via.placeholder.com/400x300/20B2AA/FFFFFF?text=Hewan+Lucu"
         }
-        // Tambahkan lebih banyak ilustrasi di sini
+        // Tambahkan lebih banyak ilustrasi di sini!
     ];
 
-    // Fungsi untuk menampilkan ilustrasi
     function displayIllustrations(filter = 'all') {
-        galleryContainer.innerHTML = ''; // Kosongkan galeri sebelum menampilkan
+        galleryContainer.innerHTML = '';
         const filteredIllustrations = filter === 'all'
             ? illustrations
             : illustrations.filter(ill => ill.category === filter);
 
+        if (filteredIllustrations.length === 0) {
+            galleryContainer.innerHTML = '<p class="no-results">Tidak ada ilustrasi untuk kategori ini.</p>';
+            return;
+        }
+
         filteredIllustrations.forEach(illustration => {
             const galleryItem = document.createElement('div');
             galleryItem.classList.add('gallery-item');
-            galleryItem.dataset.category = illustration.category; // Menambahkan data-category untuk filtering
+            galleryItem.dataset.category = illustration.category;
 
             galleryItem.innerHTML = `
                 <img src="${illustration.imageUrl}" alt="${illustration.title}">
-                <h3>${illustration.title}</h3>
-                <p>${illustration.description}</p>
+                <div class="item-info">
+                    <h3>${illustration.title}</h3>
+                    <p>${illustration.description}</p>
+                </div>
             `;
             galleryContainer.appendChild(galleryItem);
         });
     }
 
-    // Tampilkan semua ilustrasi saat halaman pertama kali dimuat
+    // Panggil saat pertama kali dimuat
     displayIllustrations();
 
-    // Tambahkan event listener untuk tombol filter
+    // Event listener untuk filter
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
-            // Hapus kelas 'active' dari semua tombol
             filterButtons.forEach(btn => btn.classList.remove('active'));
-            // Tambahkan kelas 'active' ke tombol yang diklik
             this.classList.add('active');
 
             const filterValue = this.dataset.filter;
             displayIllustrations(filterValue);
+        });
+    });
+
+    // Opsional: Smooth scrolling untuk navigasi
+    document.querySelectorAll('nav a').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
         });
     });
 });
