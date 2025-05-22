@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const galleryContainer = document.querySelector('.gallery');
     const filterButtons = document.querySelectorAll('.filter-btn');
 
-    // Data ilustrasi (kamu bisa menambahkan lebih banyak di sini!)
     const illustrations = [
+        // Data ilustrasi tetap sama seperti sebelumnya
         {
             id: 1,
             title: "Fantasi Hutan",
@@ -46,34 +46,52 @@ document.addEventListener('DOMContentLoaded', function() {
             category: "characters",
             imageUrl: "https://via.placeholder.com/400x300/20B2AA/FFFFFF?text=Hewan+Lucu"
         }
-        // Tambahkan lebih banyak ilustrasi di sini!
     ];
 
     function displayIllustrations(filter = 'all') {
-        galleryContainer.innerHTML = '';
+        const currentItems = Array.from(galleryContainer.children);
         const filteredIllustrations = filter === 'all'
             ? illustrations
             : illustrations.filter(ill => ill.category === filter);
 
-        if (filteredIllustrations.length === 0) {
-            galleryContainer.innerHTML = '<p class="no-results">Tidak ada ilustrasi untuk kategori ini.</p>';
-            return;
-        }
-
-        filteredIllustrations.forEach(illustration => {
-            const galleryItem = document.createElement('div');
-            galleryItem.classList.add('gallery-item');
-            galleryItem.dataset.category = illustration.category;
-
-            galleryItem.innerHTML = `
-                <img src="${illustration.imageUrl}" alt="${illustration.title}">
-                <div class="item-info">
-                    <h3>${illustration.title}</h3>
-                    <p>${illustration.description}</p>
-                </div>
-            `;
-            galleryContainer.appendChild(galleryItem);
+        // 1. Tambahkan kelas 'hide' ke semua item saat ini (untuk fade-out)
+        currentItems.forEach(item => {
+            item.classList.add('hide');
         });
+
+        // Tunggu transisi fade-out selesai sebelum menghapus dan menambahkan item baru
+        setTimeout(() => {
+            galleryContainer.innerHTML = ''; // Kosongkan galeri setelah transisi
+
+            if (filteredIllustrations.length === 0) {
+                galleryContainer.innerHTML = '<p class="no-results">Tidak ada ilustrasi untuk kategori ini.</p>';
+                return;
+            }
+
+            filteredIllustrations.forEach((illustration, index) => {
+                const galleryItem = document.createElement('div');
+                galleryItem.classList.add('gallery-item');
+                galleryItem.dataset.category = illustration.category;
+
+                galleryItem.innerHTML = `
+                    <img src="${illustration.imageUrl}" alt="${illustration.title}">
+                    <div class="item-info">
+                        <h3>${illustration.title}</h3>
+                        <p>${illustration.description}</p>
+                    </div>
+                `;
+                // Secara default, tambahkan kelas 'hide' terlebih dahulu
+                galleryItem.classList.add('hide');
+                galleryContainer.appendChild(galleryItem);
+
+                // Setelah ditambahkan ke DOM, picu transisi 'show' dengan sedikit delay
+                // Menggunakan setTimeout untuk memastikan CSS transisi diterapkan
+                setTimeout(() => {
+                    galleryItem.classList.remove('hide');
+                    galleryItem.classList.add('show');
+                }, 50 * index); // Delay bertingkat untuk efek staggered fade-in
+            });
+        }, 500); // Waktu ini harus sesuai dengan durasi transisi di CSS (0.5s = 500ms)
     }
 
     // Panggil saat pertama kali dimuat
@@ -90,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Opsional: Smooth scrolling untuk navigasi
+    // Smooth scrolling untuk navigasi
     document.querySelectorAll('nav a').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
