@@ -9,14 +9,14 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Fantasi Hutan",
             description: "Ilustrasi digital dengan nuansa magis.",
             category: "digital",
-            imageUrl: "https://via.placeholder.com/400x300/6A5ACD/FFFFFF?text=Fantasi+Hutan"
+            imageUrl: "https://static.wikia.nocookie.net/bandori/images/1/1d/Ave_Mujica.jpg/revision/latest?cb=20230905093854"
         },
         {
             id: 2,
             title: "Potret Klasik",
             description: "Potret cat minyak dengan detail halus.",
             category: "traditional",
-            imageUrl: "https://via.placeholder.com/400x300/CD5C5C/FFFFFF?text=Potret+Klasik"
+            imageUrl: "https://static.wikia.nocookie.net/bandori/images/1/1d/Ave_Mujica.jpg/revision/latest?cb=20230905093854"
         },
         {
             id: 3,
