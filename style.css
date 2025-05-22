@@ -61,7 +61,7 @@ header nav a {
     text-decoration: none;
     font-size: 1.1em;
     font-weight: 400;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease; /* Transisi untuk warna link navigasi */
 }
 
 header nav a:hover {
@@ -77,7 +77,7 @@ header nav a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 60vh; /* Set tinggi minimal */
+    min-height: 60vh;
 }
 
 .hero-content {
@@ -103,11 +103,11 @@ header nav a:hover {
     text-decoration: none;
     border-radius: 5px;
     font-weight: 600;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease; /* Transisi untuk tombol */
 }
 
 .btn:hover {
-    background-color: #2980b9; /* Sedikit lebih gelap dari primary-color */
+    background-color: #2980b9;
 }
 
 /* Section Styling */
@@ -116,7 +116,7 @@ section {
     text-align: center;
 }
 
-section:nth-of-type(even) { /* Memberi latar belakang abu-abu pada section genap */
+section:nth-of-type(even) {
     background-color: #f8f8f8;
 }
 
@@ -137,6 +137,7 @@ h2::after {
     bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
+    transition: width 0.3s ease; /* Transisi untuk lebar garis bawah */
 }
 
 /* Filter Buttons */
@@ -151,8 +152,8 @@ h2::after {
     padding: 10px 20px;
     margin: 0 8px;
     cursor: pointer;
-    border-radius: 25px; /* Lebih bulat */
-    transition: all 0.3s ease;
+    border-radius: 25px;
+    transition: all 0.3s ease; /* Transisi untuk semua properti tombol */
     font-size: 1em;
 }
 
@@ -167,6 +168,8 @@ h2::after {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
+    /* Kita akan mengontrol visibilitas item secara individual dengan JS,
+       jadi tidak perlu transition di sini */
 }
 
 .gallery-item {
@@ -174,13 +177,28 @@ h2::after {
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    text-align: left; /* Teks di dalam item rata kiri */
-    transition: transform 0.3s ease;
+    text-align: left;
+    transform: translateY(0); /* Default position */
+    opacity: 1; /* Default opacity */
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out; /* Transisi untuk item galeri */
     cursor: pointer;
 }
 
 .gallery-item:hover {
     transform: translateY(-5px); /* Efek hover mengangkat */
+}
+
+/* Kelas untuk efek fade-out/in */
+.gallery-item.hide {
+    opacity: 0;
+    transform: translateY(20px); /* Geser sedikit ke bawah saat menghilang */
+    pointer-events: none; /* Nonaktifkan interaksi saat tersembunyi */
+    /* Pastikan display: none hanya setelah transisi selesai jika dibutuhkan */
+}
+
+.gallery-item.show {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .gallery-item img {
@@ -212,7 +230,7 @@ h2::after {
     padding: 10px 20px;
     border: 1px solid var(--primary-color);
     border-radius: 5px;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease; /* Transisi untuk link kontak */
 }
 
 .contact-links a:hover {
@@ -248,7 +266,7 @@ footer {
     }
 
     .gallery {
-        grid-template-columns: 1fr; /* Satu kolom di layar kecil */
+        grid-template-columns: 1fr;
     }
 
     .filter-btn {
