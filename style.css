@@ -1,23 +1,127 @@
 body {
-    font-family: "Times New Roman", Times, serif;
+    font-family: Arial, sans-serif;
     margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f4f4f4; /*latar belakang*/
-    transition: background-color 0.2s ease, color 0.2s ease; /* Efek transisi */
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
 }
 
-h1 {
-    color: #333; /* Warna teks awal h1 */
-    font-size: 2.5em;
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+    padding: 20px 0;
+}
+
+header {
+    background: #333;
+    color: #fff;
+    padding-top: 30px;
+    min-height: 70px;
+    border-bottom: #77aaff 3px solid;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    padding-bottom: 10px;
+}
+
+header nav ul {
+    padding: 0;
+    list-style: none;
+    text-align: center;
+}
+
+header nav ul li {
+    display: inline;
+    padding: 0 20px;
+}
+
+header nav a {
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 16px;
+}
+
+header nav a:hover {
+    color: #77aaff;
+}
+
+section {
+    background: #fff;
+    margin-bottom: 20px;
     padding: 20px;
     border-radius: 8px;
-    cursor: pointer; /* Menandakan elemen ini interaktif */
-    transition: color 0.2s ease; /* Efek transisi untuk warna teks h1 */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-a {
-  text-decoration: none;
+h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.filter-buttons {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.filter-btn {
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    padding: 8px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.filter-btn:hover, .filter-btn.active {
+    background-color: #77aaff;
+    color: #fff;
+    border-color: #77aaff;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.gallery-item {
+    background-color: #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-align: center;
+    cursor: pointer;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 200px; /* Tinggi gambar statis */
+    object-fit: cover; /* Memastikan gambar mengisi area tanpa terdistorsi */
+    display: block;
+}
+
+.gallery-item h3 {
+    margin: 10px 0;
+    font-size: 1.2em;
+    padding: 0 10px;
+}
+
+.gallery-item p {
+    font-size: 0.9em;
+    color: #555;
+    padding: 0 10px 10px;
+}
+
+footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
 }
