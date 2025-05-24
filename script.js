@@ -1,47 +1,47 @@
-// Pastikan DOM sudah sepenuhnya dimuat sebelum menjalankan skrip
 document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-    console.log("Situs Sederhana Siap!");
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const captionModalText = document.getElementById('captionModal');
+    const closeButton = document.querySelector('.close-button');
 
-    // Contoh interaksi: Mengubah teks judul artikel ketiga saat diklik
-    const changeableTitle = document.getElementById('changeableTitle');
+    galleryItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const imgElement = this.querySelector('img');
+            const imgSrc = imgElement.src;
+            const imgAlt = imgElement.alt;
+            
+            const captionElement = this.querySelector('.caption');
+            const captionText = captionElement ? captionElement.innerText : imgAlt; 
 
-    if (changeableTitle) {
-        changeableTitle.addEventListener('click', function() {
-            if (changeableTitle.textContent.includes("Diklik!")) {
-                changeableTitle.textContent = "Judul Artikel Ketiga (Klik Saya!)";
-                changeableTitle.style.color = "#ffffff"; // Kembali ke warna asli
-            } else {
-                changeableTitle.textContent = "Judul Artikel Ketiga (Sudah Diklik!)";
-                changeableTitle.style.color = "#ffcc66"; // Ubah warna saat diklik
-            }
+            modalImage.src = imgSrc;
+            modalImage.alt = imgAlt; 
+            captionModalText.innerText = captionText;
+
+            modal.style.display = "flex"; 
         });
+    });
 
-        // Menambahkan efek hover sederhana dengan JS (bisa juga dengan CSS :hover)
-        changeableTitle.addEventListener('mouseover', function() {
-            changeableTitle.style.cursor = 'pointer'; // Ubah kursor menjadi tangan
-            if (!changeableTitle.textContent.includes("Diklik!")) {
-                 changeableTitle.style.opacity = '0.8';
-            }
-        });
-        changeableTitle.addEventListener('mouseout', function() {
-            changeableTitle.style.opacity = '1';
-        });
+    function closeModal() {
+        modal.style.display = "none";
+        modalImage.src = ""; 
     }
 
-    // Contoh lain: Alert sederhana saat link "Baca Selengkapnya" pertama diklik
-    const firstReadMoreButton = document.querySelector('.post-item .read-more'); // Ambil tombol pertama
-    if(firstReadMoreButton) {
-        firstReadMoreButton.addEventListener('click', function(event) {
-            event.preventDefault(); // Mencegah link berpindah halaman (untuk demo)
-            alert("Anda mengklik 'Baca Selengkapnya' untuk artikel pertama!");
-        });
+    if (closeButton) {
+        closeButton.addEventListener('click', closeModal);
     }
 
-    // Menambahkan tahun sekarang di footer secara dinamis
-    const footerText = document.querySelector('footer p');
-    if (footerText && footerText.textContent.includes('2025')) { // Pastikan placeholder tahun ada
-        footerText.textContent = footerText.textContent.replace('2025', new Date().getFullYear());
-    }
+    modal.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
 
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape" && modal.style.display === "flex") {
+            closeModal();
+        }
+    });
 });
