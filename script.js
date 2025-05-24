@@ -14,7 +14,7 @@ const galleryGrid = document.getElementById('galleryGrid');
 const modal = document.getElementById('imageModal');
 const modalImage = document.getElementById('modalImage');
 const captionText = document.getElementById('caption');
-const closeModal = document.querySelector('.close-modal');
+const closeModalButton = document.querySelector('.close-modal');
 const prevModalButton = document.querySelector('.prev-modal');
 const nextModalButton = document.querySelector('.next-modal');
 let currentIndex = 0;
@@ -22,59 +22,61 @@ let currentIndex = 0;
 // Fungsi untuk membuat item galeri
 function createGalleryItem(image, index) {
     const div = document.createElement('div');
-    // Kartu galeri dengan latar belakang putih
-    div.className = 'gallery-item bg-white rounded-lg shadow-lg overflow-hidden'; 
+    div.className = 'gallery-item'; // Kelas CSS kustom
     
+    const imageContainer = document.createElement('div');
+    imageContainer.className = 'image-container';
+
     const img = document.createElement('img');
     img.src = image.src;
     img.alt = image.alt;
-    img.className = 'w-full h-64 object-cover';
-    img.loading = 'lazy'; // Lazy loading untuk performa
+    img.loading = 'lazy'; 
+
+    imageContainer.appendChild(img);
 
     const titleContainer = document.createElement('div');
-    titleContainer.className = 'p-4';
+    titleContainer.className = 'title-container';
     
     const title = document.createElement('h3');
-    // Judul item galeri berwarna ungu
-    title.className = 'text-lg font-semibold text-purple-700'; 
     title.textContent = image.title;
 
     titleContainer.appendChild(title);
-    div.appendChild(img);
+    div.appendChild(imageContainer);
     div.appendChild(titleContainer);
 
-    // Event listener untuk membuka modal ketika gambar diklik
     div.addEventListener('click', () => {
         openModal(index);
     });
     return div;
 }
 
-// Fungsi untuk memuat gambar ke galeri
 function loadGallery() {
-    images.forEach((image, index) => {
-        galleryGrid.appendChild(createGalleryItem(image, index));
-    });
+    if (galleryGrid) { // Pastikan elemen galleryGrid ada
+        images.forEach((image, index) => {
+            galleryGrid.appendChild(createGalleryItem(image, index));
+        });
+    }
 }
 
-// Fungsi untuk membuka modal
 function openModal(index) {
     currentIndex = index;
-    modal.style.display = "flex"; // Menggunakan flex untuk centering
-    modalImage.src = images[currentIndex].src;
-    modalImage.alt = images[currentIndex].alt;
-    captionText.textContent = images[currentIndex].title;
-    document.body.style.overflow = 'hidden'; // Mencegah scroll halaman di belakang modal
-    updateModalNavigation();
+    if (modal && modalImage && captionText) { // Pastikan elemen modal ada
+        modal.style.display = "flex";
+        modalImage.src = images[currentIndex].src;
+        modalImage.alt = images[currentIndex].alt;
+        captionText.textContent = images[currentIndex].title;
+        document.body.style.overflow = 'hidden';
+        updateModalNavigation();
+    }
 }
 
-// Fungsi untuk menutup modal
 function closeModalFunction() {
-    modal.style.display = "none";
-    document.body.style.overflow = 'auto'; // Mengembalikan scroll halaman
+    if (modal) { // Pastikan elemen modal ada
+        modal.style.display = "none";
+        document.body.style.overflow = 'auto';
+    }
 }
 
-// Fungsi untuk menampilkan gambar sebelumnya
 function showPrevImage() {
     if (currentIndex > 0) {
         currentIndex--;
@@ -82,7 +84,6 @@ function showPrevImage() {
     }
 }
 
-// Fungsi untuk menampilkan gambar selanjutnya
 function showNextImage() {
     if (currentIndex < images.length - 1) {
         currentIndex++;
@@ -90,45 +91,44 @@ function showNextImage() {
     }
 }
 
-// Fungsi untuk memperbarui visibilitas tombol navigasi modal
 function updateModalNavigation() {
-    prevModalButton.classList.toggle('nav-hidden', currentIndex === 0);
-    nextModalButton.classList.toggle('nav-hidden', currentIndex === images.length - 1);
+    if (prevModalButton && nextModalButton) { // Pastikan tombol navigasi ada
+        prevModalButton.classList.toggle('nav-hidden', currentIndex === 0);
+        nextModalButton.classList.toggle('nav-hidden', currentIndex === images.length - 1);
+    }
 }
 
-// Event listener untuk tombol tutup modal
-closeModal.addEventListener('click', closeModalFunction);
+// Pastikan elemen-elemen ada sebelum menambahkan event listener
+if (closeModalButton) {
+    closeModalButton.addEventListener('click', closeModalFunction);
+}
+if (prevModalButton) {
+    prevModalButton.addEventListener('click', showPrevImage);
+}
+if (nextModalButton) {
+    nextModalButton.addEventListener('click', showNextImage);
+}
 
-// Event listener untuk tombol navigasi
-prevModalButton.addEventListener('click', showPrevImage);
-nextModalButton.addEventListener('click', showNextImage);
-
-// Event listener untuk menutup modal dengan klik di luar gambar
 window.addEventListener('click', (event) => {
-    if (event.target === modal) {
+    if (modal && event.target === modal) { 
         closeModalFunction();
     }
 });
 
-// Event listener untuk navigasi keyboard (Esc, panah kiri, panah kanan)
 document.addEventListener('keydown', (event) => {
-    if (modal.style.display === "flex") { // Hanya aktif jika modal terbuka
+    if (modal && modal.style.display === "flex") {
         if (event.key === 'Escape') {
             closeModalFunction();
-        } else if (event.key === 'ArrowLeft') {
+        } else if (event.key === 'ArrowLeft' && prevModalButton && !prevModalButton.classList.contains('nav-hidden')) {
             showPrevImage();
-        } else if (event.key === 'ArrowRight') {
+        } else if (event.key === 'ArrowRight' && nextModalButton && !nextModalButton.classList.contains('nav-hidden')) {
             showNextImage();
         }
     }
 });
 
-// Mengatur tahun saat ini di footer
-// Pastikan elemen dengan id 'currentYear' ada di HTML Anda
 if (document.getElementById('currentYear')) {
     document.getElementById('currentYear').textContent = new Date().getFullYear();
 }
 
-
-// Memuat galeri saat halaman dimuat
 window.onload = loadGallery;
