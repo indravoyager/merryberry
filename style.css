@@ -121,7 +121,7 @@ img, iframe {
 }
 
 /* Bagian Hero */
-.hero-section {
+/*.hero-section {
     background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), /* Penyesuaian overlay jika perlu */
                 url('https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg') no-repeat center center/cover;
     color: #ffffff;
@@ -132,6 +132,60 @@ img, iframe {
     align-items: center;
     text-align: center;
     padding: 40px 20px;
+}
+.video-background-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Video di lapisan bawah */
+    pointer-events: none; /* Agar video tidak bisa diklik/interaksi */
+    overflow: hidden; /* Pastikan iframe tidak meluap dari wrapper ini */
+}
+
+#hero-video-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto; /* Agar aspek rasio terjaga, bisa diskalakan lebih besar dari parent */
+    height: auto; /* Agar aspek rasio terjaga, bisa diskalakan lebih besar dari parent */
+    /* Trik agar video 16:9 selalu menutupi area (cover)
+       Anda mungkin perlu menyesuaikan ini jika aspek rasio video berbeda signifikan
+       atau jika perilaku cover tidak sempurna di semua ukuran layar.
+       Contoh: jika layar sangat lebar, buat tinggi video 100% dan lebar otomatis lebih besar.
+       Jika layar sangat tinggi, buat lebar video 100% dan tinggi otomatis lebih besar.
+       Untuk 16:9, jika lebar parent adalah 100%, maka tinggi seharusnya 56.25% (9/16).
+       Untuk 16:9, jika tinggi parent adalah 100%, maka lebar seharusnya 177.78% (16/9).
+       min-width dan min-height 100% dengan width/height auto adalah pendekatan umum.
+    */
+}
+
+.hero-content-overlay {
+    position: relative; /* Atau absolute jika ingin full control positioning di atas video */
+    z-index: 2; /* Konten di atas video */
+    text-align: center; /* Tengahkan teks di dalam wrapper ini */
+    padding: 40px 20px; /* Pindahkan padding ke sini */
+    width: 100%; /* Ambil lebar penuh dari parent (.hero-section) */
+    /* Properti flex dari .hero-section akan mengatur ini jika .hero-section masih display:flex */
+    /* Jika .hero-section tidak lagi flex, atur display flex di sini untuk .hero-content-overlay */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: inherit; /* Warisi min-height dari .hero-section agar konten tetap bisa di tengah secara vertikal */
+}
+
+/* Pastikan konten di dalam .hero-content-overlay tetap terlihat */
+.hero-content-overlay h1,
+.hero-content-overlay p,
+.hero-content-overlay .cta-button {
+    /* Mungkin tidak perlu perubahan di sini jika sudah diatur sebelumnya, 
+       tetapi pastikan warna kontras dengan video */
+    color: #ffffff; /* Pastikan tetap putih atau warna kontras lainnya */
 }
 
 .hero-section .hero-content h1 {
