@@ -1,42 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galeri Ilustrasi</title>
-    <link rel="stylesheet" href="style.css">  </head>
-
-<link rel="stylesheet" href="style.css">
-    </style>
+    <title>Nama Ilustrator - Portofolio</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <header class="site-header">
-        <div class="container">
-            <h1>MERRY ILLUSTRATOR</h1>
-        </div>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="#">Nama Ilustrator</a>
+            </div>
+            <ul>
+                <li><a href="#hero">Beranda</a></li>
+                <li><a href="#gallery">Galeri</a></li>
+                <li><a href="#mv">MV</a></li>
+                <li><a href="#projects">Proyek</a></li>
+                <li><a href="#contact">Kontak</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <main class="main-content">
-        <div class="gallery-container-full"> <div id="galleryGrid">
+    <main>
+        <section id="hero" class="hero-section">
+            <div class="hero-content">
+                <h1>Selamat Datang di Portofolio Saya</h1>
+                <p>Menjelajahi dunia melalui ilustrasi dan desain kreatif.</p>
+                <a href="#gallery" class="cta-button">Lihat Karya Saya</a>
+            </div>
+        </section>
+
+        <section id="gallery" class="content-section">
+            <h2>Galeri Ilustrasi</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/300x200.png?text=Ilustrasi+1" alt="Deskripsi Ilustrasi 1">
+                    <p>Judul Ilustrasi 1</p>
                 </div>
-        </div>
-        
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/300x200.png?text=Ilustrasi+2" alt="Deskripsi Ilustrasi 2">
+                    <p>Judul Ilustrasi 2</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/300x200.png?text=Ilustrasi+3" alt="Deskripsi Ilustrasi 3">
+                    <p>Judul Ilustrasi 3</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/300x200.png?text=Ilustrasi+4" alt="Deskripsi Ilustrasi 4">
+                    <p>Judul Ilustrasi 4</p>
+                </div>
+                </div>
+        </section>
+
+        <section id="mv" class="content-section alt-bg">
+            <h2>Music Videos (MV)</h2>
+            <div class="mv-grid">
+                <div class="mv-item">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <p>Judul MV 1 - Artis</p>
+                </div>
+                <div class="mv-item">
+                    <img src="https://via.placeholder.com/560x315.png?text=MV+Thumbnail+2" alt="Thumbnail MV 2" style="width:100%; max-width:560px;">
+                    <p>Judul MV 2 - Artis</p>
+                </div>
+                </div>
+        </section>
+
+        <section id="projects" class="content-section">
+            <h2>Proyek Lainnya</h2>
+            <div class="project-grid">
+                <div class="project-item">
+                    <img src="https://via.placeholder.com/300x200.png?text=Proyek+A" alt="Deskripsi Proyek A">
+                    <h3>Nama Proyek A</h3>
+                    <p>Deskripsi singkat mengenai proyek A. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <a href="#" class="project-link">Lihat Detail</a>
+                </div>
+                <div class="project-item">
+                    <img src="https://via.placeholder.com/300x200.png?text=Proyek+B" alt="Deskripsi Proyek B">
+                    <h3>Nama Proyek B</h3>
+                    <p>Deskripsi singkat mengenai proyek B. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <a href="#" class="project-link">Lihat Detail</a>
+                </div>
+                </div>
+        </section>
+
+        <section id="contact" class="content-section alt-bg">
+            <h2>Hubungi Saya</h2>
+            <p>Tertarik untuk berkolaborasi atau memiliki pertanyaan? Jangan ragu untuk menghubungi saya.</p>
+            <a href="mailto:emailanda@example.com" class="cta-button">Kirim Email</a>
+            </section>
     </main>
 
-    <div id="imageModal" class="modal">
-        <div class="modal-image-wrapper">
-            <span class="close-modal" title="Tutup">&times;</span>
-            <span class="prev-modal nav-hidden" title="Sebelumnya">&#10094;</span>
-            <img id="modalImage" alt="Gambar Ilustrasi Diperbesar">
-            <span class="next-modal nav-hidden" title="Selanjutnya">&#10095;</span>
-        </div>
-        <div id="caption" class="modal-caption"></div>
-    </div>
-
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; <span id="currentYear"></span>Merry-go-Round.</p>
+    <footer>
+        <p>&copy; <span id="currentYear"></span> Nama Ilustrator. Semua Hak Dilindungi.</p>
+        <div class="social-links">
+            <a href="#" target="_blank">Instagram</a>
+            <a href="#" target="_blank">Behance</a>
+            <a href="#" target="_blank">LinkedIn</a>
         </div>
     </footer>
 
-<script src="script.js"></script> </body>
+    <script src="script.js"></script>
+</body>
 </html>
