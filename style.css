@@ -1,204 +1,81 @@
-/* Reset CSS Dasar & Font Dasar */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+/* Gaya kustom tambahan */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    background-color: #f0f2f5; 
-    color: #333;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    font-family: 'Inter', sans-serif; /* Menggunakan font Inter */
+    /* Warna latar belakang dan teks default diatur oleh kelas Tailwind pada tag body di HTML */
 }
-
-/* Header */
-header {
-    color: #333; 
-    padding: 0; 
-    text-align: left; 
-    margin-bottom: 30px; 
-}
-
-header h1 {
-    font-size: 2.2em;
-    font-weight: 700; 
-}
-
-/* Kontainer Galeri Utama */
-.gallery-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px; 
-    width: 100%;
-    max-width: 1200px; 
-    margin: 0 auto; 
-    flex-grow: 1; 
-}
-
-/* Item Galeri (Hanya Gambar) */
 .gallery-item {
-    transition: transform 0.3s ease; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
-    display: flex;
-    flex-direction: column; 
 }
-
-.gallery-item:hover img { 
-    transform: scale(1.05); 
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2); 
+.gallery-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
-
-.gallery-item img {
-    width: 100%;
-    height: 220px; 
-    object-fit: cover; 
-    display: block;
-    border-radius: 8px; 
-    transition: transform 0.3s ease, box-shadow 0.3s ease; 
-}
-
-.gallery-item .caption {
-    display: none; 
-}
-
-/* Footer */
-footer {
-    text-align: center;
-    margin-top: 40px; 
-    padding: 20px 0;
-    background-color: #333;
-    color: #f4f4f4;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    font-size: 0.9em;
-}
-
-/* Modal (Pop-up Gambar) */
 .modal {
-    display: none; 
-    position: fixed; 
-    z-index: 1000; 
+    display: none; /* Sembunyikan modal secara default */
+    position: fixed;
+    z-index: 50;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; 
-    background-color: rgba(0,0,0,0.88); 
-    justify-content: center; 
-    align-items: center; 
-    padding: 20px;
-}
-
-.modal-content-wrapper {
-    position: relative;
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    max-width: 90%;
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.8); /* Latar belakang gelap transparan */
     align-items: center;
-    animation-name: zoomIn;
-    animation-duration: 0.4s;
-}
-
-.modal-image {
-    max-width: 100%;
-    max-height: calc(85vh - 70px); 
-    display: block;
-    border-radius: 4px;
-    margin-bottom: 15px;
-}
-
-#captionModal {
-    text-align: center;
-    color: #333;
-    font-size: 1.1em;
-    font-weight: 500;
-    padding: 10px 0;
-    width: 100%;
-}
-
-/* Animasi Zoom untuk Modal */
-@keyframes zoomIn {
-    from {transform: scale(0.7); opacity: 0;}
-    to {transform: scale(1); opacity: 1;}
-}
-
-.close-button {
-    position: absolute;
-    top: -15px; 
-    right: -15px;
-    background-color: #fff;
-    color: #333;
-    font-size: 28px;
-    font-weight: bold;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
     justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
-
-.close-button:hover,
-.close-button:focus {
-    background-color: #e74c3c; 
-    color: #fff;
+.modal-content {
+    margin: auto;
+    display: block;
+    max-width: 80vw; /* Lebar maksimum gambar 80% dari viewport width */
+    max-height: 80vh; /* Tinggi maksimum gambar 80% dari viewport height */
+    border-radius: 8px; /* Sudut membulat untuk gambar modal */
+}
+.modal-caption {
+    margin-top: 15px;
+    text-align: center;
+    color: #ccc; /* Warna abu-abu muda untuk caption modal */
+    font-size: 1.125rem; /* Ukuran font caption */
+}
+.close-modal, .prev-modal, .next-modal {
+    position: absolute;
+    color: white; /* Warna putih untuk tombol kontrol modal */
+    font-size: 30px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+    user-select: none; /* Mencegah teks terseleksi */
+}
+.close-modal {
+    top: 20px;
+    right: 35px;
+}
+.prev-modal {
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+}
+.next-modal {
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+.close-modal:hover, .close-modal:focus,
+.prev-modal:hover, .prev-modal:focus,
+.next-modal:hover, .next-modal:focus {
+    color: #bbb; /* Warna abu-abu lebih terang saat hover */
     text-decoration: none;
 }
-
-/* Media Queries untuk Responsivitas Tambahan */
-@media (max-width: 768px) {
-    header h1 {
-        font-size: 1.8em;
-    }
-    .gallery-container {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px; 
-    }
-    .gallery-item img {
-        height: 200px;
-    }
+/* Animasi untuk modal */
+.modal-content, .modal-caption {
+    animation-name: zoom;
+    animation-duration: 0.4s;
 }
-
-@media (max-width: 480px) {
-    body {
-        padding: 10px;
-    }
-    .gallery-container {
-        grid-template-columns: 1fr;
-        gap: 15px; 
-    }
-    header h1 {
-        font-size: 1.6em;
-    }
-    .gallery-item img {
-        height: 180px;
-    }
-    .modal-content-wrapper {
-        padding: 10px;
-    }
-    .modal-image {
-         max-height: calc(80vh - 60px);
-    }
-    #captionModal {
-        font-size: 1em;
-    }
-    .close-button {
-        font-size: 24px;
-        width: 35px;
-        height: 35px;
-        top: -10px;
-        right: -10px;
-    }
+@keyframes zoom {
+    from {transform:scale(0.8)}
+    to {transform:scale(1)}
+}
+/* Menyembunyikan tombol navigasi jika tidak ada gambar sebelumnya/selanjutnya */
+.nav-hidden {
+    display: none !important;
 }
