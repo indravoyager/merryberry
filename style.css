@@ -9,14 +9,14 @@
 
 html {
     scroll-behavior: smooth;
-    font-size: 16px; /* Base font size */
+    font-size: 16px;
 }
 
 body {
     font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.7;
-    color: #343a40; /* Warna teks utama (abu-abu gelap) */
-    background-color: #f8f9fa; /* Warna latar belakang utama (putih keabuan) */
+    color: #E4E6EB; /* Teks Utama Dark Mode */
+    background-color: #181A1B; /* Latar Belakang Body Dark Mode */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -24,19 +24,19 @@ body {
 /* Utilitas */
 .container {
     width: 90%;
-    max-width: 1200px; /* Lebar maksimum container */
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 15px;
 }
 
 /* Link global */
 a {
-    color: #007bff; /* Warna link utama (biru cerah) */
+    color: #0A84FF; /* Aksen Dark Mode */
     text-decoration: none;
     transition: color 0.3s ease;
 }
 a:hover {
-    color: #0056b3; /* Warna link hover */
+    color: #409FFF; /* Aksen hover Dark Mode */
 }
 
 /* Gambar responsif */
@@ -48,13 +48,13 @@ img, iframe {
 
 /* Header dan Navigasi */
 .header {
-    background-color: #ffffff; /* Header putih bersih */
+    background-color: #1F2023; /* Latar Header Dark Mode */
     padding: 1rem 0;
     position: sticky;
     top: 0;
     z-index: 1000;
     width: 100%;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Bayangan halus untuk header */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Bayangan Dark Mode */
 }
 .header nav.container { 
     display: flex;
@@ -62,7 +62,7 @@ img, iframe {
     align-items: center;
 }
 .header .logo a {
-    color: #212529; /* Warna logo lebih gelap */
+    color: #E4E6EB; /* Teks Logo Dark Mode */
     font-size: 1.75rem;
     font-weight: 600; 
     letter-spacing: -0.5px;
@@ -76,7 +76,7 @@ img, iframe {
     margin-left: 25px;
 }
 .header .nav-links li a {
-    color: #495057; /* Warna link navigasi (abu-abu) */
+    color: #B0B3B8; /* Teks Nav Link Dark Mode */
     font-weight: 500;
     font-size: 0.95rem;
     padding: 5px 0;
@@ -89,7 +89,7 @@ img, iframe {
     height: 2px;
     bottom: -2px;
     left: 0;
-    background-color: #007bff; 
+    background-color: #0A84FF; /* Aksen Dark Mode */
     transition: width 0.3s ease;
 }
 .header .nav-links li a:hover::after,
@@ -97,7 +97,7 @@ img, iframe {
     width: 100%;
 }
 .header .nav-links li a:hover {
-    color: #007bff;
+    color: #0A84FF; /* Aksen Dark Mode */
 }
 
 /* Tombol Hamburger & Garis Animasi */
@@ -105,10 +105,9 @@ img, iframe {
     background: none;
     border: none;
     cursor: pointer;
-    display: none; /* Akan ditampilkan oleh media query */
+    display: none; 
     flex-direction: column;
     justify-content: space-between; 
-    
     width: 28px;  
     height: 22px; 
     padding: 0;   
@@ -119,7 +118,7 @@ img, iframe {
     display: block;
     width: 100%; 
     height: 3px; 
-    background-color: #343a40; 
+    background-color: #E4E6EB; /* Warna Garis Hamburger Dark Mode */
     border-radius: 3px;
     transition: transform 0.3s ease-in-out, opacity 0.2s ease-in-out;
 }
@@ -134,44 +133,37 @@ img, iframe {
     transform: translateY(-9.5px) rotate(-45deg); 
 }
 
-/* Bagian Hero - dengan latar belakang blur (TERBARU) */
+/* Bagian Hero - dengan latar belakang blur */
 .hero-section {
-    color: #ffffff; 
-    min-height: 100vh; /* Full viewport height */
+    color: #ffffff; /* Teks di hero tetap putih, kontras dengan overlay gelap */
+    min-height: 100vh; 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     padding: 40px 20px; 
-    position: relative; /* Diperlukan untuk positioning ::before */
-    overflow: hidden; /* Untuk memotong blur yang mungkin sedikit keluar batas */
-    /* Properti background utama dipindahkan ke ::before */
+    position: relative; 
+    overflow: hidden; 
 }
-
 .hero-section::before {
-    content: ''; /* Wajib ada untuk pseudo-elements */
+    content: ''; 
     position: absolute;
-    /* Beri sedikit lebih besar dari parent untuk menghindari tepi blur yang tipis */
     top: -10px; 
     left: -10px;
     right: -10px;
     bottom: -10px;
-    background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+    /* Overlay gradien gelap tetap efektif untuk kontras teks */
+    background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
                 url('https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg') no-repeat center center;
     background-size: cover;
-    filter: blur(3px); /* Atur tingkat blur sesuai keinginan (misalnya 3px, 5px, 8px) */
-    z-index: -1; /* Tempatkan pseudo-element di belakang konten .hero-section */
-    /* Opsional: Sedikit perbesar skala untuk memastikan blur menutupi sepenuhnya */
-    /* transform: scale(1.02); */
+    filter: blur(5px); 
+    z-index: -1; 
 }
-
 .hero-section .hero-content {
-    /* Style yang sudah ada sebelumnya: */
-    position: relative; /* Pastikan di atas pseudo-element ::before */
-    z-index: 1;         /* atau nilai positif lainnya */
+    position: relative; 
+    z-index: 1;         
 }
-
 .hero-section .hero-content h1 {
     font-size: clamp(2.5rem, 6vw, 4rem); 
     font-weight: 700;
@@ -181,25 +173,26 @@ img, iframe {
 .hero-section .hero-content p {
     font-size: clamp(1rem, 2.5vw, 1.25rem); 
     max-width: 600px; 
-    margin: 0 auto 2rem auto; /* Paragraf di tengah */
+    margin: 0 auto 2rem auto; 
     opacity: 0.9;
 }
 .cta-button {
     display: inline-block;
-    background-color: #007bff; 
-    color: #ffffff;
+    background-color: #0A84FF; /* Aksen Dark Mode */
+    color: #ffffff; /* Teks tombol tetap putih */
     padding: 12px 30px; 
     text-decoration: none;
     border-radius: 30px; 
     font-weight: 600;
     font-size: 1rem;
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+    /* Bayangan tombol di dark mode mungkin perlu disesuaikan atau dihilangkan jika terlalu menonjol */
+    box-shadow: 0 4px 15px rgba(0, 100, 255, 0.2); /* Sedikit penyesuaian bayangan */
 }
 .cta-button:hover {
-    background-color: #0056b3;
+    background-color: #0073E6; /* Aksen hover Dark Mode */
     transform: translateY(-3px); 
-    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 6px 20px rgba(0, 100, 255, 0.3);
 }
 
 /* Bagian Konten Umum */
@@ -210,19 +203,19 @@ img, iframe {
 .content-section .section-title { 
     font-size: clamp(2rem, 5vw, 2.8rem); 
     margin-bottom: 1rem;
-    color: #212529;
+    color: #E4E6EB; /* Teks Judul Dark Mode */
     font-weight: 600;
 }
 .content-section .section-subtitle { 
     font-size: clamp(0.9rem, 2vw, 1.1rem);
-    color: #6c757d; 
+    color: #B0B3B8; /* Teks Subjudul Dark Mode */
     margin-bottom: 50px; 
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
 }
-.alt-bg {
-    background-color: #ffffff; 
+.alt-bg { /* Bagian dengan latar alternatif */
+    background-color: #1F2023; /* Latar Alternatif Dark Mode, sedikit beda dari body */
 }
 
 /* Grid untuk Galeri, MV, dan Proyek */
@@ -234,9 +227,11 @@ img, iframe {
 
 /* Item Card (Galeri, MV, Proyek) */
 .card-item {
-    background: #ffffff;
+    background: #242526; /* Latar Card Dark Mode */
     border-radius: 12px; 
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08); 
+    /* Bayangan di dark mode: bisa sangat subtil atau menggunakan border */
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2); 
+    /* Alternatif: border: 1px solid #3E4042; box-shadow: none; */
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex; 
@@ -245,7 +240,7 @@ img, iframe {
 }
 .card-item:hover {
     transform: translateY(-8px); 
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
 }
 .card-item .card-image img {
     width: 100%;
@@ -256,6 +251,8 @@ img, iframe {
     width: 100%;
     aspect-ratio: 16/9; 
     border: none;
+    /* Jika iframe perlu border-radius agar cocok dengan card: */
+    /* border-radius: 12px 12px 0 0; (jika konten di bawahnya) */
 }
 .card-item .card-content {
     padding: 20px;
@@ -266,18 +263,18 @@ img, iframe {
 .card-item .card-title { 
     font-size: 1.25rem;
     font-weight: 600;
-    color: #343a40;
+    color: #E4E6EB; /* Teks Judul Card Dark Mode */
     margin-bottom: 10px;
 }
 .card-item .card-description { 
     font-size: 0.9rem;
-    color: #6c757d;
+    color: #B0B3B8; /* Teks Deskripsi Card Dark Mode */
     margin-bottom: 15px;
     flex-grow: 1; 
 }
 .card-item .card-link {
     display: inline-block;
-    color: #007bff;
+    color: #0A84FF; /* Aksen Dark Mode */
     font-weight: 500;
     font-size: 0.9rem;
     margin-top: auto; 
@@ -291,14 +288,16 @@ img, iframe {
 #contact .section-subtitle {
     margin-bottom: 30px;
 }
+/* .cta-button sudah di-style untuk dark mode */
 
 /* Footer */
 .footer { 
-    background-color: #212529; 
-    color: #adb5bd; 
+    background-color: #1F2023; /* Latar Footer Dark Mode */
+    color: #B0B3B8; /* Teks Footer Dark Mode */
     text-align: center;
     padding: 40px 20px;
     font-size: 0.9rem;
+    border-top: 1px solid #3E4042; /* Border pemisah halus */
 }
 .footer .container p {
     margin-bottom: 15px;
@@ -318,6 +317,11 @@ img, iframe {
     width: 24px;
     height: 24px;
     vertical-align: middle; 
+    /* Filter SVG agar ikon menjadi putih atau terang di dark mode */
+    /* Asumsi ikon SVG aslinya berwarna gelap/hitam */
+    filter: invert(90%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(170%) contrast(95%);
+    /* Filter di atas menghasilkan warna putih keabuan. Sesuaikan jika perlu. */
+    /* Alternatif filter sederhana untuk putih: filter: invert(1) brightness(2); */
 }
 
 /* Media Queries untuk Responsivitas */
@@ -330,11 +334,11 @@ img, iframe {
         top: 100%; 
         left: 0;
         width: 100%;
-        background-color: #ffffff;
+        background-color: #242526; /* Latar Mobile Menu Dark Mode */
         flex-direction: column;
         align-items: stretch; 
         text-align: center;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Bayangan Mobile Menu Dark Mode */
         
         opacity: 0;
         transform: translateY(-10px); 
@@ -354,7 +358,12 @@ img, iframe {
     .header .nav-links li a {
         display: block; 
         padding: 12px 20px; 
-        border-bottom: 1px solid #f0f0f0; 
+        border-bottom: 1px solid #3E4042; /* Border Pemisah Mobile Menu Dark Mode */
+        color: #E4E6EB; /* Teks Link Mobile Menu Dark Mode */
+    }
+    .header .nav-links li a:hover {
+        color: #0A84FF; /* Warna hover tetap aksen */
+        background-color: rgba(10, 132, 255, 0.1); /* Efek hover latar halus */
     }
     .header .nav-links li:last-child a {
         border-bottom: none; 
