@@ -1,12 +1,7 @@
-/* Reset dan Gaya Dasar */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
     font-family: 'Inter', 'Arial', sans-serif;
+    background-color: #F3F4F6;
+    color: #1F2937;
     background-color: #F3F4F6; /* Mirip bg-gray-100 */
     color: #1F2937; /* Mirip text-gray-800 */
     line-height: 1.6;
@@ -14,28 +9,19 @@ body {
     /* Gaya untuk Sticky Footer */
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
     min-height: 100vh; /* Minimal setinggi viewport/layar */
 }
 
 .container {
-    width: 90%;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 15px;
-    padding-right: 15px;
-}
-
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
+@@ -32,89 +34,72 @@ img {
 
 /* Header */
 .site-header {
+    background-color: #FFFFFF;
     background-color: #FFFFFF; /* Mirip bg-white */
     padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Mirip shadow-md */
     position: sticky;
     top: 0;
@@ -48,154 +34,141 @@ img {
 }
 
 .site-header h1 {
+    font-size: 2rem;
     font-size: 2rem; /* Mirip text-3xl */
     font-weight: bold;
+    color: #7C3AED;
     color: #7C3AED; /* Mirip text-purple-600 */
 }
 
 /* Konten Utama dan Galeri */
 .main-content {
-    padding-top: 2rem; /* Bisa disesuaikan atau dihilangkan jika gallery-container-full sudah punya padding atas/bawah sendiri */
-    padding-bottom: 2rem; /* Sama seperti di atas */
+    padding-top: 2rem;
+    padding-bottom: 2rem;
     flex-grow: 1;
+
+    /* Gaya untuk Sticky Footer */
+    flex-grow: 1; /* Biarkan main content mengisi ruang yang tersedia */
 }
 
-.gallery-container-full {
-    width: 100%; /* Mengambil lebar penuh dari parentnya (.main-content) */
-    padding-left: 1rem;  /* "Jeda dikit" di sisi kiri, sekitar 16px */
-    padding-right: 1rem; /* "Jeda dikit" di sisi kanan, sekitar 16px */
-    box-sizing: border-box; /* Agar padding tidak menambah lebar total dari 100% */
-}
-
+/* MODIFIKASI UNTUK HORIZONTAL SCROLLING GALLERY */
 #galleryGrid {
+    display: flex; /* Menggunakan Flexbox */
+    flex-direction: row; /* Item berbaris horizontal */
+    overflow-x: auto;  /* Memungkinkan scroll horizontal */
+    overflow-y: hidden; /* Sembunyikan scroll vertikal untuk baris galeri */
+    gap: 1.5rem;       /* Jarak antar item galeri */
+    padding-bottom: 1rem; /* Ruang untuk scrollbar horizontal agar tidak menutupi item */
+    /* Hapus properti grid-template-columns karena tidak lagi menggunakan CSS Grid untuk ini */
+    /* Jika ingin scrollbar lebih custom (tidak selalu terlihat), bisa pakai plugin JS atau styling scrollbar CSS (tergantung browser) */
+    /* Untuk Firefox, scrollbar styling: */
+    /* scrollbar-width: thin; */
+    /* scrollbar-color: #6D28D9 #F3F4F6; */
+    /* Untuk Chrome/Edge/Safari (Webkit): */
+    /* &::-webkit-scrollbar { height: 8px; } */
+    /* &::-webkit-scrollbar-track { background: #F3F4F6; border-radius: 4px;} */
+    /* &::-webkit-scrollbar-thumb { background-color: #6D28D9; border-radius: 4px;} */
     display: grid;
     grid-template-columns: repeat(1, 1fr); /* Default 1 kolom */
-    gap: 1.5rem; 
-    /* Tidak perlu max-width atau margin:auto di sini, karena sudah diatur oleh .gallery-container-full */
+    gap: 1.5rem; /* Mirip gap-6 */
 }
 
 .gallery-item {
     background-color: #FFFFFF;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
     border-radius: 0.5rem; /* Mirip rounded-lg */
     box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Mirip shadow-lg */
     overflow: hidden; /* Mirip overflow-hidden */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
+
+    /* MODIFIKASI UNTUK HORIZONTAL SCROLLING GALLERY */
+    width: 280px;       /* Tentukan lebar tetap untuk setiap item */
+    flex-shrink: 0;     /* Mencegah item menyusut */
 }
 
 .gallery-item:hover {
+    transform: scale(1.05); /* Efek hover bisa sedikit disesuaikan jika item terlalu rapat */
     transform: scale(1.05);
     box-shadow: 0 10px 15px rgba(0,0,0,0.1);
 }
 
 .gallery-item .image-container img {
     width: 100%;
+    height: 220px; /* Tinggi gambar bisa disesuaikan kembali */
+    object-fit: cover;
     height: 250px; /* Mirip h-64, sesuaikan jika perlu */
     object-fit: cover; /* Mirip object-cover */
 }
 
 .gallery-item .title-container {
+    padding: 1rem;
     padding: 1rem; /* Mirip p-4 */
 }
 
 .gallery-item h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #6D28D9;
     font-size: 1.125rem; /* Mirip text-lg */
     font-weight: 600; /* Mirip font-semibold */
     color: #6D28D9; /* Mirip text-purple-700 */
     margin: 0;
+    white-space: nowrap; /* Mencegah judul wrap jika terlalu panjang untuk lebar item */
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+/* Modal (Tetap sama) */
 /* Modal */
 .modal {
     display: none;
     position: fixed;
-    z-index: 1050;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
+@@ -127,10 +112,10 @@ img {
     background-color: rgba(0,0,0,0.85);
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     flex-direction: column; /* Untuk caption di bawah gambar */
 }
 
+.modal-image-wrapper {
 .modal-image-wrapper { /* Wrapper untuk gambar dan navigasi kiri/kanan */
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
-    max-width: 85vw;
-    max-height: 75vh;
-}
-
-#modalImage {
-    display: block;
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 8px;
-    animation-name: zoom;
-    animation-duration: 0.4s;
-}
-
-@keyframes zoom {
-    from {transform:scale(0.8)}
-    to {transform:scale(1)}
-}
-
-.modal-caption {
-    margin-top: 15px;
-    text-align: center;
-    color: #ccc;
-    font-size: 1.125rem;
-}
-
-.close-modal, .prev-modal, .next-modal {
-    position: absolute;
-    color: white;
-    font-size: 30px;
-    font-weight: bold;
+@@ -168,7 +153,7 @@ img {
     transition: 0.3s;
     cursor: pointer;
     user-select: none;
+    z-index: 1060;
     z-index: 1060; /* Di atas gambar modal */
 }
 
 .close-modal {
-    top: -40px; 
-    right: 0px; 
-}
-
-.prev-modal {
-    left: -40px; 
-}
-
-.next-modal {
-    right: -40px; 
-}
-
-.close-modal:hover, .close-modal:focus,
-.prev-modal:hover, .prev-modal:focus,
-.next-modal:hover, .next-modal:focus {
-    color: #bbb;
-    text-decoration: none;
-}
-
-.nav-hidden {
+@@ -195,24 +180,42 @@ img {
     display: none !important;
 }
 
+/* Footer (Tetap sama) */
 /* Footer */
 .site-footer {
+    background-color: #1F2937;
+    color: #FFFFFF;
     background-color: #1F2937; /* Mirip bg-gray-800 */
     color: #FFFFFF; /* Mirip text-white */
     text-align: center;
     padding: 1.5rem 0;
+    margin-top: 3rem;
     margin-top: 3rem; /* Ini akan relevan jika konten sangat pendek dan sticky footer mendorongnya */
     /* flex-shrink: 0; /* Opsional: Mencegah footer menyusut jika konten sangat banyak */
 }
 
+/* Media Queries untuk Responsivitas */
+/* Media query yang sebelumnya mengatur grid-template-columns untuk #galleryGrid DIHAPUS */
+/* Media query untuk modal dan lainnya bisa tetap ada */
 /* Media Queries untuk Responsivitas Grid Galeri */
 /* Tablet Kecil (sm) - 2 kolom */
 @media (min-width: 640px) {
