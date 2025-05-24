@@ -5,14 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nama Ilustrator - Portofolio</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <nav>
+    <header class="header">
+        <nav class="container">
             <div class="logo">
                 <a href="#">Nama Ilustrator</a>
             </div>
-            <ul>
+            <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+                ☰
+            </button>
+            <ul class="nav-links">
                 <li><a href="#hero">Beranda</a></li>
                 <li><a href="#gallery">Galeri</a></li>
                 <li><a href="#mv">MV</a></li>
@@ -32,72 +36,116 @@
         </section>
 
         <section id="gallery" class="content-section">
-            <h2>Galeri Ilustrasi</h2>
-            <div class="gallery-grid">
-                <div class="gallery-item">
-                    <img src="https://via.placeholder.com/300x200.png?text=Ilustrasi+1" alt="Deskripsi Ilustrasi 1">
-                    <p>Judul Ilustrasi 1</p>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://via.placeholder.com/300x200.png?text=Ilustrasi+2" alt="Deskripsi Ilustrasi 2">
-                    <p>Judul Ilustrasi 2</p>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://via.placeholder.com/300x200.png?text=Ilustrasi+3" alt="Deskripsi Ilustrasi 3">
-                    <p>Judul Ilustrasi 3</p>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://via.placeholder.com/300x200.png?text=Ilustrasi+4" alt="Deskripsi Ilustrasi 4">
-                    <p>Judul Ilustrasi 4</p>
-                </div>
-                </div>
+            <div class="container">
+                <h2 class="section-title">Galeri Ilustrasi</h2>
+                <p class="section-subtitle">Lihat kumpulan karya ilustrasi terbaru dan terbaik saya.</p>
+                <div class="gallery-grid">
+                    <div class="card-item">
+                        <div class="card-image">
+                            <img src="https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg" alt="Reverse 1999 Voyager">
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title">Voyager - Reverse 1999</h3>
+                            <p class="card-description">Ilustrasi karakter Voyager dari game Reverse 1999 untuk testing.</p>
+                            <a href="#" class="card-link">Lihat Lebih Lanjut →</a>
+                        </div>
+                    </div>
+                    <div class="card-item">
+                        <div class="card-image">
+                            <img src="https://via.placeholder.com/300x200.png?text=Ilustrasi+Keren" alt="Deskripsi Ilustrasi Keren">
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title">Ilustrasi Keren</h3>
+                            <p class="card-description">Deskripsi singkat tentang ilustrasi ini, teknik yang digunakan atau konsepnya.</p>
+                            <a href="#" class="card-link">Lihat Lebih Lanjut →</a>
+                        </div>
+                    </div>
+                    <div class="card-item">
+                        <div class="card-image">
+                            <img src="https://via.placeholder.com/300x200.png?text=Desain+Karakter" alt="Deskripsi Desain Karakter">
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title">Desain Karakter Unik</h3>
+                            <p class="card-description">Proses di balik pembuatan desain karakter yang menarik dan berkesan.</p>
+                            <a href="#" class="card-link">Lihat Lebih Lanjut →</a>
+                        </div>
+                    </div>
+                     </div>
+            </div>
         </section>
 
         <section id="mv" class="content-section alt-bg">
-            <h2>Music Videos (MV)</h2>
-            <div class="mv-grid">
-                <div class="mv-item">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    <p>Judul MV 1 - Artis</p>
-                </div>
-                <div class="mv-item">
-                    <img src="https://via.placeholder.com/560x315.png?text=MV+Thumbnail+2" alt="Thumbnail MV 2" style="width:100%; max-width:560px;">
-                    <p>Judul MV 2 - Artis</p>
-                </div>
-                </div>
+            <div class="container">
+                <h2 class="section-title">Music Videos (MV)</h2>
+                <p class="section-subtitle">Animasi dan ilustrasi yang saya kerjakan untuk video musik.</p>
+                <div class="mv-grid">
+                    <div class="card-item">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <div class="card-content">
+                            <h3 class="card-title">Judul MV 1 - Nama Artis</h3>
+                            <p class="card-description">Kontribusi saya dalam pembuatan aset visual dan animasi untuk MV ini.</p>
+                        </div>
+                    </div>
+                    <div class="card-item">
+                        <div class="card-image">
+                            <img src="https://via.placeholder.com/560x315.png?text=MV+Thumbnail+2" alt="Thumbnail MV 2">
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title">Judul MV 2 - Nama Artis</h3>
+                            <p class="card-description">Ilustrasi sampul dan elemen promosi untuk video musik.</p>
+                            <a href="#" class="card-link" target="_blank">Tonton Video →</a>
+                        </div>
+                    </div>
+                    </div>
+            </div>
         </section>
 
         <section id="projects" class="content-section">
-            <h2>Proyek Lainnya</h2>
-            <div class="project-grid">
-                <div class="project-item">
-                    <img src="https://via.placeholder.com/300x200.png?text=Proyek+A" alt="Deskripsi Proyek A">
-                    <h3>Nama Proyek A</h3>
-                    <p>Deskripsi singkat mengenai proyek A. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    <a href="#" class="project-link">Lihat Detail</a>
-                </div>
-                <div class="project-item">
-                    <img src="https://via.placeholder.com/300x200.png?text=Proyek+B" alt="Deskripsi Proyek B">
-                    <h3>Nama Proyek B</h3>
-                    <p>Deskripsi singkat mengenai proyek B. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    <a href="#" class="project-link">Lihat Detail</a>
-                </div>
-                </div>
+            <div class="container">
+                <h2 class="section-title">Proyek Lainnya</h2>
+                <p class="section-subtitle">Berbagai proyek menarik yang pernah saya tangani.</p>
+                <div class="project-grid">
+                    <div class="card-item">
+                        <div class="card-image">
+                            <img src="https://via.placeholder.com/300x200.png?text=Proyek+Buku+Anak" alt="Deskripsi Proyek Buku Anak">
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title">Ilustrasi Buku Anak "Petualangan Ceria"</h3>
+                            <p class="card-description">Mengilustrasikan seluruh halaman buku cerita anak yang penuh warna dan imajinasi.</p>
+                            <a href="#" class="card-link">Lihat Detail Proyek →</a>
+                        </div>
+                    </div>
+                    <div class="card-item">
+                        <div class="card-image">
+                            <img src="https://via.placeholder.com/300x200.png?text=Proyek+Game+Assets" alt="Deskripsi Proyek Game Assets">
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title">Desain Aset untuk Game Mobile "Galaxy Runner"</h3>
+                            <p class="card-description">Membuat karakter, item, dan lingkungan untuk game mobile yang seru.</p>
+                            <a href="#" class="card-link">Lihat Detail Proyek →</a>
+                        </div>
+                    </div>
+                    </div>
+            </div>
         </section>
 
         <section id="contact" class="content-section alt-bg">
-            <h2>Hubungi Saya</h2>
-            <p>Tertarik untuk berkolaborasi atau memiliki pertanyaan? Jangan ragu untuk menghubungi saya.</p>
-            <a href="mailto:emailanda@example.com" class="cta-button">Kirim Email</a>
-            </section>
+            <div class="container">
+                <h2 class="section-title">Hubungi Saya</h2>
+                <p class="section-subtitle">Tertarik untuk berkolaborasi atau memiliki pertanyaan? Jangan ragu untuk menghubungi saya.</p>
+                <a href="mailto:emailanda@example.com" class="cta-button">Kirim Email</a>
+            </div>
+        </section>
     </main>
 
-    <footer>
-        <p>&copy; <span id="currentYear"></span> Nama Ilustrator. Semua Hak Dilindungi.</p>
-        <div class="social-links">
-            <a href="#" target="_blank">Instagram</a>
-            <a href="#" target="_blank">Behance</a>
-            <a href="#" target="_blank">LinkedIn</a>
+    <footer class="footer">
+        <div class="container">
+            <p>© <span id="currentYear"></span> Nama Ilustrator. Semua Hak Dilindungi.</p>
+            <div class="social-links">
+                <a href="#" target="_blank" aria-label="Instagram"><img src="https://simpleicons.org/icons/instagram.svg" alt="Instagram" style="width:24px; height:24px; filter: invert(70%) sepia(13%) saturate(268%) hue-rotate(176deg) brightness(93%) contrast(87%);"></a>
+                <a href="#" target="_blank" aria-label="Behance"><img src="https://simpleicons.org/icons/behance.svg" alt="Behance" style="width:24px; height:24px; filter: invert(70%) sepia(13%) saturate(268%) hue-rotate(176deg) brightness(93%) contrast(87%);"></a>
+                <a href="#" target="_blank" aria-label="LinkedIn"><img src="https://simpleicons.org/icons/linkedin.svg" alt="LinkedIn" style="width:24px; height:24px; filter: invert(70%) sepia(13%) saturate(268%) hue-rotate(176deg) brightness(93%) contrast(87%);"></a>
+                </div>
         </div>
     </footer>
 
