@@ -1,317 +1,399 @@
-/* Reset CSS Dasar & Pengaturan Global */
-* {
+/* Reset CSS Dasar & Pengaturan Global Modern */
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body {
-    font-family: 'Arial', sans-serif; /* Ganti dengan font pilihan Anda */
-    line-height: 1.6;
-    color: #333;
-    background-color: #f9f9f9;
+html {
+    scroll-behavior: smooth;
+    font-size: 16px; /* Base font size */
 }
 
-html {
-    scroll-behavior: smooth; /* Untuk animasi scroll halus saat klik navigasi */
+body {
+    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.7;
+    color: #343a40;
+    background-color: #f8f9fa;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* Utilitas */
 .container {
     width: 90%;
-    max-width: 1100px;
-    margin: auto;
-    overflow: hidden; /* Untuk clear floats jika menggunakan float */
-    padding: 0 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
 }
 
-/* Header dan Navigasi */
-header {
-    background-color: #333;
-    color: #fff;
-    padding: 1rem 0;
-    position: sticky; /* Membuat header tetap di atas saat scroll */
-    top: 0;
-    z-index: 1000; /* Memastikan header di atas konten lain */
-    width: 100%;
-}
-
-header nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 90%;
-    max-width: 1100px;
-    margin: auto;
-    padding: 0 20px;
-}
-
-header .logo a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-header ul {
-    list-style: none;
-    display: flex;
-}
-
-header ul li {
-    margin-left: 20px;
-}
-
-header ul li a {
-    color: #fff;
+/* Link global */
+a {
+    color: #007bff;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
-header ul li a:hover {
-    color: #ffc107; /* Warna hover, sesuaikan */
+a:hover {
+    color: #0056b3;
+}
+
+/* Gambar responsif */
+img, iframe {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Header dan Navigasi */
+.header {
+    background-color: #ffffff;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+.header nav.container { /* Specificity for nav inside header */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header .logo a {
+    color: #212529;
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+.header .nav-links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+
+.header .nav-links li {
+    margin-left: 25px;
+}
+
+.header .nav-links li a {
+    color: #495057;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 5px 0;
+    position: relative;
+}
+
+.header .nav-links li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: #007bff;
+    transition: width 0.3s ease;
+}
+
+.header .nav-links li a:hover::after,
+.header .nav-links li a.active::after {
+    width: 100%;
+}
+
+.header .nav-links li a:hover {
+    color: #007bff;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem; /* Ukuran ikon hamburger */
+    color: #343a40;
+    cursor: pointer;
+    padding: 0.5rem;
 }
 
 /* Bagian Hero */
 .hero-section {
-    background: #e2e2e2 url('https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg?text=Latar+Belakang+Hero') no-repeat center center/cover; /* Ganti dengan gambar latar Anda */
-    color: #fff; /* Ubah warna teks jika gambar latar terang */
-    height: 80vh; /* Tinggi section hero, bisa disesuaikan */
+    background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), /* Penyesuaian overlay jika perlu */
+                url('https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg') no-repeat center center/cover;
+    color: #ffffff;
+    min-height: 85vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 0 20px;
+    padding: 40px 20px;
 }
 
 .hero-section .hero-content h1 {
-    font-size: 3rem;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
     margin-bottom: 1rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Bayangan teks agar mudah dibaca */
+    line-height: 1.2;
 }
 
 .hero-section .hero-content p {
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
     margin-bottom: 2rem;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    max-width: 600px;
+    opacity: 0.9;
 }
 
 .cta-button {
     display: inline-block;
-    background-color: #ffc107; /* Warna tombol utama, sesuaikan */
-    color: #333;
-    padding: 10px 20px;
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 12px 30px;
     text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
 }
 
 .cta-button:hover {
-    background-color: #e0a800; /* Warna hover tombol */
+    background-color: #0056b3;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
 }
 
 /* Bagian Konten Umum */
 .content-section {
-    padding: 60px 20px; /* Padding atas-bawah dan kiri-kanan */
+    padding: 80px 0;
     text-align: center;
 }
 
-.content-section h2 {
-    font-size: 2.5rem;
-    margin-bottom: 40px;
-    color: #333;
+.content-section .section-title {
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    margin-bottom: 1rem;
+    color: #212529;
+    font-weight: 600;
+}
+
+.content-section .section-subtitle {
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    color: #6c757d;
+    margin-bottom: 50px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .alt-bg {
-    background-color: #f0f0f0; /* Warna latar alternatif */
+    background-color: #ffffff;
 }
 
 /* Grid untuk Galeri, MV, dan Proyek */
 .gallery-grid, .mv-grid, .project-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsif */
-    gap: 20px;
-    justify-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
 }
 
-/* Item Galeri */
-.gallery-item {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    overflow: hidden; /* Agar gambar tidak keluar dari border-radius */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.gallery-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-}
-
-.gallery-item img {
-    width: 100%;
-    height: auto;
-    display: block;
-    aspect-ratio: 3/2; /* Menjaga rasio aspek gambar */
-    object-fit: cover; /* Memastikan gambar mengisi area tanpa distorsi */
-}
-
-.gallery-item p {
-    padding: 15px;
-    font-weight: bold;
-    color: #555;
-}
-
-/* Item MV */
-.mv-item {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+/* Item Card (Galeri, MV, Proyek) */
+.card-item {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
     overflow: hidden;
-    padding: 15px; /* Padding jika ada konten selain video */
-    width: 100%;
-    max-width: 560px; /* Lebar maksimum untuk video */
-}
-
-.mv-item iframe, .mv-item img {
-    width: 100%;
-    border-radius: 5px; /* Sedikit lengkungan pada video/thumbnail */
-    display: block;
-    margin-bottom: 10px;
-}
-
-.mv-item p {
-    font-weight: bold;
-    color: #555;
-    text-align: left; /* Atau center, sesuai selera */
-}
-
-/* Item Proyek */
-.project-item {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    padding: 20px;
-    text-align: left;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
 }
 
-.project-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+.card-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
 }
 
-.project-item img {
+.card-item .card-image img {
     width: 100%;
-    height: auto;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    aspect-ratio: 16/9;
+    aspect-ratio: 16/10;
     object-fit: cover;
 }
+/* Khusus untuk iframe di MV card */
+.mv-grid .card-item iframe {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: none;
+    border-radius: 12px 12px 0 0; /* Jika ada konten di bawah iframe */
+}
+.mv-grid .card-item .card-image + .card-content { /* Jika iframe di dalam card-image */
+    border-top: 1px solid #eee;
+}
 
-.project-item h3 {
-    font-size: 1.5rem;
+
+.card-item .card-content {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-item .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #343a40;
     margin-bottom: 10px;
-    color: #333;
 }
 
-.project-item p {
-    font-size: 0.95rem;
-    margin-bottom: 15px;
-    color: #666;
-}
-
-.project-link {
-    display: inline-block;
-    background-color: #555;
-    color: #fff;
-    padding: 8px 15px;
-    text-decoration: none;
-    border-radius: 4px;
+.card-item .card-description {
     font-size: 0.9rem;
-    transition: background-color 0.3s ease;
+    color: #6c757d;
+    margin-bottom: 15px;
+    flex-grow: 1;
 }
 
-.project-link:hover {
-    background-color: #333;
+.card-item .card-link {
+    display: inline-block;
+    color: #007bff;
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-top: auto;
+    align-self: flex-start;
+}
+
+.card-item .card-link:hover {
+    text-decoration: underline;
 }
 
 /* Bagian Kontak */
-#contact p {
-    margin-bottom: 20px;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+#contact .section-subtitle {
+    margin-bottom: 30px;
 }
 
 /* Footer */
-footer {
-    background-color: #333;
-    color: #fff;
+.footer {
+    background-color: #212529;
+    color: #adb5bd;
     text-align: center;
-    padding: 20px;
+    padding: 40px 20px;
+    font-size: 0.9rem;
+}
+.footer .container p {
+    margin-bottom: 15px;
 }
 
-footer .social-links {
-    margin-top: 10px;
+.footer .social-links {
+    margin-top: 0;
 }
 
-footer .social-links a {
-    color: #fff;
-    text-decoration: none;
+.footer .social-links a {
+    display: inline-block; /* Untuk padding dan ukuran ikon */
     margin: 0 10px;
-    font-size: 1.2rem;
-    transition: color 0.3s ease;
+    transition: transform 0.3s ease;
+}
+.footer .social-links a:hover {
+    transform: scale(1.1);
+}
+.footer .social-links img {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle; /* Agar sejajar dengan teks jika ada */
+     /* filter dipindah ke inline style di HTML untuk kemudahan ganti ikon */
 }
 
-footer .social-links a:hover {
-    color: #ffc107; /* Warna hover, sesuaikan */
-}
 
 /* Media Queries untuk Responsivitas */
-@media (max-width: 768px) {
-    header nav {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    header .logo {
-        margin-bottom: 10px;
-    }
-
-    header ul {
-        flex-direction: column;
-        text-align: center;
+@media (max-width: 992px) { /* Titik breakpoint bisa disesuaikan */
+    .header .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
         width: 100%;
+        background-color: #ffffff;
+        flex-direction: column;
+        align-items: stretch; /* Agar link memenuhi lebar */
+        text-align: center;
+        padding: 0; /* Dihapus, padding diatur di <li> */
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+        max-height: 0;
+        opacity: 0;
+        visibility: hidden;
+        overflow: hidden;
+        transition: max-height 0.4s ease-out, opacity 0.3s ease-out, visibility 0.3s ease-out;
     }
 
-    header ul li {
-        margin: 10px 0;
+    .header .nav-links.active {
+        max-height: 500px; /* Cukup tinggi untuk semua item */
+        opacity: 1;
+        visibility: visible;
+        padding: 10px 0; /* Padding saat menu aktif */
     }
 
-    .hero-section h1 {
-        font-size: 2.2rem;
+    .header .nav-links li {
+        margin: 0; /* Hapus margin kiri */
+    }
+    .header .nav-links li a {
+        display: block; /* Link memenuhi lebar li */
+        padding: 12px 20px; /* Padding link menu */
+        border-bottom: 1px solid #f0f0f0; /* Pemisah antar link */
+    }
+    .header .nav-links li:last-child a {
+        border-bottom: none; /* Hilangkan border untuk item terakhir */
+    }
+     .header .nav-links li a::after { /* Sembunyikan efek underline di mobile */
+        display: none;
     }
 
-    .hero-section p {
-        font-size: 1rem;
+    .menu-toggle {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 75vh; /* Sedikit lebih rendah untuk layar kecil */
     }
 
-    .content-section h2 {
-        font-size: 2rem;
+    .content-section {
+        padding: 60px 0;
     }
 
     .gallery-grid, .mv-grid, .project-grid {
-        grid-template-columns: 1fr; /* Satu kolom di layar kecil */
-        gap: 15px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Penyesuaian minmax jika perlu */
+        gap: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section .hero-content h1 {
+        font-size: clamp(2rem, 8vw, 2.8rem); /* Ukuran disesuaikan lagi */
+    }
+    .hero-section .hero-content p {
+        font-size: clamp(0.9rem, 4vw, 1.1rem);
+    }
+    .cta-button {
+        padding: 10px 25px;
+        font-size: 0.95rem;
+    }
+    .content-section .section-title {
+        font-size: clamp(1.8rem, 7vw, 2.4rem);
+    }
+    .content-section .section-subtitle {
+        font-size: clamp(0.85rem, 3.5vw, 1rem);
+        margin-bottom: 40px;
     }
 
-    .mv-item iframe {
-        height: auto; /* Biarkan iframe menyesuaikan tinggi */
+    .gallery-grid, .mv-grid, .project-grid {
+        /* Memastikan 1 kolom di layar sangat kecil jika minmax tidak cukup */
+        grid-template-columns: 1fr;
+    }
+    .card-item .card-title {
+        font-size: 1.1rem;
+    }
+    .card-item .card-description {
+        font-size: 0.85rem;
     }
 }
