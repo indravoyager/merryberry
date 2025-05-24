@@ -7,14 +7,12 @@
 
 body {
     font-family: 'Inter', 'Arial', sans-serif;
-    background-color: #F3F4F6; /* Mirip bg-gray-100 */
-    color: #1F2937; /* Mirip text-gray-800 */
+    background-color: #F3F4F6;
+    color: #1F2937;
     line-height: 1.6;
-
-    /* Gaya untuk Sticky Footer */
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Minimal setinggi viewport/layar */
+    min-height: 100vh;
 }
 
 .container {
@@ -34,13 +32,12 @@ img {
 
 /* Header */
 .site-header {
-    background-color: #FFFFFF; /* Mirip bg-white */
+    background-color: #FFFFFF;
     padding: 1rem 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Mirip shadow-md */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     position: sticky;
     top: 0;
     z-index: 1000;
-    /* flex-shrink: 0; /* Opsional: Mencegah header menyusut jika konten sangat banyak */
 }
 
 .site-header .container {
@@ -48,58 +45,76 @@ img {
 }
 
 .site-header h1 {
-    font-size: 2rem; /* Mirip text-3xl */
+    font-size: 2rem;
     font-weight: bold;
-    color: #7C3AED; /* Mirip text-purple-600 */
+    color: #7C3AED;
 }
 
 /* Konten Utama dan Galeri */
 .main-content {
     padding-top: 2rem;
     padding-bottom: 2rem;
-
-    /* Gaya untuk Sticky Footer */
-    flex-grow: 1; /* Biarkan main content mengisi ruang yang tersedia */
+    flex-grow: 1;
 }
 
+/* MODIFIKASI UNTUK HORIZONTAL SCROLLING GALLERY */
 #galleryGrid {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr); /* Default 1 kolom */
-    gap: 1.5rem; /* Mirip gap-6 */
+    display: flex; /* Menggunakan Flexbox */
+    flex-direction: row; /* Item berbaris horizontal */
+    overflow-x: auto;  /* Memungkinkan scroll horizontal */
+    overflow-y: hidden; /* Sembunyikan scroll vertikal untuk baris galeri */
+    gap: 1.5rem;       /* Jarak antar item galeri */
+    padding-bottom: 1rem; /* Ruang untuk scrollbar horizontal agar tidak menutupi item */
+    /* Hapus properti grid-template-columns karena tidak lagi menggunakan CSS Grid untuk ini */
+    /* Jika ingin scrollbar lebih custom (tidak selalu terlihat), bisa pakai plugin JS atau styling scrollbar CSS (tergantung browser) */
+    /* Untuk Firefox, scrollbar styling: */
+    /* scrollbar-width: thin; */
+    /* scrollbar-color: #6D28D9 #F3F4F6; */
+    /* Untuk Chrome/Edge/Safari (Webkit): */
+    /* &::-webkit-scrollbar { height: 8px; } */
+    /* &::-webkit-scrollbar-track { background: #F3F4F6; border-radius: 4px;} */
+    /* &::-webkit-scrollbar-thumb { background-color: #6D28D9; border-radius: 4px;} */
 }
 
 .gallery-item {
     background-color: #FFFFFF;
-    border-radius: 0.5rem; /* Mirip rounded-lg */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Mirip shadow-lg */
-    overflow: hidden; /* Mirip overflow-hidden */
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
+
+    /* MODIFIKASI UNTUK HORIZONTAL SCROLLING GALLERY */
+    width: 280px;       /* Tentukan lebar tetap untuk setiap item */
+    flex-shrink: 0;     /* Mencegah item menyusut */
 }
 
 .gallery-item:hover {
-    transform: scale(1.05);
+    transform: scale(1.05); /* Efek hover bisa sedikit disesuaikan jika item terlalu rapat */
     box-shadow: 0 10px 15px rgba(0,0,0,0.1);
 }
 
 .gallery-item .image-container img {
     width: 100%;
-    height: 250px; /* Mirip h-64, sesuaikan jika perlu */
-    object-fit: cover; /* Mirip object-cover */
+    height: 220px; /* Tinggi gambar bisa disesuaikan kembali */
+    object-fit: cover;
 }
 
 .gallery-item .title-container {
-    padding: 1rem; /* Mirip p-4 */
+    padding: 1rem;
 }
 
 .gallery-item h3 {
-    font-size: 1.125rem; /* Mirip text-lg */
-    font-weight: 600; /* Mirip font-semibold */
-    color: #6D28D9; /* Mirip text-purple-700 */
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #6D28D9;
     margin: 0;
+    white-space: nowrap; /* Mencegah judul wrap jika terlalu panjang untuk lebar item */
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Modal */
+/* Modal (Tetap sama) */
 .modal {
     display: none;
     position: fixed;
@@ -112,10 +127,10 @@ img {
     background-color: rgba(0,0,0,0.85);
     align-items: center;
     justify-content: center;
-    flex-direction: column; /* Untuk caption di bawah gambar */
+    flex-direction: column;
 }
 
-.modal-image-wrapper { /* Wrapper untuk gambar dan navigasi kiri/kanan */
+.modal-image-wrapper {
     position: relative;
     display: flex;
     align-items: center;
@@ -153,7 +168,7 @@ img {
     transition: 0.3s;
     cursor: pointer;
     user-select: none;
-    z-index: 1060; /* Di atas gambar modal */
+    z-index: 1060;
 }
 
 .close-modal {
@@ -180,42 +195,24 @@ img {
     display: none !important;
 }
 
-/* Footer */
+/* Footer (Tetap sama) */
 .site-footer {
-    background-color: #1F2937; /* Mirip bg-gray-800 */
-    color: #FFFFFF; /* Mirip text-white */
+    background-color: #1F2937;
+    color: #FFFFFF;
     text-align: center;
     padding: 1.5rem 0;
-    margin-top: 3rem; /* Ini akan relevan jika konten sangat pendek dan sticky footer mendorongnya */
-    /* flex-shrink: 0; /* Opsional: Mencegah footer menyusut jika konten sangat banyak */
+    margin-top: 3rem;
 }
 
-/* Media Queries untuk Responsivitas Grid Galeri */
-/* Tablet Kecil (sm) - 2 kolom */
-@media (min-width: 640px) {
-    #galleryGrid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-/* Tablet Sedang (md) - 3 kolom */
+/* Media Queries untuk Responsivitas */
+/* Media query yang sebelumnya mengatur grid-template-columns untuk #galleryGrid DIHAPUS */
+/* Media query untuk modal dan lainnya bisa tetap ada */
 @media (min-width: 768px) {
-    #galleryGrid {
-        grid-template-columns: repeat(3, 1fr);
-    }
      .modal-image-wrapper {
         max-width: 80vw;
         max-height: 80vh;
     }
-    /* Posisi tombol modal yang lebih umum di layar besar */
     .close-modal { top: 20px; right: 35px; } 
     .prev-modal { top: 50%; left: 20px; transform: translateY(-50%);}
     .next-modal { top: 50%; right: 20px; transform: translateY(-50%);}
-}
-
-/* Desktop (lg) - 4 kolom */
-@media (min-width: 1024px) {
-    #galleryGrid {
-        grid-template-columns: repeat(4, 1fr);
-    }
 }
