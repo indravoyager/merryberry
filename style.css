@@ -1,277 +1,136 @@
-:root {
-    --primary-color: #3498db; /* Biru cerah sebagai aksen */
-    --secondary-color: #2c3e50; /* Abu-abu gelap untuk teks */
-    --background-light: #fdfdfd;
-    --background-dark: #222222;
-    --text-light: #fefefe;
-    --text-dark: #333333;
-    --border-color: #e0e0e0;
-}
-
+/* Reset sederhana & gaya dasar */
 body {
-    font-family: 'Montserrat', sans-serif;
     margin: 0;
-    background-color: var(--background-light);
-    color: var(--text-dark);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #1a1a1a; /* Latar belakang gelap */
+    color: #e0e0e0; /* Teks terang */
     line-height: 1.6;
-    scroll-behavior: smooth;
 }
 
 .container {
     width: 90%;
-    max-width: 1200px;
-    margin: auto;
-    overflow: hidden;
-    padding: 20px 0;
+    max-width: 960px; /* Lebar konten maksimal */
+    margin: 0 auto; /* Konten di tengah */
+    padding: 0 15px;
 }
 
+/* Header & Navigasi */
 header {
-    background: var(--background-light);
-    padding: 20px 0;
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    background-color: #252525; /* Warna header sedikit lebih terang dari body */
+    padding: 1em 0;
+    border-bottom: 1px solid #333;
+    text-align: center;
 }
 
-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
+header h1 {
     margin: 0;
-    font-size: 1.8em;
-    color: var(--secondary-color);
-    font-weight: 600;
+    color: #ffffff;
+    font-size: 2em;
 }
 
-header nav ul {
+nav ul {
+    list-style-type: none;
     padding: 0;
-    margin: 0;
-    list-style: none;
+    margin-top: 0.5em;
 }
 
-header nav ul li {
-    display: inline-block;
-    margin-left: 25px;
+nav ul li {
+    display: inline;
+    margin-right: 20px;
 }
 
-header nav a {
-    color: var(--secondary-color);
+nav ul li a {
+    color: #aaccff; /* Warna link navigasi */
     text-decoration: none;
-    font-size: 1.1em;
-    font-weight: 400;
-    transition: color 0.3s ease; /* Transisi untuk warna link navigasi */
+    font-weight: bold;
 }
 
-header nav a:hover {
-    color: var(--primary-color);
+nav ul li a:hover {
+    color: #ffffff;
+    text-decoration: underline;
 }
 
-/* Hero Section */
-#hero {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://via.placeholder.com/1500x800/555555/FFFFFF?text=Latar+Belakang+Portofolio') no-repeat center center/cover;
-    color: var(--text-light);
+/* Main Content */
+main {
+    padding: 20px 0;
+}
+
+.hero {
     text-align: center;
-    padding: 100px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 60vh;
-}
-
-.hero-content {
-    max-width: 700px;
-}
-
-#hero h2 {
-    font-size: 3em;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-#hero p {
-    font-size: 1.2em;
+    padding: 30px 10px;
+    background-color: #2c2c2c;
     margin-bottom: 30px;
-}
-
-.btn {
-    display: inline-block;
-    background-color: var(--primary-color);
-    color: var(--text-light);
-    padding: 12px 25px;
-    text-decoration: none;
     border-radius: 5px;
-    font-weight: 600;
-    transition: background-color 0.3s ease; /* Transisi untuk tombol */
 }
 
-.btn:hover {
-    background-color: #2980b9;
+.hero h2 {
+    margin-top: 0;
+    color: #fff;
 }
 
-/* Section Styling */
-section {
-    padding: 60px 0;
-    text-align: center;
+.content-area h3, .gallery-placeholder h3 {
+    color: #f0f0f0;
+    border-bottom: 2px solid #444;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 
-section:nth-of-type(even) {
-    background-color: #f8f8f8;
+.post-item {
+    background-color: #2c2c2c;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border-left: 4px solid #aaccff; /* Aksen warna */
 }
 
-h2 {
-    font-size: 2.5em;
-    color: var(--secondary-color);
-    margin-bottom: 40px;
-    position: relative;
+.post-item h4 {
+    margin-top: 0;
+    color: #ffffff;
+}
+
+.post-item p {
+    color: #c0c0c0; /* Warna teks konten sedikit lebih redup */
+}
+
+.read-more {
     display: inline-block;
+    margin-top: 10px;
+    padding: 8px 15px;
+    background-color: #aaccff;
+    color: #1a1a1a;
+    text-decoration: none;
+    border-radius: 3px;
+    font-weight: bold;
 }
 
-h2::after {
-    content: '';
-    position: absolute;
-    width: 60px;
-    height: 3px;
-    background-color: var(--primary-color);
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    transition: width 0.3s ease; /* Transisi untuk lebar garis bawah */
+.read-more:hover {
+    background-color: #88aadd;
 }
 
-/* Filter Buttons */
-.filter-buttons {
-    margin-bottom: 30px;
-}
-
-.filter-btn {
-    background-color: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--secondary-color);
-    padding: 10px 20px;
-    margin: 0 8px;
-    cursor: pointer;
-    border-radius: 25px;
-    transition: all 0.3s ease; /* Transisi untuk semua properti tombol */
-    font-size: 1em;
-}
-
-.filter-btn:hover, .filter-btn.active {
-    background-color: var(--primary-color);
-    color: var(--text-light);
-    border-color: var(--primary-color);
-}
-
-/* Gallery */
-.gallery {
+/* Placeholder Galeri Sederhana */
+.gallery-placeholder .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    /* Kita akan mengontrol visibilitas item secara individual dengan JS,
-       jadi tidak perlu transition di sini */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
 }
 
 .gallery-item {
-    background-color: var(--background-light);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    text-align: left;
-    transform: translateY(0); /* Default position */
-    opacity: 1; /* Default opacity */
-    transition: transform 0.5s ease-out, opacity 0.5s ease-out; /* Transisi untuk item galeri */
-    cursor: pointer;
-}
-
-.gallery-item:hover {
-    transform: translateY(-5px); /* Efek hover mengangkat */
-}
-
-/* Kelas untuk efek fade-out/in */
-.gallery-item.hide {
-    opacity: 0;
-    transform: translateY(20px); /* Geser sedikit ke bawah saat menghilang */
-    pointer-events: none; /* Nonaktifkan interaksi saat tersembunyi */
-    /* Pastikan display: none hanya setelah transisi selesai jika dibutuhkan */
-}
-
-.gallery-item.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.gallery-item img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    display: block;
-}
-
-.gallery-item h3 {
-    margin: 15px 15px 5px;
-    font-size: 1.3em;
-    color: var(--secondary-color);
-}
-
-.gallery-item p {
-    font-size: 0.95em;
-    color: #666;
-    margin: 0 15px 15px;
-}
-
-/* Contact Links */
-.contact-links a {
-    display: inline-block;
-    color: var(--primary-color);
-    text-decoration: none;
-    font-size: 1.1em;
-    margin: 0 15px;
-    padding: 10px 20px;
-    border: 1px solid var(--primary-color);
-    border-radius: 5px;
-    transition: all 0.3s ease; /* Transisi untuk link kontak */
-}
-
-.contact-links a:hover {
-    background-color: var(--primary-color);
-    color: var(--text-light);
-}
-
-
-footer {
-    background: var(--background-dark);
-    color: var(--text-light);
+    background-color: #333;
+    color: #ccc;
+    padding: 40px 20px;
     text-align: center;
-    padding: 30px;
-    margin-top: 40px;
+    border-radius: 4px;
+    border: 1px solid #444;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    header .container {
-        flex-direction: column;
-    }
 
-    header nav ul li {
-        margin: 0 10px;
-    }
-
-    #hero h2 {
-        font-size: 2.2em;
-    }
-
-    #hero p {
-        font-size: 1em;
-    }
-
-    .gallery {
-        grid-template-columns: 1fr;
-    }
-
-    .filter-btn {
-        margin: 5px;
-        padding: 8px 12px;
-        font-size: 0.9em;
-    }
+/* Footer */
+footer {
+    background-color: #252525;
+    color: #aaa;
+    text-align: center;
+    padding: 1.5em 0;
+    margin-top: 30px;
+    border-top: 1px solid #333;
+    font-size: 0.9em;
 }
