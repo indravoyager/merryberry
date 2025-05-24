@@ -3,52 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portofolio Ilustrator | Nama Kamu</title>
+    <title>Situs Mirip Yoru no Gumo (Versi Simple)</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
         <div class="container">
-            <h1 class="logo">Nama Ilustrator</h1>
+            <h1>Nama Situs Anda</h1>
             <nav>
                 <ul>
-                    <li><a href="#portfolio">Karya</a></li>
-                    <li><a href="#about">Tentang</a></li>
-                    <li><a href="#contact">Kontak</a></li>
+                    <li><a href="#">Beranda</a></li>
+                    <li><a href="#">Tentang</a></li>
+                    <li><a href="#">Portofolio</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Kontak</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
     <main>
-        <section id="hero">
-            <div class="hero-content">
-                <h2>Ciptakan Dunia dengan Ilustrasi</h2>
-                <p>Jelajahi beragam karya digital dan tradisional saya.</p>
-                <a href="#portfolio" class="btn">Lihat Portofolio</a>
-            </div>
-        </section>
+        <div class="container">
+            <section class="hero">
+                <h2>Selamat Datang di Situs Saya</h2>
+                <p>Ini adalah deskripsi singkat atau tagline situs Anda.</p>
+            </section>
 
-        <section id="portfolio" class="container">
-            <h2>Karya Terbaru</h2>
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">Semua</button>
-                <button class="filter-btn" data-filter="digital">Digital</button>
-                <button class="filter-btn" data-filter="traditional">Tradisional</button>
-                <button class="filter-btn" data-filter="characters">Karakter</button>
-            </div>
-            <div class="gallery">
+            <section class="content-area">
+                <h3>Artikel Terbaru</h3>
+                <div class="post-item">
+                    <h4>Judul Artikel Pertama</h4>
+                    <p>Ini adalah cuplikan singkat dari artikel pertama. Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+                    <a href="#" class="read-more">Baca Selengkapnya</a>
                 </div>
-        </section>
+                <div class="post-item">
+                    <h4>Judul Artikel Kedua</h4>
+                    <p>Ini adalah cuplikan singkat dari artikel kedua. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
+                    <a href="#" class="read-more">Baca Selengkapnya</a>
+                </div>
+                <div class="post-item">
+                    <h4 id="changeableTitle">Judul Artikel Ketiga (Klik Saya!)</h4>
+                    <p>Ini adalah cuplikan singkat dari artikel ketiga. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi...</p>
+                    <a href="#" class="read-more">Baca Selengkapnya</a>
+                </div>
+            </section>
 
-        <section id="about" class="container">
-            <h2>Tentang Saya</h2>
-            <p>Saya adalah seorang ilustrator yang bersemangat dalam membawa ide menjadi visual yang menakjubkan. Dengan pengalaman lebih dari X tahun, saya mengkhususkan diri dalam (sebutkan keahlian spesifikmu, misal: desain karakter, ilustrasi buku anak, konsep seni digital).</p>
-            <p>Setiap proyek adalah kesempatan untuk bereksperimen dan menciptakan sesuatu yang unik. Mari berkolaborasi!</p>
-        </section>
+            <section class="gallery-placeholder">
+                <h3>Galeri Saya</h3>
+                <div class="gallery-grid">
+                    <div class="gallery-item">Gambar 1</div>
+                    <div class="gallery-item">Gambar 2</div>
+                    <div class="gallery-item">Gambar 3</div>
+                    <div class="gallery-item">Gambar 4</div>
+                </div>
+            </section>
+        </div>
+    </main>
 
-        <section id="contact" class="container">
-            <h2>Hubungi</h2>
-            <p>Punya proyek menarik? Mari berdiskusi!</p>
-            <div class="contact-links
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Nama Anda. Dibuat dengan HTML, CSS, & JS.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
