@@ -3,39 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galeri Ilustrasi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Galeri Ilustrasi (CSS Kustom)</title>
     <style>
-<link rel="stylesheet" href="style.css">
+        /* Kode CSS akan ditempatkan di sini atau di file style.css (lihat Bagian 2) */
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body>
 
-    <header class="bg-white shadow-md sticky top-0 z-40">
-        <div class="container mx-auto px-6 py-4">
-            <h1 class="text-3xl font-bold text-center text-purple-600">Galeri Ilustrasiku</h1>
+    <header class="site-header">
+        <div class="container">
+            <h1>Galeri Ilustrasiku</h1>
         </div>
     </header>
 
-    <main class="container mx-auto px-6 py-8">
-        <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            </div>
+    <main class="main-content">
+        <div class="container">
+            <div id="galleryGrid">
+                </div>
+        </div>
     </main>
 
     <div id="imageModal" class="modal">
-        <span class="close-modal" title="Tutup">&times;</span>
-        <span class="prev-modal nav-hidden" title="Sebelumnya">&#10094;</span>
-        <img class="modal-content" id="modalImage">
-        <span class="next-modal nav-hidden" title="Selanjutnya">&#10095;</span>
+        <div class="modal-image-wrapper">
+            <span class="close-modal" title="Tutup">&times;</span>
+            <span class="prev-modal nav-hidden" title="Sebelumnya">&#10094;</span>
+            <img id="modalImage" alt="Gambar Ilustrasi Diperbesar">
+            <span class="next-modal nav-hidden" title="Selanjutnya">&#10095;</span>
+        </div>
         <div id="caption" class="modal-caption"></div>
     </div>
 
-    <footer class="bg-gray-800 text-white text-center p-4 mt-12">
-        <p>&copy; <span id="currentYear"></span> Galeri Ilustrasi Anda. Dibuat dengan ❤️.</p>
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; <span id="currentYear"></span> Galeri Ilustrasi Anda. Dibuat dengan ❤️.</p>
+        </div>
     </footer>
 
     <script>
-<script src="script.js"></script>
+        // Kode JavaScript akan ditempatkan di sini atau di file script.js (lihat Bagian 3)
     </script>
 
 </body>
