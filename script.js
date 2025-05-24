@@ -12,15 +12,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (menuToggle && navLinks) {
         menuToggle.addEventListener('click', function() {
             navLinks.classList.toggle('active');
+            this.classList.toggle('active'); // Toggle kelas .active pada tombol hamburger
+
             // Update aria-expanded attribute for accessibility
             const isExpanded = navLinks.classList.contains('active');
             menuToggle.setAttribute('aria-expanded', isExpanded);
-            // Ganti ikon hamburger menjadi 'X' dan sebaliknya
-            if (isExpanded) {
-                menuToggle.innerHTML = '&times;'; // Karakter 'X'
-            } else {
-                menuToggle.innerHTML = '☰'; // Karakter hamburger
-            }
+
+            // Tidak perlu lagi mengubah innerHTML untuk ikon
         });
 
         // Menutup menu jika link di klik (berguna untuk navigasi halaman tunggal)
@@ -29,8 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
             link.addEventListener('click', () => {
                 if (navLinks.classList.contains('active')) {
                     navLinks.classList.remove('active');
+                    menuToggle.classList.remove('active'); // Hapus kelas .active dari tombol
                     menuToggle.setAttribute('aria-expanded', 'false');
-                    menuToggle.innerHTML = '☰'; // Kembalikan ikon hamburger
                 }
             });
         });
