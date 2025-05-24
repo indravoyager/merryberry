@@ -74,7 +74,7 @@ header ul li a:hover {
 
 /* Bagian Hero */
 .hero-section {
-    background: #e2e2e2 url('https://via.placeholder.com/1920x1080.png?text=Latar+Belakang+Hero') no-repeat center center/cover; /* Ganti dengan gambar latar Anda */
+    background: #e2e2e2 url('https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg?text=Latar+Belakang+Hero') no-repeat center center/cover; /* Ganti dengan gambar latar Anda */
     color: #fff; /* Ubah warna teks jika gambar latar terang */
     height: 80vh; /* Tinggi section hero, bisa disesuaikan */
     display: flex;
