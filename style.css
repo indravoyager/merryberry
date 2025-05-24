@@ -134,11 +134,8 @@ img, iframe {
     transform: translateY(-9.5px) rotate(-45deg); 
 }
 
-
-/* Bagian Hero - gambar statis, full space */
+/* Bagian Hero - dengan latar belakang blur (TERBARU) */
 .hero-section {
-    background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
-                url('https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg') no-repeat center center/cover;
     color: #ffffff; 
     min-height: 100vh; /* Full viewport height */
     display: flex;
@@ -147,8 +144,34 @@ img, iframe {
     align-items: center;
     text-align: center;
     padding: 40px 20px; 
-    position: relative; 
+    position: relative; /* Diperlukan untuk positioning ::before */
+    overflow: hidden; /* Untuk memotong blur yang mungkin sedikit keluar batas */
+    /* Properti background utama dipindahkan ke ::before */
 }
+
+.hero-section::before {
+    content: ''; /* Wajib ada untuk pseudo-elements */
+    position: absolute;
+    /* Beri sedikit lebih besar dari parent untuk menghindari tepi blur yang tipis */
+    top: -10px; 
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+                url('https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg') no-repeat center center;
+    background-size: cover;
+    filter: blur(5px); /* Atur tingkat blur sesuai keinginan (misalnya 3px, 5px, 8px) */
+    z-index: -1; /* Tempatkan pseudo-element di belakang konten .hero-section */
+    /* Opsional: Sedikit perbesar skala untuk memastikan blur menutupi sepenuhnya */
+    /* transform: scale(1.02); */
+}
+
+.hero-section .hero-content {
+    /* Style yang sudah ada sebelumnya: */
+    position: relative; /* Pastikan di atas pseudo-element ::before */
+    z-index: 1;         /* atau nilai positif lainnya */
+}
+
 .hero-section .hero-content h1 {
     font-size: clamp(2.5rem, 6vw, 4rem); 
     font-weight: 700;
@@ -299,10 +322,10 @@ img, iframe {
 
 /* Media Queries untuk Responsivitas */
 @media (max-width: 992px) {
-    .menu-toggle { /* Tampilkan tombol hamburger di mobile */
+    .menu-toggle { 
         display: flex; 
     }
-    .header .nav-links { /* Animasi panel menu mobile yang lebih halus dan reliable (TERBARU) */
+    .header .nav-links { 
         position: absolute;
         top: 100%; 
         left: 0;
@@ -315,15 +338,14 @@ img, iframe {
         
         opacity: 0;
         transform: translateY(-10px); 
-        visibility: hidden; /* Atur langsung ke hidden saat tidak aktif */
+        visibility: hidden; 
         transition: opacity 0.3s ease-out, transform 0.3s ease-out; 
-        /* 'visibility' tidak ditransisikan dengan durasi */
         padding: 0; 
     }
     .header .nav-links.active {
         opacity: 1;
         transform: translateY(0); 
-        visibility: visible; /* Atur langsung ke visible saat aktif */
+        visibility: visible; 
         padding: 10px 0; 
     }
     .header .nav-links li {
@@ -337,7 +359,7 @@ img, iframe {
     .header .nav-links li:last-child a {
         border-bottom: none; 
     }
-     .header .nav-links li a::after { /* Sembunyikan efek underline di mobile */
+     .header .nav-links li a::after { 
         display: none;
     }
 }
