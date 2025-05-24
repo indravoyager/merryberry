@@ -1,200 +1,317 @@
-body {
-    font-family: 'Inter', 'Arial', sans-serif;
-    background-color: #F3F4F6;
-    color: #1F2937;
-    background-color: #F3F4F6; /* Mirip bg-gray-100 */
-    color: #1F2937; /* Mirip text-gray-800 */
-    line-height: 1.6;
+/* Reset CSS Dasar & Pengaturan Global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    /* Gaya untuk Sticky Footer */
+body {
+    font-family: 'Arial', sans-serif; /* Ganti dengan font pilihan Anda */
+    line-height: 1.6;
+    color: #333;
+    background-color: #f9f9f9;
+}
+
+html {
+    scroll-behavior: smooth; /* Untuk animasi scroll halus saat klik navigasi */
+}
+
+/* Utilitas */
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: auto;
+    overflow: hidden; /* Untuk clear floats jika menggunakan float */
+    padding: 0 20px;
+}
+
+/* Header dan Navigasi */
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem 0;
+    position: sticky; /* Membuat header tetap di atas saat scroll */
+    top: 0;
+    z-index: 1000; /* Memastikan header di atas konten lain */
+    width: 100%;
+}
+
+header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    max-width: 1100px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+header .logo a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+header ul {
+    list-style: none;
+    display: flex;
+}
+
+header ul li {
+    margin-left: 20px;
+}
+
+header ul li a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+header ul li a:hover {
+    color: #ffc107; /* Warna hover, sesuaikan */
+}
+
+/* Bagian Hero */
+.hero-section {
+    background: #e2e2e2 url('https://via.placeholder.com/1920x1080.png?text=Latar+Belakang+Hero') no-repeat center center/cover; /* Ganti dengan gambar latar Anda */
+    color: #fff; /* Ubah warna teks jika gambar latar terang */
+    height: 80vh; /* Tinggi section hero, bisa disesuaikan */
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    min-height: 100vh; /* Minimal setinggi viewport/layar */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
 }
 
-.container {
-@@ -32,89 +34,72 @@ img {
-
-/* Header */
-.site-header {
-    background-color: #FFFFFF;
-    background-color: #FFFFFF; /* Mirip bg-white */
-    padding: 1rem 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Mirip shadow-md */
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    /* flex-shrink: 0; /* Opsional: Mencegah header menyusut jika konten sangat banyak */
+.hero-section .hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Bayangan teks agar mudah dibaca */
 }
 
-.site-header .container {
+.hero-section .hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: #ffc107; /* Warna tombol utama, sesuaikan */
+    color: #333;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #e0a800; /* Warna hover tombol */
+}
+
+/* Bagian Konten Umum */
+.content-section {
+    padding: 60px 20px; /* Padding atas-bawah dan kiri-kanan */
     text-align: center;
 }
 
-.site-header h1 {
-    font-size: 2rem;
-    font-size: 2rem; /* Mirip text-3xl */
-    font-weight: bold;
-    color: #7C3AED;
-    color: #7C3AED; /* Mirip text-purple-600 */
+.content-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: #333;
 }
 
-/* Konten Utama dan Galeri */
-.main-content {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-    flex-grow: 1;
-
-    /* Gaya untuk Sticky Footer */
-    flex-grow: 1; /* Biarkan main content mengisi ruang yang tersedia */
+.alt-bg {
+    background-color: #f0f0f0; /* Warna latar alternatif */
 }
 
-/* MODIFIKASI UNTUK HORIZONTAL SCROLLING GALLERY */
-#galleryGrid {
-    display: flex; /* Menggunakan Flexbox */
-    flex-direction: row; /* Item berbaris horizontal */
-    overflow-x: auto;  /* Memungkinkan scroll horizontal */
-    overflow-y: hidden; /* Sembunyikan scroll vertikal untuk baris galeri */
-    gap: 1.5rem;       /* Jarak antar item galeri */
-    padding-bottom: 1rem; /* Ruang untuk scrollbar horizontal agar tidak menutupi item */
-    /* Hapus properti grid-template-columns karena tidak lagi menggunakan CSS Grid untuk ini */
-    /* Jika ingin scrollbar lebih custom (tidak selalu terlihat), bisa pakai plugin JS atau styling scrollbar CSS (tergantung browser) */
-    /* Untuk Firefox, scrollbar styling: */
-    /* scrollbar-width: thin; */
-    /* scrollbar-color: #6D28D9 #F3F4F6; */
-    /* Untuk Chrome/Edge/Safari (Webkit): */
-    /* &::-webkit-scrollbar { height: 8px; } */
-    /* &::-webkit-scrollbar-track { background: #F3F4F6; border-radius: 4px;} */
-    /* &::-webkit-scrollbar-thumb { background-color: #6D28D9; border-radius: 4px;} */
+/* Grid untuk Galeri, MV, dan Proyek */
+.gallery-grid, .mv-grid, .project-grid {
     display: grid;
-    grid-template-columns: repeat(1, 1fr); /* Default 1 kolom */
-    gap: 1.5rem; /* Mirip gap-6 */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsif */
+    gap: 20px;
+    justify-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
+/* Item Galeri */
 .gallery-item {
-    background-color: #FFFFFF;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    overflow: hidden;
-    border-radius: 0.5rem; /* Mirip rounded-lg */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Mirip shadow-lg */
-    overflow: hidden; /* Mirip overflow-hidden */
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    overflow: hidden; /* Agar gambar tidak keluar dari border-radius */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-
-    /* MODIFIKASI UNTUK HORIZONTAL SCROLLING GALLERY */
-    width: 280px;       /* Tentukan lebar tetap untuk setiap item */
-    flex-shrink: 0;     /* Mencegah item menyusut */
 }
 
 .gallery-item:hover {
-    transform: scale(1.05); /* Efek hover bisa sedikit disesuaikan jika item terlalu rapat */
-    transform: scale(1.05);
-    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
 }
 
-.gallery-item .image-container img {
+.gallery-item img {
     width: 100%;
-    height: 220px; /* Tinggi gambar bisa disesuaikan kembali */
-    object-fit: cover;
-    height: 250px; /* Mirip h-64, sesuaikan jika perlu */
-    object-fit: cover; /* Mirip object-cover */
+    height: auto;
+    display: block;
+    aspect-ratio: 3/2; /* Menjaga rasio aspek gambar */
+    object-fit: cover; /* Memastikan gambar mengisi area tanpa distorsi */
 }
 
-.gallery-item .title-container {
-    padding: 1rem;
-    padding: 1rem; /* Mirip p-4 */
+.gallery-item p {
+    padding: 15px;
+    font-weight: bold;
+    color: #555;
 }
 
-.gallery-item h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #6D28D9;
-    font-size: 1.125rem; /* Mirip text-lg */
-    font-weight: 600; /* Mirip font-semibold */
-    color: #6D28D9; /* Mirip text-purple-700 */
-    margin: 0;
-    white-space: nowrap; /* Mencegah judul wrap jika terlalu panjang untuk lebar item */
+/* Item MV */
+.mv-item {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     overflow: hidden;
-    text-overflow: ellipsis;
+    padding: 15px; /* Padding jika ada konten selain video */
+    width: 100%;
+    max-width: 560px; /* Lebar maksimum untuk video */
 }
 
-/* Modal (Tetap sama) */
-/* Modal */
-.modal {
-    display: none;
-    position: fixed;
-@@ -127,10 +112,10 @@ img {
-    background-color: rgba(0,0,0,0.85);
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    flex-direction: column; /* Untuk caption di bawah gambar */
+.mv-item iframe, .mv-item img {
+    width: 100%;
+    border-radius: 5px; /* Sedikit lengkungan pada video/thumbnail */
+    display: block;
+    margin-bottom: 10px;
 }
 
-.modal-image-wrapper {
-.modal-image-wrapper { /* Wrapper untuk gambar dan navigasi kiri/kanan */
-    position: relative;
-    display: flex;
-    align-items: center;
-@@ -168,7 +153,7 @@ img {
-    transition: 0.3s;
-    cursor: pointer;
-    user-select: none;
-    z-index: 1060;
-    z-index: 1060; /* Di atas gambar modal */
+.mv-item p {
+    font-weight: bold;
+    color: #555;
+    text-align: left; /* Atau center, sesuai selera */
 }
 
-.close-modal {
-@@ -195,24 +180,42 @@ img {
-    display: none !important;
+/* Item Proyek */
+.project-item {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 20px;
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Footer (Tetap sama) */
+.project-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.project-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+}
+
+.project-item h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.project-item p {
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+    color: #666;
+}
+
+.project-link {
+    display: inline-block;
+    background-color: #555;
+    color: #fff;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.project-link:hover {
+    background-color: #333;
+}
+
+/* Bagian Kontak */
+#contact p {
+    margin-bottom: 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 /* Footer */
-.site-footer {
-    background-color: #1F2937;
-    color: #FFFFFF;
-    background-color: #1F2937; /* Mirip bg-gray-800 */
-    color: #FFFFFF; /* Mirip text-white */
+footer {
+    background-color: #333;
+    color: #fff;
     text-align: center;
-    padding: 1.5rem 0;
-    margin-top: 3rem;
-    margin-top: 3rem; /* Ini akan relevan jika konten sangat pendek dan sticky footer mendorongnya */
-    /* flex-shrink: 0; /* Opsional: Mencegah footer menyusut jika konten sangat banyak */
+    padding: 20px;
+}
+
+footer .social-links {
+    margin-top: 10px;
+}
+
+footer .social-links a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+footer .social-links a:hover {
+    color: #ffc107; /* Warna hover, sesuaikan */
 }
 
 /* Media Queries untuk Responsivitas */
-/* Media query yang sebelumnya mengatur grid-template-columns untuk #galleryGrid DIHAPUS */
-/* Media query untuk modal dan lainnya bisa tetap ada */
-/* Media Queries untuk Responsivitas Grid Galeri */
-/* Tablet Kecil (sm) - 2 kolom */
-@media (min-width: 640px) {
-    #galleryGrid {
-        grid-template-columns: repeat(2, 1fr);
+@media (max-width: 768px) {
+    header nav {
+        flex-direction: column;
+        align-items: center;
     }
-}
 
-/* Tablet Sedang (md) - 3 kolom */
-@media (min-width: 768px) {
-    #galleryGrid {
-        grid-template-columns: repeat(3, 1fr);
+    header .logo {
+        margin-bottom: 10px;
     }
-     .modal-image-wrapper {
-        max-width: 80vw;
-        max-height: 80vh;
-    }
-    /* Posisi tombol modal yang lebih umum di layar besar */
-    .close-modal { top: 20px; right: 35px; } 
-    .prev-modal { top: 50%; left: 20px; transform: translateY(-50%);}
-    .next-modal { top: 50%; right: 20px; transform: translateY(-50%);}
-}
 
-/* Desktop (lg) - 4 kolom */
-@media (min-width: 1024px) {
-    #galleryGrid {
-        grid-template-columns: repeat(4, 1fr);
+    header ul {
+        flex-direction: column;
+        text-align: center;
+        width: 100%;
+    }
+
+    header ul li {
+        margin: 10px 0;
+    }
+
+    .hero-section h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero-section p {
+        font-size: 1rem;
+    }
+
+    .content-section h2 {
+        font-size: 2rem;
+    }
+
+    .gallery-grid, .mv-grid, .project-grid {
+        grid-template-columns: 1fr; /* Satu kolom di layar kecil */
+        gap: 15px;
+    }
+
+    .mv-item iframe {
+        height: auto; /* Biarkan iframe menyesuaikan tinggi */
     }
 }
