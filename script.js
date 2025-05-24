@@ -6,7 +6,7 @@ const images = [
     { src: 'https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg?', alt: 'Deskripsi Ilustrasi Keempat', title: 'Robot Futuristik' },
     { src: 'https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg?', alt: 'Deskripsi Ilustrasi Kelima', title: 'Makhluk Mitos' },
     { src: 'https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg?', alt: 'Deskripsi Ilustrasi Keenam', title: 'Kota Cyberpunk' },
-    { src: 'https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg?',, alt: 'Deskripsi Ilustrasi Ketujuh', title: 'Alam Semesta Miniatur' },
+    { src: 'https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg?', alt: 'Deskripsi Ilustrasi Ketujuh', title: 'Alam Semesta Miniatur' },
     { src: 'https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg?', alt: 'Deskripsi Ilustrasi Kedelapan', title: 'Potret Surreal' },
 ];
 
