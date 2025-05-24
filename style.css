@@ -9,7 +9,7 @@
 
 html {
     scroll-behavior: smooth;
-    font-size: 16px; /* Base font size */
+    font-size: 16px;
 }
 
 body {
@@ -29,18 +29,14 @@ body {
     padding: 0 15px;
 }
 
-/* Link global */
 a {
     color: #007bff;
     text-decoration: none;
     transition: color 0.3s ease;
 }
-
 a:hover {
     color: #0056b3;
 }
-
-/* Gambar responsif */
 img, iframe {
     max-width: 100%;
     height: auto;
@@ -56,32 +52,26 @@ img, iframe {
     z-index: 1000;
     width: 100%;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    transition: box-shadow 0.3s ease;
 }
-
-.header nav.container { /* Specificity for nav inside header */
+.header nav.container {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
 .header .logo a {
     color: #212529;
     font-size: 1.75rem;
     font-weight: 600;
     letter-spacing: -0.5px;
 }
-
 .header .nav-links {
     list-style: none;
     display: flex;
     align-items: center;
 }
-
 .header .nav-links li {
     margin-left: 25px;
 }
-
 .header .nav-links li a {
     color: #495057;
     font-weight: 500;
@@ -89,7 +79,6 @@ img, iframe {
     padding: 5px 0;
     position: relative;
 }
-
 .header .nav-links li a::after {
     content: '';
     position: absolute;
@@ -100,78 +89,74 @@ img, iframe {
     background-color: #007bff;
     transition: width 0.3s ease;
 }
-
 .header .nav-links li a:hover::after,
-.header .nav-links li a.active::after {
+.header .nav-links li a.active::after { /* Anda bisa menambahkan kelas 'active' dengan JS untuk link aktif */
     width: 100%;
 }
-
 .header .nav-links li a:hover {
     color: #007bff;
 }
 
+/* Tombol Hamburger & Garis Animasi */
 .menu-toggle {
-    display: none;
     background: none;
     border: none;
-    font-size: 1.5rem; /* Ukuran ikon hamburger */
-    color: #343a40;
+    color: #343a40; /* Tidak lagi dipakai jika span yang di-style */
     cursor: pointer;
-    padding: 0.5rem;
+    padding: 10px; 
+    display: none; /* Akan ditampilkan oleh media query */
+    flex-direction: column;
+    justify-content: space-around; 
+    width: 30px; 
+    height: 24px; 
+    position: relative; 
+    z-index: 1001; 
+}
+.hamburger-line {
+    display: block;
+    width: 100%;
+    height: 3px; 
+    background-color: #343a40; 
+    border-radius: 3px;
+    transition: transform 0.3s ease-in-out, opacity 0.2s ease-in-out;
+}
+.menu-toggle.active .line-1 {
+    transform: translateY(7.5px) rotate(45deg); 
+}
+.menu-toggle.active .line-2 {
+    opacity: 0;
+    transform: translateX(-100%); 
+}
+.menu-toggle.active .line-3 {
+    transform: translateY(-7.5px) rotate(-45deg); 
 }
 
-/* Bagian Hero */
+/* Bagian Hero - kembali ke gambar statis */
 .hero-section {
-    background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), /* Penyesuaian overlay jika perlu */
+    background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
                 url('https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg') no-repeat center center/cover;
     color: #ffffff;
-    min-height: 100vh;
+    min-height: 100vh; /* Full viewport height */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 40px 20px;
+    padding: 40px 20px; /* Padding pada .hero-section */
+    position: relative; 
 }
-
-.hero-content-overlay {
-    position: relative; /* Atau absolute jika ingin full control positioning di atas video */
-    z-index: 2; /* Konten di atas video */
-    text-align: center; /* Tengahkan teks di dalam wrapper ini */
-    padding: 40px 20px; /* Pindahkan padding ke sini */
-    width: 100%; /* Ambil lebar penuh dari parent (.hero-section) */
-    /* Properti flex dari .hero-section akan mengatur ini jika .hero-section masih display:flex */
-    /* Jika .hero-section tidak lagi flex, atur display flex di sini untuk .hero-content-overlay */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: inherit; /* Warisi min-height dari .hero-section agar konten tetap bisa di tengah secara vertikal */
-}
-
-/* Pastikan konten di dalam .hero-content-overlay tetap terlihat */
-.hero-content-overlay h1,
-.hero-content-overlay p,
-.hero-content-overlay .cta-button {
-    /* Mungkin tidak perlu perubahan di sini jika sudah diatur sebelumnya, 
-       tetapi pastikan warna kontras dengan video */
-    color: #ffffff; /* Pastikan tetap putih atau warna kontras lainnya */
-}
-
 .hero-section .hero-content h1 {
     font-size: clamp(2.5rem, 6vw, 4rem);
     font-weight: 700;
     margin-bottom: 1rem;
     line-height: 1.2;
 }
-
 .hero-section .hero-content p {
     font-size: clamp(1rem, 2.5vw, 1.25rem);
     max-width: 600px;
-    margin: 0 auto 2rem auto; /* 0 untuk atas, auto untuk kiri/kanan, 2rem untuk bawah */
+    margin: 0 auto 2rem auto; /* Paragraf di tengah */
     opacity: 0.9;
 }
-
 .cta-button {
     display: inline-block;
     background-color: #007bff;
@@ -184,7 +169,6 @@ img, iframe {
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
     box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
 }
-
 .cta-button:hover {
     background-color: #0056b3;
     transform: translateY(-3px);
@@ -196,14 +180,12 @@ img, iframe {
     padding: 80px 0;
     text-align: center;
 }
-
 .content-section .section-title {
     font-size: clamp(2rem, 5vw, 2.8rem);
     margin-bottom: 1rem;
     color: #212529;
     font-weight: 600;
 }
-
 .content-section .section-subtitle {
     font-size: clamp(0.9rem, 2vw, 1.1rem);
     color: #6c757d;
@@ -212,7 +194,6 @@ img, iframe {
     margin-left: auto;
     margin-right: auto;
 }
-
 .alt-bg {
     background-color: #ffffff;
 }
@@ -224,7 +205,7 @@ img, iframe {
     gap: 30px;
 }
 
-/* Item Card (Galeri, MV, Proyek) */
+/* Item Card */
 .card-item {
     background: #ffffff;
     border-radius: 12px;
@@ -235,50 +216,43 @@ img, iframe {
     flex-direction: column;
     text-align: left;
 }
-
 .card-item:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
 }
-
 .card-item .card-image img {
     width: 100%;
     aspect-ratio: 16/10;
     object-fit: cover;
 }
-/* Khusus untuk iframe di MV card */
-.mv-grid .card-item iframe {
+.mv-grid .card-item iframe { /* Styling spesifik untuk iframe di MV card */
     width: 100%;
     aspect-ratio: 16/9;
     border: none;
-    border-radius: 12px 12px 0 0; /* Jika ada konten di bawah iframe */
+    /* Jika iframe langsung di .card-item tanpa .card-image, border-radius bisa diterapkan langsung */
+    /* border-radius: 12px 12px 0 0; */ 
 }
-.mv-grid .card-item .card-image + .card-content { /* Jika iframe di dalam card-image */
-    border-top: 1px solid #eee;
+.mv-grid .card-item .card-image + .card-content { 
+    border-top: 1px solid #eee; /* Jika iframe di dalam .card-image */
 }
-
-
 .card-item .card-content {
     padding: 20px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
-
 .card-item .card-title {
     font-size: 1.25rem;
     font-weight: 600;
     color: #343a40;
     margin-bottom: 10px;
 }
-
 .card-item .card-description {
     font-size: 0.9rem;
     color: #6c757d;
     margin-bottom: 15px;
     flex-grow: 1;
 }
-
 .card-item .card-link {
     display: inline-block;
     color: #007bff;
@@ -287,7 +261,6 @@ img, iframe {
     margin-top: auto;
     align-self: flex-start;
 }
-
 .card-item .card-link:hover {
     text-decoration: underline;
 }
@@ -308,13 +281,11 @@ img, iframe {
 .footer .container p {
     margin-bottom: 15px;
 }
-
 .footer .social-links {
     margin-top: 0;
 }
-
 .footer .social-links a {
-    display: inline-block; /* Untuk padding dan ukuran ikon */
+    display: inline-block;
     margin: 0 10px;
     transition: transform 0.3s ease;
 }
@@ -324,76 +295,69 @@ img, iframe {
 .footer .social-links img {
     width: 24px;
     height: 24px;
-    vertical-align: middle; /* Agar sejajar dengan teks jika ada */
-     /* filter dipindah ke inline style di HTML untuk kemudahan ganti ikon */
+    vertical-align: middle;
 }
 
-
 /* Media Queries untuk Responsivitas */
-@media (max-width: 992px) { /* Titik breakpoint bisa disesuaikan */
-    .header .nav-links {
+@media (max-width: 992px) {
+    .menu-toggle { /* Tampilkan tombol hamburger di mobile */
+        display: flex; 
+    }
+    .header .nav-links { /* Animasi panel menu mobile yang lebih halus */
         position: absolute;
-        top: 100%;
+        top: 100%; 
         left: 0;
         width: 100%;
         background-color: #ffffff;
         flex-direction: column;
-        align-items: stretch; /* Agar link memenuhi lebar */
+        align-items: stretch; 
         text-align: center;
-        padding: 0; /* Dihapus, padding diatur di <li> */
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
-        max-height: 0;
+        
         opacity: 0;
         visibility: hidden;
-        overflow: hidden;
-        transition: max-height 0.4s ease-out, opacity 0.3s ease-out, visibility 0.3s ease-out;
+        transform: translateY(-10px); 
+        transition: opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0.3s ease-out;
+        padding: 0; 
     }
-
     .header .nav-links.active {
-        max-height: 500px; /* Cukup tinggi untuk semua item */
         opacity: 1;
         visibility: visible;
-        padding: 10px 0; /* Padding saat menu aktif */
+        transform: translateY(0); 
+        padding: 10px 0; 
     }
-
     .header .nav-links li {
-        margin: 0; /* Hapus margin kiri */
+        margin: 0; 
     }
     .header .nav-links li a {
-        display: block; /* Link memenuhi lebar li */
-        padding: 12px 20px; /* Padding link menu */
-        border-bottom: 1px solid #f0f0f0; /* Pemisah antar link */
+        display: block; 
+        padding: 12px 20px; 
+        border-bottom: 1px solid #f0f0f0; 
     }
     .header .nav-links li:last-child a {
-        border-bottom: none; /* Hilangkan border untuk item terakhir */
+        border-bottom: none; 
     }
-     .header .nav-links li a::after { /* Sembunyikan efek underline di mobile */
+    .header .nav-links li a::after { 
         display: none;
-    }
-
-    .menu-toggle {
-        display: block;
     }
 }
 
 @media (max-width: 768px) {
     .hero-section {
-        min-height: 75vh; /* Sedikit lebih rendah untuk layar kecil */
+        min-height: 75vh; 
     }
-
     .content-section {
         padding: 60px 0;
     }
-
     .gallery-grid, .mv-grid, .project-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Penyesuaian minmax jika perlu */
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 20px;
     }
 }
 
 @media (max-width: 576px) {
     .hero-section .hero-content h1 {
-        font-size: clamp(2rem, 8vw, 2.8rem); /* Ukuran disesuaikan lagi */
+        font-size: clamp(2rem, 8vw, 2.8rem); 
     }
     .hero-section .hero-content p {
         font-size: clamp(0.9rem, 4vw, 1.1rem);
@@ -409,9 +373,7 @@ img, iframe {
         font-size: clamp(0.85rem, 3.5vw, 1rem);
         margin-bottom: 40px;
     }
-
     .gallery-grid, .mv-grid, .project-grid {
-        /* Memastikan 1 kolom di layar sangat kecil jika minmax tidak cukup */
         grid-template-columns: 1fr;
     }
     .card-item .card-title {
