@@ -143,8 +143,8 @@ img, iframe {
 
 .hero-section .hero-content p {
     font-size: clamp(1rem, 2.5vw, 1.25rem);
-    margin-bottom: 2rem;
     max-width: 600px;
+    margin: 0 auto 2rem auto; /* 0 untuk atas, auto untuk kiri/kanan, 2rem untuk bawah */
     opacity: 0.9;
 }
 
