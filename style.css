@@ -160,7 +160,7 @@ img, iframe {
     background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
                 url('https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg') no-repeat center center;
     background-size: cover;
-    filter: blur(2px); /* Atur tingkat blur sesuai keinginan (misalnya 3px, 5px, 8px) */
+    filter: blur(3px); /* Atur tingkat blur sesuai keinginan (misalnya 3px, 5px, 8px) */
     z-index: -1; /* Tempatkan pseudo-element di belakang konten .hero-section */
     /* Opsional: Sedikit perbesar skala untuk memastikan blur menutupi sepenuhnya */
     /* transform: scale(1.02); */
