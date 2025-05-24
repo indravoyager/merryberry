@@ -9,14 +9,14 @@
 
 html {
     scroll-behavior: smooth;
-    font-size: 16px;
+    font-size: 16px; /* Base font size */
 }
 
 body {
     font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.7;
-    color: #343a40;
-    background-color: #f8f9fa;
+    color: #343a40; /* Warna teks utama (abu-abu gelap) */
+    background-color: #f8f9fa; /* Warna latar belakang utama (putih keabuan) */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -24,19 +24,22 @@ body {
 /* Utilitas */
 .container {
     width: 90%;
-    max-width: 1200px;
+    max-width: 1200px; /* Lebar maksimum container */
     margin: 0 auto;
     padding: 0 15px;
 }
 
+/* Link global */
 a {
-    color: #007bff;
+    color: #007bff; /* Warna link utama (biru cerah) */
     text-decoration: none;
     transition: color 0.3s ease;
 }
 a:hover {
-    color: #0056b3;
+    color: #0056b3; /* Warna link hover */
 }
+
+/* Gambar responsif */
 img, iframe {
     max-width: 100%;
     height: auto;
@@ -45,26 +48,26 @@ img, iframe {
 
 /* Header dan Navigasi */
 .header {
-    background-color: #ffffff;
+    background-color: #ffffff; /* Header putih bersih */
     padding: 1rem 0;
     position: sticky;
     top: 0;
     z-index: 1000;
     width: 100%;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Bayangan halus untuk header */
 }
-.header nav.container {
+.header nav.container { 
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 .header .logo a {
-    color: #212529;
+    color: #212529; /* Warna logo lebih gelap */
     font-size: 1.75rem;
-    font-weight: 600;
+    font-weight: 600; 
     letter-spacing: -0.5px;
 }
-.header .nav-links {
+.header .nav-links { 
     list-style: none;
     display: flex;
     align-items: center;
@@ -73,11 +76,11 @@ img, iframe {
     margin-left: 25px;
 }
 .header .nav-links li a {
-    color: #495057;
+    color: #495057; /* Warna link navigasi (abu-abu) */
     font-weight: 500;
     font-size: 0.95rem;
     padding: 5px 0;
-    position: relative;
+    position: relative; 
 }
 .header .nav-links li a::after {
     content: '';
@@ -86,56 +89,57 @@ img, iframe {
     height: 2px;
     bottom: -2px;
     left: 0;
-    background-color: #007bff;
+    background-color: #007bff; 
     transition: width 0.3s ease;
 }
 .header .nav-links li a:hover::after,
-.header .nav-links li a.active::after { /* Anda bisa menambahkan kelas 'active' dengan JS untuk link aktif */
+.header .nav-links li a.active::after { 
     width: 100%;
 }
 .header .nav-links li a:hover {
     color: #007bff;
 }
 
-/* Tombol Hamburger & Garis Animasi */
+/* Tombol Hamburger & Garis Animasi (TERBARU) */
 .menu-toggle {
     background: none;
     border: none;
-    color: #343a40; /* Tidak lagi dipakai jika span yang di-style */
     cursor: pointer;
-    padding: 10px; 
     display: none; /* Akan ditampilkan oleh media query */
     flex-direction: column;
-    justify-content: space-around; 
-    width: 30px; 
-    height: 24px; 
+    justify-content: space-between; /* Distribusi spasi antar garis */
+    
+    width: 28px;  /* Lebar ikon */
+    height: 22px; /* Tinggi ikon (cukup untuk 3 garis @3px + 2 spasi @6.5px) */
+    padding: 0;   /* Tidak ada padding internal, ukuran pas untuk garis */
     position: relative; 
-    z-index: 1001; 
+    z-index: 1001; /* Pastikan di atas elemen lain jika ada */
 }
 .hamburger-line {
     display: block;
-    width: 100%;
+    width: 100%; 
     height: 3px; 
     background-color: #343a40; 
     border-radius: 3px;
     transition: transform 0.3s ease-in-out, opacity 0.2s ease-in-out;
 }
 .menu-toggle.active .line-1 {
-    transform: translateY(7.5px) rotate(45deg); 
+    transform: translateY(9.5px) rotate(45deg); /* Disesuaikan untuk height 22px */
 }
 .menu-toggle.active .line-2 {
     opacity: 0;
     transform: translateX(-100%); 
 }
 .menu-toggle.active .line-3 {
-    transform: translateY(-7.5px) rotate(-45deg); 
+    transform: translateY(-9.5px) rotate(-45deg); /* Disesuaikan untuk height 22px */
 }
 
-/* Bagian Hero - kembali ke gambar statis */
+
+/* Bagian Hero - kembali ke gambar statis, full space */
 .hero-section {
     background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
                 url('https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg') no-repeat center center/cover;
-    color: #ffffff;
+    color: #ffffff; 
     min-height: 100vh; /* Full viewport height */
     display: flex;
     flex-direction: column;
@@ -146,24 +150,24 @@ img, iframe {
     position: relative; 
 }
 .hero-section .hero-content h1 {
-    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-size: clamp(2.5rem, 6vw, 4rem); 
     font-weight: 700;
     margin-bottom: 1rem;
     line-height: 1.2;
 }
 .hero-section .hero-content p {
-    font-size: clamp(1rem, 2.5vw, 1.25rem);
-    max-width: 600px;
+    font-size: clamp(1rem, 2.5vw, 1.25rem); 
+    max-width: 600px; 
     margin: 0 auto 2rem auto; /* Paragraf di tengah */
     opacity: 0.9;
 }
 .cta-button {
     display: inline-block;
-    background-color: #007bff;
+    background-color: #007bff; 
     color: #ffffff;
-    padding: 12px 30px;
+    padding: 12px 30px; 
     text-decoration: none;
-    border-radius: 30px;
+    border-radius: 30px; 
     font-weight: 600;
     font-size: 1rem;
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
@@ -171,95 +175,96 @@ img, iframe {
 }
 .cta-button:hover {
     background-color: #0056b3;
-    transform: translateY(-3px);
+    transform: translateY(-3px); 
     box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
 }
 
 /* Bagian Konten Umum */
 .content-section {
-    padding: 80px 0;
+    padding: 80px 0; 
     text-align: center;
 }
-.content-section .section-title {
-    font-size: clamp(2rem, 5vw, 2.8rem);
+.content-section .section-title { 
+    font-size: clamp(2rem, 5vw, 2.8rem); 
     margin-bottom: 1rem;
     color: #212529;
     font-weight: 600;
 }
-.content-section .section-subtitle {
+.content-section .section-subtitle { 
     font-size: clamp(0.9rem, 2vw, 1.1rem);
-    color: #6c757d;
-    margin-bottom: 50px;
+    color: #6c757d; 
+    margin-bottom: 50px; 
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
 }
 .alt-bg {
-    background-color: #ffffff;
+    background-color: #ffffff; 
 }
 
 /* Grid untuk Galeri, MV, dan Proyek */
 .gallery-grid, .mv-grid, .project-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 30px; 
 }
 
-/* Item Card */
+/* Item Card (Galeri, MV, Proyek) */
 .card-item {
     background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+    border-radius: 12px; 
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08); 
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    text-align: left;
+    display: flex; 
+    flex-direction: column; 
+    text-align: left; 
 }
 .card-item:hover {
-    transform: translateY(-8px);
+    transform: translateY(-8px); 
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
 }
 .card-item .card-image img {
     width: 100%;
-    aspect-ratio: 16/10;
+    aspect-ratio: 16/10; 
     object-fit: cover;
 }
-.mv-grid .card-item iframe { /* Styling spesifik untuk iframe di MV card */
+.mv-grid .card-item iframe { 
     width: 100%;
-    aspect-ratio: 16/9;
+    aspect-ratio: 16/9; 
     border: none;
-    /* Jika iframe langsung di .card-item tanpa .card-image, border-radius bisa diterapkan langsung */
-    /* border-radius: 12px 12px 0 0; */ 
 }
 .mv-grid .card-item .card-image + .card-content { 
-    border-top: 1px solid #eee; /* Jika iframe di dalam .card-image */
+    /* Jika iframe dibungkus .card-image, beri border atas pada konten */
+    /* border-top: 1px solid #eee; */ 
+    /* Karena struktur iframe sekarang langsung, ini mungkin tidak diperlukan,
+       kecuali Anda memutuskan membungkus iframe kedua di .card-image lagi */
 }
 .card-item .card-content {
     padding: 20px;
-    flex-grow: 1;
+    flex-grow: 1; 
     display: flex;
     flex-direction: column;
 }
-.card-item .card-title {
+.card-item .card-title { 
     font-size: 1.25rem;
     font-weight: 600;
     color: #343a40;
     margin-bottom: 10px;
 }
-.card-item .card-description {
+.card-item .card-description { 
     font-size: 0.9rem;
     color: #6c757d;
     margin-bottom: 15px;
-    flex-grow: 1;
+    flex-grow: 1; 
 }
 .card-item .card-link {
     display: inline-block;
     color: #007bff;
     font-weight: 500;
     font-size: 0.9rem;
-    margin-top: auto;
-    align-self: flex-start;
+    margin-top: auto; 
+    align-self: flex-start; 
 }
 .card-item .card-link:hover {
     text-decoration: underline;
@@ -271,9 +276,9 @@ img, iframe {
 }
 
 /* Footer */
-.footer {
-    background-color: #212529;
-    color: #adb5bd;
+.footer { 
+    background-color: #212529; 
+    color: #adb5bd; 
     text-align: center;
     padding: 40px 20px;
     font-size: 0.9rem;
@@ -282,10 +287,10 @@ img, iframe {
     margin-bottom: 15px;
 }
 .footer .social-links {
-    margin-top: 0;
+    margin-top: 0; /* Dihilangkan karena p sudah punya margin-bottom */
 }
 .footer .social-links a {
-    display: inline-block;
+    display: inline-block; 
     margin: 0 10px;
     transition: transform 0.3s ease;
 }
@@ -295,7 +300,7 @@ img, iframe {
 .footer .social-links img {
     width: 24px;
     height: 24px;
-    vertical-align: middle;
+    vertical-align: middle; 
 }
 
 /* Media Queries untuk Responsivitas */
@@ -303,7 +308,7 @@ img, iframe {
     .menu-toggle { /* Tampilkan tombol hamburger di mobile */
         display: flex; 
     }
-    .header .nav-links { /* Animasi panel menu mobile yang lebih halus */
+    .header .nav-links { /* Animasi panel menu mobile yang lebih halus (TERBARU) */
         position: absolute;
         top: 100%; 
         left: 0;
@@ -316,70 +321,5 @@ img, iframe {
         
         opacity: 0;
         visibility: hidden;
-        transform: translateY(-10px); 
-        transition: opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0.3s ease-out;
-        padding: 0; 
-    }
-    .header .nav-links.active {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0); 
-        padding: 10px 0; 
-    }
-    .header .nav-links li {
-        margin: 0; 
-    }
-    .header .nav-links li a {
-        display: block; 
-        padding: 12px 20px; 
-        border-bottom: 1px solid #f0f0f0; 
-    }
-    .header .nav-links li:last-child a {
-        border-bottom: none; 
-    }
-    .header .nav-links li a::after { 
-        display: none;
-    }
-}
-
-@media (max-width: 768px) {
-    .hero-section {
-        min-height: 75vh; 
-    }
-    .content-section {
-        padding: 60px 0;
-    }
-    .gallery-grid, .mv-grid, .project-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
-    }
-}
-
-@media (max-width: 576px) {
-    .hero-section .hero-content h1 {
-        font-size: clamp(2rem, 8vw, 2.8rem); 
-    }
-    .hero-section .hero-content p {
-        font-size: clamp(0.9rem, 4vw, 1.1rem);
-    }
-    .cta-button {
-        padding: 10px 25px;
-        font-size: 0.95rem;
-    }
-    .content-section .section-title {
-        font-size: clamp(1.8rem, 7vw, 2.4rem);
-    }
-    .content-section .section-subtitle {
-        font-size: clamp(0.85rem, 3.5vw, 1rem);
-        margin-bottom: 40px;
-    }
-    .gallery-grid, .mv-grid, .project-grid {
-        grid-template-columns: 1fr;
-    }
-    .card-item .card-title {
-        font-size: 1.1rem;
-    }
-    .card-item .card-description {
-        font-size: 0.85rem;
-    }
-}
+        transform: translateY(-10px); /* Mulai sedikit dari atas dan tersembunyi */
+        transition
