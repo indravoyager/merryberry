@@ -7,11 +7,11 @@
 
 body {
     font-family: 'Inter', 'Arial', sans-serif;
-    background-color: #F3F4F6;
-    color: #1F2937;
+    background-color: #F3F4F6; /* Mirip bg-gray-100 */
+    color: #1F2937; /* Mirip text-gray-800 */
     line-height: 1.6;
 
-    /* TAMBAHKAN INI untuk sticky footer */
+    /* Gaya untuk Sticky Footer */
     display: flex;
     flex-direction: column;
     min-height: 100vh; /* Minimal setinggi viewport/layar */
@@ -40,6 +40,7 @@ img {
     position: sticky;
     top: 0;
     z-index: 1000;
+    /* flex-shrink: 0; /* Opsional: Mencegah header menyusut jika konten sangat banyak */
 }
 
 .site-header .container {
@@ -56,6 +57,9 @@ img {
 .main-content {
     padding-top: 2rem;
     padding-bottom: 2rem;
+
+    /* Gaya untuk Sticky Footer */
+    flex-grow: 1; /* Biarkan main content mengisi ruang yang tersedia */
 }
 
 #galleryGrid {
@@ -136,81 +140,3 @@ img {
 
 .modal-caption {
     margin-top: 15px;
-    text-align: center;
-    color: #ccc;
-    font-size: 1.125rem;
-}
-
-.close-modal, .prev-modal, .next-modal {
-    position: absolute;
-    color: white;
-    font-size: 30px;
-    font-weight: bold;
-    transition: 0.3s;
-    cursor: pointer;
-    user-select: none;
-    z-index: 1060; /* Di atas gambar modal */
-}
-
-.close-modal {
-    top: -40px; 
-    right: 0px; 
-}
-
-.prev-modal {
-    left: -40px; 
-}
-
-.next-modal {
-    right: -40px; 
-}
-
-.close-modal:hover, .close-modal:focus,
-.prev-modal:hover, .prev-modal:focus,
-.next-modal:hover, .next-modal:focus {
-    color: #bbb;
-    text-decoration: none;
-}
-
-.nav-hidden {
-    display: none !important;
-}
-
-/* Footer */
-.site-footer {
-    background-color: #1F2937;
-    color: #FFFFFF;
-    text-align: center;
-    padding: 1.5rem 0;
-    margin-top: 3rem;
-}
-
-/* Media Queries untuk Responsivitas Grid Galeri */
-/* Tablet Kecil (sm) - 2 kolom */
-@media (min-width: 640px) {
-    #galleryGrid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-/* Tablet Sedang (md) - 3 kolom */
-@media (min-width: 768px) {
-    #galleryGrid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-     .modal-image-wrapper {
-        max-width: 80vw;
-        max-height: 80vh;
-    }
-    /* Posisi tombol modal yang lebih umum di layar besar */
-    .close-modal { top: 20px; right: 35px; } 
-    .prev-modal { top: 50%; left: 20px; transform: translateY(-50%);}
-    .next-modal { top: 50%; right: 20px; transform: translateY(-50%);}
-}
-
-/* Desktop (lg) - 4 kolom */
-@media (min-width: 1024px) {
-    #galleryGrid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
