@@ -100,20 +100,20 @@ img, iframe {
     color: #007bff;
 }
 
-/* Tombol Hamburger & Garis Animasi (TERBARU) */
+/* Tombol Hamburger & Garis Animasi */
 .menu-toggle {
     background: none;
     border: none;
     cursor: pointer;
     display: none; /* Akan ditampilkan oleh media query */
     flex-direction: column;
-    justify-content: space-between; /* Distribusi spasi antar garis */
+    justify-content: space-between; 
     
-    width: 28px;  /* Lebar ikon */
-    height: 22px; /* Tinggi ikon (cukup untuk 3 garis @3px + 2 spasi @6.5px) */
-    padding: 0;   /* Tidak ada padding internal, ukuran pas untuk garis */
+    width: 28px;  
+    height: 22px; 
+    padding: 0;   
     position: relative; 
-    z-index: 1001; /* Pastikan di atas elemen lain jika ada */
+    z-index: 1001; 
 }
 .hamburger-line {
     display: block;
@@ -124,18 +124,18 @@ img, iframe {
     transition: transform 0.3s ease-in-out, opacity 0.2s ease-in-out;
 }
 .menu-toggle.active .line-1 {
-    transform: translateY(9.5px) rotate(45deg); /* Disesuaikan untuk height 22px */
+    transform: translateY(9.5px) rotate(45deg); 
 }
 .menu-toggle.active .line-2 {
     opacity: 0;
     transform: translateX(-100%); 
 }
 .menu-toggle.active .line-3 {
-    transform: translateY(-9.5px) rotate(-45deg); /* Disesuaikan untuk height 22px */
+    transform: translateY(-9.5px) rotate(-45deg); 
 }
 
 
-/* Bagian Hero - kembali ke gambar statis, full space */
+/* Bagian Hero - gambar statis, full space */
 .hero-section {
     background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
                 url('https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg') no-repeat center center/cover;
@@ -146,7 +146,7 @@ img, iframe {
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 40px 20px; /* Padding pada .hero-section */
+    padding: 40px 20px; 
     position: relative; 
 }
 .hero-section .hero-content h1 {
@@ -234,12 +234,6 @@ img, iframe {
     aspect-ratio: 16/9; 
     border: none;
 }
-.mv-grid .card-item .card-image + .card-content { 
-    /* Jika iframe dibungkus .card-image, beri border atas pada konten */
-    /* border-top: 1px solid #eee; */ 
-    /* Karena struktur iframe sekarang langsung, ini mungkin tidak diperlukan,
-       kecuali Anda memutuskan membungkus iframe kedua di .card-image lagi */
-}
 .card-item .card-content {
     padding: 20px;
     flex-grow: 1; 
@@ -287,7 +281,7 @@ img, iframe {
     margin-bottom: 15px;
 }
 .footer .social-links {
-    margin-top: 0; /* Dihilangkan karena p sudah punya margin-bottom */
+    margin-top: 0;
 }
 .footer .social-links a {
     display: inline-block; 
@@ -308,7 +302,7 @@ img, iframe {
     .menu-toggle { /* Tampilkan tombol hamburger di mobile */
         display: flex; 
     }
-    .header .nav-links { /* Animasi panel menu mobile yang lebih halus (TERBARU) */
+    .header .nav-links { /* Animasi panel menu mobile yang lebih halus dan reliable (TERBARU) */
         position: absolute;
         top: 100%; 
         left: 0;
@@ -320,6 +314,72 @@ img, iframe {
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
         
         opacity: 0;
-        visibility: hidden;
-        transform: translateY(-10px); /* Mulai sedikit dari atas dan tersembunyi */
-        transition
+        transform: translateY(-10px); 
+        visibility: hidden; /* Atur langsung ke hidden saat tidak aktif */
+        transition: opacity 0.3s ease-out, transform 0.3s ease-out; 
+        /* 'visibility' tidak ditransisikan dengan durasi */
+        padding: 0; 
+    }
+    .header .nav-links.active {
+        opacity: 1;
+        transform: translateY(0); 
+        visibility: visible; /* Atur langsung ke visible saat aktif */
+        padding: 10px 0; 
+    }
+    .header .nav-links li {
+        margin: 0; 
+    }
+    .header .nav-links li a {
+        display: block; 
+        padding: 12px 20px; 
+        border-bottom: 1px solid #f0f0f0; 
+    }
+    .header .nav-links li:last-child a {
+        border-bottom: none; 
+    }
+     .header .nav-links li a::after { /* Sembunyikan efek underline di mobile */
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 75vh; 
+    }
+    .content-section {
+        padding: 60px 0;
+    }
+    .gallery-grid, .mv-grid, .project-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section .hero-content h1 {
+        font-size: clamp(2rem, 8vw, 2.8rem); 
+    }
+    .hero-section .hero-content p {
+        font-size: clamp(0.9rem, 4vw, 1.1rem);
+    }
+    .cta-button {
+        padding: 10px 25px;
+        font-size: 0.95rem;
+    }
+    .content-section .section-title {
+        font-size: clamp(1.8rem, 7vw, 2.4rem);
+    }
+    .content-section .section-subtitle {
+        font-size: clamp(0.85rem, 3.5vw, 1rem);
+        margin-bottom: 40px;
+    }
+    .gallery-grid, .mv-grid, .project-grid {
+        grid-template-columns: 1fr;
+    }
+    .card-item .card-title {
+        font-size: 1.1rem;
+    }
+    .card-item .card-description {
+        font-size: 0.85rem;
+    }
+}
