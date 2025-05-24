@@ -3,69 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Situs Mirip Yoru no Gumo (Versi Simple)</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Merry Illustration</title>
+    <link rel="stylesheet" href="style.css"> {/* Tambahkan ini untuk menghubungkan ke file CSS */}
 </head>
 <body>
     <header>
-        <div class="container">
-            <h1>Nama Situs Anda</h1>
-            <nav>
-                <ul>
-                    <li><a href="#">Beranda</a></li>
-                    <li><a href="#">Tentang</a></li>
-                    <li><a href="#">Portofolio</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Kontak</a></li>
-                </ul>
-            </nav>
-        </div>
+        <h1>Merry Illustration</h1>
     </header>
 
-    <main>
-        <div class="container">
-            <section class="hero">
-                <h2>Selamat Datang di Situs Saya</h2>
-                <p>Ini adalah deskripsi singkat atau tagline situs Anda.</p>
-            </section>
-
-            <section class="content-area">
-                <h3>Artikel Terbaru</h3>
-                <div class="post-item">
-                    <h4>Judul Artikel Pertama</h4>
-                    <p>Ini adalah cuplikan singkat dari artikel pertama. Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-                    <a href="#" class="read-more">Baca Selengkapnya</a>
-                </div>
-                <div class="post-item">
-                    <h4>Judul Artikel Kedua</h4>
-                    <p>Ini adalah cuplikan singkat dari artikel kedua. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
-                    <a href="#" class="read-more">Baca Selengkapnya</a>
-                </div>
-                <div class="post-item">
-                    <h4 id="changeableTitle">Judul Artikel Ketiga (Klik Saya!)</h4>
-                    <p>Ini adalah cuplikan singkat dari artikel ketiga. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi...</p>
-                    <a href="#" class="read-more">Baca Selengkapnya</a>
-                </div>
-            </section>
-
-            <section class="gallery-placeholder">
-                <h3>Galeri Saya</h3>
-                <div class="gallery-grid">
-                    <div class="gallery-item">Gambar 1</div>
-                    <div class="gallery-item">Gambar 2</div>
-                    <div class="gallery-item">Gambar 3</div>
-                    <div class="gallery-item">Gambar 4</div>
-                </div>
-            </section>
+    <main class="gallery-container">
+        <div class="gallery-item">
+            <img src="https://placehold.co/600x400/E6A4B4/white?text=Ilustrasi+1" alt="Deskripsi Ilustrasi Pertama yang Menarik">
+            <div class="caption">Karya Fantasi Hutan Ajaib</div>
+        </div>
+        <div class="gallery-item">
+            <img src="https://placehold.co/600x400/F3CCF3/white?text=Ilustrasi+2" alt="Deskripsi Ilustrasi Kedua yang Detail">
+            <div class="caption">Potret Karakter Anime</div>
+        </div>
+        <div class="gallery-item">
+            <img src="https://placehold.co/600x400/D57E7E/white?text=Ilustrasi+3" alt="Deskripsi Ilustrasi Ketiga yang Unik">
+            <div class="caption">Pemandangan Kota Cyberpunk</div>
+        </div>
+        <div class="gallery-item">
+            <img src="https://placehold.co/600x400/9BCDD2/white?text=Ilustrasi+4" alt="Deskripsi Ilustrasi Keempat">
+            <div class="caption">Hewan Lucu Abstrak</div>
+        </div>
+        <div class="gallery-item">
+            <img src="https://placehold.co/600x400/FFD9B7/white?text=Ilustrasi+5" alt="Deskripsi Ilustrasi Kelima">
+            <div class="caption">Desain Pola Geometris</div>
+        </div>
+        <div class="gallery-item">
+            <img src="https://placehold.co/600x400/77B0AA/white?text=Ilustrasi+6" alt="Deskripsi Ilustrasi Keenam">
+            <div class="caption">Ilustrasi Makanan Lezat</div>
         </div>
     </main>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2025 Nama Anda. Dibuat dengan HTML, CSS, & JS.</p>
-        </div>
+        <p>&copy; <span id="currentYear"></span> Nama Anda. Hak Cipta Dilindungi.</p>
     </footer>
 
-    <script src="script.js"></script>
+    <div id="imageModal" class="modal">
+        <div class="modal-content-wrapper">
+            <span class="close-button" title="Tutup">&times;</span>
+            <img class="modal-image" id="modalImage" src="" alt="Gambar yang diperbesar">
+            <div id="captionModal"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script> {/* Tambahkan ini untuk menghubungkan ke file JavaScript */}
 </body>
 </html>
