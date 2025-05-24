@@ -125,7 +125,7 @@ img, iframe {
     background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), /* Penyesuaian overlay jika perlu */
                 url('https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg') no-repeat center center/cover;
     color: #ffffff;
-    min-height: 85vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
