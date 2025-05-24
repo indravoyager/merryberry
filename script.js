@@ -1,6 +1,6 @@
 // Data gambar (ganti dengan path dan deskripsi gambar Anda)
 const images = [
-    { src: 'https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg?text=Ilustrasi+1', alt: 'Deskripsi Ilustrasi Pertama', title: 'Karya Seni Digital Abstrak' },
+    { src: 'https://static1.srcdn.com/wordpress/wp-content/uploads/2023/11/reverse-1999-the-best-voyager-build-psychubes-team-comp.jpg?', alt: 'Deskripsi Ilustrasi Pertama', title: 'Karya Seni Digital Abstrak' },
     { src: 'https://placehold.co/600x400/C4B5FD/4338CA?text=Ilustrasi+2', alt: 'Deskripsi Ilustrasi Kedua', title: 'Pemandangan Fantasi' },
     { src: 'https://placehold.co/600x400/DDD6FE/5B21B6?text=Ilustrasi+3', alt: 'Deskripsi Ilustrasi Ketiga', title: 'Karakter Anime Lucu' },
     { src: 'https://placehold.co/600x400/A78BFA/6D28D9?text=Ilustrasi+4', alt: 'Deskripsi Ilustrasi Keempat', title: 'Robot Futuristik' },
