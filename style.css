@@ -55,17 +55,23 @@ img {
 
 /* Konten Utama dan Galeri */
 .main-content {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    padding-top: 2rem; /* Bisa disesuaikan atau dihilangkan jika gallery-container-full sudah punya padding atas/bawah sendiri */
+    padding-bottom: 2rem; /* Sama seperti di atas */
+    flex-grow: 1;
+}
 
-    /* Gaya untuk Sticky Footer */
-    flex-grow: 1; /* Biarkan main content mengisi ruang yang tersedia */
+.gallery-container-full {
+    width: 100%; /* Mengambil lebar penuh dari parentnya (.main-content) */
+    padding-left: 1rem;  /* "Jeda dikit" di sisi kiri, sekitar 16px */
+    padding-right: 1rem; /* "Jeda dikit" di sisi kanan, sekitar 16px */
+    box-sizing: border-box; /* Agar padding tidak menambah lebar total dari 100% */
 }
 
 #galleryGrid {
     display: grid;
     grid-template-columns: repeat(1, 1fr); /* Default 1 kolom */
-    gap: 1.5rem; /* Mirip gap-6 */
+    gap: 1.5rem; 
+    /* Tidak perlu max-width atau margin:auto di sini, karena sudah diatur oleh .gallery-container-full */
 }
 
 .gallery-item {
