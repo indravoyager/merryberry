@@ -3,53 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merry Illustration</title>
-    <link rel="stylesheet" href="style.css"> {/* Tambahkan ini untuk menghubungkan ke file CSS */}
+    <title>Galeri Ilustrasi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Gaya kustom tambahan akan ditempatkan di sini ATAU di file style.css */
+        /* (Lihat bagian CSS di bawah) */
+    </style>
 </head>
-<body>
-    <header>
-        <h1>Merry Illustration</h1>
+<body class="bg-gray-100 text-gray-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-40">
+        <div class="container mx-auto px-6 py-4">
+            <h1 class="text-3xl font-bold text-center text-purple-600">Galeri Ilustrasiku</h1>
+        </div>
     </header>
 
-    <main class="gallery-container">
-        <div class="gallery-item">
-            <img src="https://placehold.co/600x400/E6A4B4/white?text=Ilustrasi+1" alt="Deskripsi Ilustrasi Pertama yang Menarik">
-            <div class="caption">Karya Fantasi Hutan Ajaib</div>
-        </div>
-        <div class="gallery-item">
-            <img src="https://placehold.co/600x400/F3CCF3/white?text=Ilustrasi+2" alt="Deskripsi Ilustrasi Kedua yang Detail">
-            <div class="caption">Potret Karakter Anime</div>
-        </div>
-        <div class="gallery-item">
-            <img src="https://placehold.co/600x400/D57E7E/white?text=Ilustrasi+3" alt="Deskripsi Ilustrasi Ketiga yang Unik">
-            <div class="caption">Pemandangan Kota Cyberpunk</div>
-        </div>
-        <div class="gallery-item">
-            <img src="https://placehold.co/600x400/9BCDD2/white?text=Ilustrasi+4" alt="Deskripsi Ilustrasi Keempat">
-            <div class="caption">Hewan Lucu Abstrak</div>
-        </div>
-        <div class="gallery-item">
-            <img src="https://placehold.co/600x400/FFD9B7/white?text=Ilustrasi+5" alt="Deskripsi Ilustrasi Kelima">
-            <div class="caption">Desain Pola Geometris</div>
-        </div>
-        <div class="gallery-item">
-            <img src="https://placehold.co/600x400/77B0AA/white?text=Ilustrasi+6" alt="Deskripsi Ilustrasi Keenam">
-            <div class="caption">Ilustrasi Makanan Lezat</div>
-        </div>
+    <main class="container mx-auto px-6 py-8">
+        <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            </div>
     </main>
 
-    <footer>
-        <p>&copy; <span id="currentYear"></span> Nama Anda. Hak Cipta Dilindungi.</p>
-    </footer>
-
     <div id="imageModal" class="modal">
-        <div class="modal-content-wrapper">
-            <span class="close-button" title="Tutup">&times;</span>
-            <img class="modal-image" id="modalImage" src="" alt="Gambar yang diperbesar">
-            <div id="captionModal"></div>
-        </div>
+        <span class="close-modal" title="Tutup">&times;</span>
+        <span class="prev-modal nav-hidden" title="Sebelumnya">&#10094;</span>
+        <img class="modal-content" id="modalImage">
+        <span class="next-modal nav-hidden" title="Selanjutnya">&#10095;</span>
+        <div id="caption" class="modal-caption"></div>
     </div>
 
-    <script src="script.js"></script> {/* Tambahkan ini untuk menghubungkan ke file JavaScript */}
+    <footer class="bg-gray-800 text-white text-center p-4 mt-12">
+        <p>&copy; <span id="currentYear"></span> Galeri Ilustrasi Anda. Dibuat dengan ❤️.</p>
+    </footer>
+
+    <script>
+        // Kode JavaScript akan ditempatkan di sini ATAU di file script.js
+        // (Lihat bagian JavaScript di bawah)
+    </script>
+
 </body>
 </html>
