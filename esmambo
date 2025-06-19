@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sedang Maintenance - Mohon Maaf 🙏</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            animation: fadeIn 1s ease-out;
+        }
+        h1 {
+            color: #d9534f;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 span {
+            margin-left: 10px;
+        }
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        .contact-button {
+            display: inline-block;
+            background-color: #25D366; /* WhatsApp Green */
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .contact-button:hover {
+            background-color: #1DA851;
+            transform: translateY(-2px);
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #777;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            p {
+                font-size: 1em;
+            }
+            .contact-button {
+                padding: 12px 25px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sedang Maintenance 🚧<span>ごめんなさい!</span></h1>
+        <p>Website kami sedang dalam proses perbaikan dan peningkatan untuk memberikan pengalaman yang lebih baik buat kamu. 🛠️</p>
+        <p>Mohon maaf atas ketidaknyamanannya, ya! Kami akan segera kembali! ✨</p>
+        <p>Kalau ada pertanyaan mendesak, kamu bisa hubungi kami via WhatsApp:</p>
+        <a href="https://wa.me/6285155155730" target="_blank" class="contact-button">
+            Kirim Pesan WhatsApp 💬
+        </a>
+    </div>
+    <div class="footer">
+        <p>&copy; 2025 Website Kami. Semua Hak Dilindungi. 🌸</p>
+    </div>
+</body>
+</html>
