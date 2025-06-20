@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unggah File ke Google Drive via Uploadcare</title>
+    <title>Website Unggah Dokumen</title>
     <style>
         /* --- CSS Dasar & Layout --- */
         body {
@@ -153,9 +153,9 @@
 
     <div class="container">
         <h1>Unggah Dokumen Anda</h1>
-        <p>Klik tombol di bawah ini untuk mengunggah file. Anda bisa memilih dari komputer atau melakukan seret & lepas saat jendela unggah muncul.</p>
+        <p>Klik tombol di bawah ini untuk mengunggah dokumen Anda. Anda bisa memilih dari komputer atau melakukan seret & lepas saat jendela unggah muncul. Setelah unggahan selesai, Anda bisa langsung menyalin tautan dokumen Anda.</p>
 
-        <button id="upload-trigger-button">Unggah File</button>
+        <button id="upload-trigger-button">Unggah Dokumen</button>
 
         <div id="status-message"></div>
         <div id="file-info"></div>
@@ -170,7 +170,6 @@
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
                 console.log('Teks berhasil disalin:', text);
-                // Opsional: berikan feedback visual ke user
                 alert('Tautan berhasil disalin!');
             }).catch(err => {
                 console.error('Gagal menyalin teks:', err);
@@ -178,10 +177,11 @@
             });
         }
 
-        // Event listener saat tombol "Unggah File" diklik
+        // Event listener saat tombol "Unggah Dokumen" diklik
         uploadTriggerButton.addEventListener('click', function() {
             // Membuka dialog unggah Uploadcare
             uploadcare.openDialog().done(function(file) {
+                // Handle progress, failure, and success of the upload
                 file.progress(function(info) {
                     statusMessage.textContent = `Mengunggah: ${info.progress}%`;
                     statusMessage.style.color = '#007bff';
@@ -192,7 +192,7 @@
                     fileInfoDiv.innerHTML = '';
                     console.error('Upload failed:', error);
                 }).done(function(info) {
-                    console.log('File terunggah:', info);
+                    console.log('Dokumen terunggah:', info); // Ubah log
                     statusMessage.textContent = 'Unggahan Berhasil!';
                     statusMessage.style.color = '#28a745';
                     statusMessage.classList.remove('error');
@@ -200,17 +200,17 @@
                     let fileDetails = '';
                     if (info.isGroup) { // Jika mengunggah banyak file
                         fileDetails = info.files.map(file => `
-                            <strong>Nama File:</strong> ${file.name}<br>
+                            <strong>Nama Dokumen:</strong> ${file.name}<br>
                             <strong>Ukuran:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
-                            <strong>URL:</strong> <a href="${file.cdnUrl}" target="_blank">${file.cdnUrl}</a>
-                            <button class="copy-button" data-link="${file.cdnUrl}">Copy Link</button>
-                        `).join('<br><br>');
+                            <strong>Tautan:</strong> <a href="${file.cdnUrl}" target="_blank">${file.cdnUrl}</a>
+                            <button class="copy-button" data-link="${file.cdnUrl}">Salin Tautan</button>
+                        `).join('<br><br>'); // Gabungkan detail setiap file dengan baris baru
                     } else { // Jika mengunggah satu file
                         fileDetails = `
-                            <strong>Nama File:</strong> ${info.name}<br>
+                            <strong>Nama Dokumen:</strong> ${info.name}<br>
                             <strong>Ukuran:</strong> ${(info.size / 1024 / 1024).toFixed(2)} MB<br>
-                            <strong>URL:</strong> <a href="${info.cdnUrl}" target="_blank">${info.cdnUrl}</a>
-                            <button class="copy-button" data-link="${info.cdnUrl}">Copy Link</button>
+                            <strong>Tautan:</strong> <a href="${info.cdnUrl}" target="_blank">${info.cdnUrl}</a>
+                            <button class="copy-button" data-link="${info.cdnUrl}">Salin Tautan</button>
                         `;
                     }
                     fileInfoDiv.innerHTML = fileDetails;
