@@ -16,7 +16,7 @@
             background-color: #1a1a1a; /* Latar belakang hitam */
             color: #f0f0f0; /* Warna teks umum */
             margin: 0;
-            padding: 0; /* Padding body direset ke 0, karena container yang akan mengatur jarak */
+            padding: 0;
             box-sizing: border-box;
         }
 
@@ -119,12 +119,12 @@
             transform: translateY(0);
         }
 
-        /* --- Responsif --- */
+        /* Responsif */
         @media (max-width: 600px) {
             .container {
                 padding: 30px 20px; /* Padding internal container */
-                width: calc(100% - 40px); /* Memastikan lebar total container (termasuk padding) tidak melebihi lebar viewport - margin */
-                margin: 20px auto; /* Margin 20px di atas/bawah, auto di kiri/kanan untuk centering */
+                width: calc(100% - 40px);
+                margin: 20px auto; /* Margin atas/bawah, auto kiri/kanan */
             }
             h1 {
                 font-size: 1.5em;
@@ -179,11 +179,24 @@
             });
         }
 
+        // Fungsi untuk mendapatkan UUID yang dipersingkat
+        function getShortenedUUID(uuid) {
+            // Kita ambil 2 karakter pertama dan 5 karakter berikutnya
+            // UUID contoh: c02c4148f12574e3489f
+            // Output yang diinginkan: c02c41
+            // Atau jika hanya mau 2 karakter + 5 angka, kita harus pastikan 5 angka itu ada di sana.
+            // UUID Uploadcare campuran huruf dan angka, jadi ini mungkin tidak selalu 2 huruf + 5 angka.
+            // Solusi paling realistis adalah memotong di awal.
+            if (uuid && uuid.length >= 7) {
+                // Mengambil 7 karakter pertama dari UUID
+                return uuid.substring(0, 7);
+            }
+            return uuid; // Kembali ke UUID lengkap jika terlalu pendek
+        }
+
         // Event listener saat tombol "Unggah Dokumen" diklik
         uploadTriggerButton.addEventListener('click', function() {
-            // Membuka dialog unggah Uploadcare
             uploadcare.openDialog().done(function(file) {
-                // Handle progress, failure, and success of the upload
                 file.progress(function(info) {
                     statusMessage.textContent = `Mengunggah: ${info.progress}%`;
                     statusMessage.style.color = '#007bff';
@@ -200,24 +213,37 @@
                     statusMessage.classList.remove('error');
 
                     let fileDetails = '';
-                    if (info.isGroup) { // Jika mengunggah banyak file
-                        fileDetails = info.files.map(file => `
-                            <strong>Nama Dokumen:</strong> ${file.name}<br>
-                            <strong>Ukuran:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
-                            <strong>Tautan:</strong> <a href="${file.cdnUrl}" target="_blank">${file.cdnUrl}</a>
-                            <button class="copy-button" data-link="${file.cdnUrl}">Salin Tautan</button>
-                        `).join('<br><br>');
-                    } else { // Jika mengunggah satu file
+                    if (info.isGroup) {
+                        fileDetails = info.files.map(file => {
+                            const fullUrl = file.cdnUrl;
+                            const uuid = file.uuid; // Ambil UUID dari objek file
+                            const shortenedUuid = getShortenedUUID(uuid);
+                            // Buat URL yang ditampilkan dengan UUID yang dipersingkat
+                            const displayedUrl = `https://ucarecdn.com/${shortenedUuid}/.../${file.name}`; // Tampilkan ... untuk sisa UUID
+                            
+                            return `
+                                <strong>Nama Dokumen:</strong> ${file.name}<br>
+                                <strong>Ukuran:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
+                                <strong>Tautan:</strong> <a href="${fullUrl}" target="_blank">${displayedUrl}</a>
+                                <button class="copy-button" data-link="${fullUrl}">Salin Tautan</button>
+                            `;
+                        }).join('<br><br>');
+                    } else {
+                        const fullUrl = info.cdnUrl;
+                        const uuid = info.uuid; // Ambil UUID dari objek file
+                        const shortenedUuid = getShortenedUUID(uuid);
+                        // Buat URL yang ditampilkan dengan UUID yang dipersingkat
+                        const displayedUrl = `https://ucarecdn.com/${shortenedUuid}/.../${info.name}`;
+                        
                         fileDetails = `
                             <strong>Nama Dokumen:</strong> ${info.name}<br>
                             <strong>Ukuran:</strong> ${(info.size / 1024 / 1024).toFixed(2)} MB<br>
-                            <strong>Tautan:</strong> <a href="${info.cdnUrl}" target="_blank">${info.cdnUrl}</a>
-                            <button class="copy-button" data-link="${info.cdnUrl}">Salin Tautan</button>
+                            <strong>Tautan:</strong> <a href="${fullUrl}" target="_blank">${displayedUrl}</a>
+                            <button class="copy-button" data-link="${fullUrl}">Salin Tautan</button>
                         `;
                     }
                     fileInfoDiv.innerHTML = fileDetails;
 
-                    // Tambahkan event listener untuk semua tombol copy yang baru dibuat
                     document.querySelectorAll('.copy-button').forEach(button => {
                         button.addEventListener('click', function() {
                             const linkToCopy = this.getAttribute('data-link');
