@@ -171,34 +171,44 @@
         // Fungsi untuk menyalin teks ke clipboard
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                console.log('Teks berhasil disalin:', text);
+                console.log('Tautan berhasil disalin:', text);
                 alert('Tautan berhasil disalin!');
             }).catch(err => {
-                console.error('Gagal menyalin teks:', err);
+                console.error('Gagal menyalin tautan:', err);
                 alert('Gagal menyalin tautan. Silakan salin manual.');
             });
         }
 
-        // Fungsi untuk mendapatkan nama file yang sangat pendek (<15 karakter)
-        function getUltraShortFileName(fileName, maxLength = 10) { // Set maxLength ke 10-12 agar di bawah 15 termasuk "..."
-            const extension = fileName.substring(fileName.lastIndexOf('.'));
-            const nameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
-
-            // Jika nama tanpa ekstensi sudah sangat pendek, atau total kurang dari maxLength
-            if (nameWithoutExt.length <= (maxLength - extension.length - 3) || fileName.length <= maxLength) {
-                return fileName;
-            }
-            
-            // Potong bagian depan dan tambahkan "..."
-            return nameWithoutExt.substring(0, maxLength - extension.length - 3) + '...' + extension;
-        }
-
-        // Fungsi untuk mendapatkan UUID yang dipersingkat untuk tampilan (misal 7 karakter)
+        // Fungsi untuk mendapatkan UUID yang dipersingkat untuk tampilan
         function getShortenedUUID(uuid) {
             if (uuid && uuid.length >= 7) {
+                // Mengambil 7 karakter pertama dari UUID
                 return uuid.substring(0, 7);
             }
-            return uuid;
+            return uuid; // Kembali ke UUID lengkap jika terlalu pendek
+        }
+
+        // Fungsi untuk mempersingkat nama file untuk tampilan
+        function getShortenedFileName(fileName, maxLength = 20) {
+            if (fileName.length > maxLength) {
+                const extensionIndex = fileName.lastIndexOf('.');
+                let nameWithoutExt = fileName;
+                let extension = '';
+
+                if (extensionIndex !== -1 && extensionIndex >= fileName.length - 5) { // Cek jika ada ekstensi valid
+                    nameWithoutExt = fileName.substring(0, extensionIndex);
+                    extension = fileName.substring(extensionIndex);
+                }
+
+                const charsBeforeEllipsis = maxLength - extension.length - 3; // 3 untuk "..."
+
+                if (charsBeforeEllipsis <= 0) { // Jika nama sangat pendek atau hanya ekstensi
+                    return fileName;
+                }
+                
+                return nameWithoutExt.substring(0, charsBeforeEllipsis) + '...' + extension;
+            }
+            return fileName;
         }
 
         // Event listener saat tombol "Unggah Dokumen" diklik
@@ -212,7 +222,7 @@
                     statusMessage.textContent = `Unggahan Gagal: ${error.message}`;
                     statusMessage.classList.add('error');
                     fileInfoDiv.innerHTML = '';
-                    console.error('Upload failed:', error);
+                    console.error('Unggahan gagal:', error);
                 }).done(function(info) {
                     console.log('Dokumen terunggah:', info);
                     statusMessage.textContent = 'Unggahan Berhasil!';
@@ -224,33 +234,38 @@
                         fileDetails = info.files.map(file => {
                             const fullUrl = file.cdnUrl;
                             const uuid = file.uuid;
-                            const displayedUuid = getShortenedUUID(uuid);
-                            const displayedFileName = getUltraShortFileName(file.name); // <--- Menggunakan fungsi baru
+                            const shortenedUuid = getShortenedUUID(uuid);
+                            const displayedFileName = getShortenedFileName(file.name);
                             
-                            // Baris pertama: "Dokumen [Nama Dokumen Singkat]"
-                            // Baris kedua: "Tautan: https://en.m.wiktionary.org/wiki/singkat [Tombol Salin]"
+                            // Buat URL yang ditampilkan dengan UUID dan nama file yang dipersingkat
+                            const displayedUrl = `https://ucarecdn.com/${shortenedUuid}/.../${displayedFileName}`;
+                            
                             return `
-                                <strong>Dokumen:</strong> ${displayedFileName}<br>
-                                <strong>Tautan:</strong> <a href="${fullUrl}" target="_blank">ucarecdn.com/${displayedUuid}/...</a>
+                                <strong>Nama Dokumen:</strong> ${displayedFileName}<br>
+                                <strong>Ukuran:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
+                                <strong>Tautan:</strong> <a href="${fullUrl}" target="_blank">${displayedUrl}</a>
                                 <button class="copy-button" data-link="${fullUrl}">Salin Tautan</button>
                             `;
                         }).join('<br><br>');
                     } else { // Jika mengunggah satu file
                         const fullUrl = info.cdnUrl;
                         const uuid = info.uuid;
-                        const displayedUuid = getShortenedUUID(uuid);
-                        const displayedFileName = getUltraShortFileName(info.name); // <--- Menggunakan fungsi baru
+                        const shortenedUuid = getShortenedUUID(uuid);
+                        const displayedFileName = getShortenedFileName(info.name);
                         
-                        // Baris pertama: "Dokumen [Nama Dokumen Singkat]"
-                        // Baris kedua: "Tautan: https://en.m.wiktionary.org/wiki/singkat [Tombol Salin]"
+                        // Buat URL yang ditampilkan dengan UUID dan nama file yang dipersingkat
+                        const displayedUrl = `https://ucarecdn.com/${shortenedUuid}/.../${displayedFileName}`;
+                        
                         fileDetails = `
-                            <strong>Dokumen:</strong> ${displayedFileName}<br>
-                            <strong>Tautan:</strong> <a href="${fullUrl}" target="_blank">ucarecdn.com/${displayedUuid}/...</a>
+                            <strong>Nama Dokumen:</strong> ${displayedFileName}<br>
+                            <strong>Ukuran:</strong> ${(info.size / 1024 / 1024).toFixed(2)} MB<br>
+                            <strong>Tautan:</strong> <a href="${fullUrl}" target="_blank">${displayedUrl}</a>
                             <button class="copy-button" data-link="${fullUrl}">Salin Tautan</button>
                         `;
                     }
                     fileInfoDiv.innerHTML = fileDetails;
 
+                    // Tambahkan event listener untuk semua tombol copy yang baru dibuat
                     document.querySelectorAll('.copy-button').forEach(button => {
                         button.addEventListener('click', function() {
                             const linkToCopy = this.getAttribute('data-link');
