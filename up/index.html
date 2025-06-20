@@ -16,7 +16,7 @@
             background-color: #1a1a1a; /* Latar belakang hitam */
             color: #f0f0f0; /* Warna teks umum */
             margin: 0;
-            padding: 20px; /* Padding default untuk desktop */
+            padding: 0; /* Padding body direset ke 0, karena container yang akan mengatur jarak */
             box-sizing: border-box;
         }
 
@@ -27,7 +27,9 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Efek bayangan */
             text-align: center;
             max-width: 500px;
-            width: 100%;
+            width: calc(100% - 40px); /* Lebar 100% dikurangi 20px padding kiri & 20px padding kanan */
+            margin: 20px; /* Margin 20px di semua sisi untuk memberikan jarak dari tepi layar */
+            box-sizing: border-box; /* Penting untuk perhitungan width dan padding */
         }
 
         /* --- Judul & Paragraf --- */
@@ -105,7 +107,7 @@
             cursor: pointer;
             margin-left: 10px;
             transition: background-color 0.2s ease, transform 0.1s ease;
-            white-space: nowrap;
+            white-space: nowrap; /* Pastikan tombol tidak pecah baris */
         }
 
         .copy-button:hover {
@@ -119,12 +121,10 @@
 
         /* --- Responsif --- */
         @media (max-width: 600px) {
-            body {
-                padding: 15px; /* Padding lebih besar di kiri-kanan untuk mobile */
-            }
             .container {
-                padding: 30px 20px;
-                margin: 0; /* Margin direset agar padding body yang berfungsi */
+                padding: 30px 20px; /* Padding internal container */
+                width: calc(100% - 40px); /* Memastikan lebar total container (termasuk padding) tidak melebihi lebar viewport - margin */
+                margin: 20px auto; /* Margin 20px di atas/bawah, auto di kiri/kanan untuk centering */
             }
             h1 {
                 font-size: 1.5em;
@@ -139,10 +139,9 @@
             #status-message, #file-info {
                 font-size: 0.85em;
             }
-            /* Sesuaikan ukuran tombol copy di mobile jika perlu */
             .copy-button {
-                padding: 5px 10px; /* Padding tombol copy di mobile */
-                font-size: 0.8em; /* Ukuran font tombol copy di mobile */
+                padding: 5px 10px;
+                font-size: 0.8em;
             }
         }
     </style>
