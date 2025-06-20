@@ -179,19 +179,26 @@
             });
         }
 
-        // Fungsi untuk mendapatkan UUID yang dipersingkat
+        // Fungsi untuk mendapatkan nama file yang sangat pendek (<15 karakter)
+        function getUltraShortFileName(fileName, maxLength = 10) { // Set maxLength ke 10-12 agar di bawah 15 termasuk "..."
+            const extension = fileName.substring(fileName.lastIndexOf('.'));
+            const nameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
+
+            // Jika nama tanpa ekstensi sudah sangat pendek, atau total kurang dari maxLength
+            if (nameWithoutExt.length <= (maxLength - extension.length - 3) || fileName.length <= maxLength) {
+                return fileName;
+            }
+            
+            // Potong bagian depan dan tambahkan "..."
+            return nameWithoutExt.substring(0, maxLength - extension.length - 3) + '...' + extension;
+        }
+
+        // Fungsi untuk mendapatkan UUID yang dipersingkat untuk tampilan (misal 7 karakter)
         function getShortenedUUID(uuid) {
-            // Kita ambil 2 karakter pertama dan 5 karakter berikutnya
-            // UUID contoh: c02c4148f12574e3489f
-            // Output yang diinginkan: c02c41
-            // Atau jika hanya mau 2 karakter + 5 angka, kita harus pastikan 5 angka itu ada di sana.
-            // UUID Uploadcare campuran huruf dan angka, jadi ini mungkin tidak selalu 2 huruf + 5 angka.
-            // Solusi paling realistis adalah memotong di awal.
             if (uuid && uuid.length >= 7) {
-                // Mengambil 7 karakter pertama dari UUID
                 return uuid.substring(0, 7);
             }
-            return uuid; // Kembali ke UUID lengkap jika terlalu pendek
+            return uuid;
         }
 
         // Event listener saat tombol "Unggah Dokumen" diklik
@@ -213,32 +220,32 @@
                     statusMessage.classList.remove('error');
 
                     let fileDetails = '';
-                    if (info.isGroup) {
+                    if (info.isGroup) { // Jika mengunggah banyak file
                         fileDetails = info.files.map(file => {
                             const fullUrl = file.cdnUrl;
-                            const uuid = file.uuid; // Ambil UUID dari objek file
-                            const shortenedUuid = getShortenedUUID(uuid);
-                            // Buat URL yang ditampilkan dengan UUID yang dipersingkat
-                            const displayedUrl = `https://ucarecdn.com/${shortenedUuid}/.../${file.name}`; // Tampilkan ... untuk sisa UUID
+                            const uuid = file.uuid;
+                            const displayedUuid = getShortenedUUID(uuid);
+                            const displayedFileName = getUltraShortFileName(file.name); // <--- Menggunakan fungsi baru
                             
+                            // Baris pertama: "Dokumen [Nama Dokumen Singkat]"
+                            // Baris kedua: "Tautan: https://en.m.wiktionary.org/wiki/singkat [Tombol Salin]"
                             return `
-                                <strong>Nama Dokumen:</strong> ${file.name}<br>
-                                <strong>Ukuran:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
-                                <strong>Tautan:</strong> <a href="${fullUrl}" target="_blank">${displayedUrl}</a>
+                                <strong>Dokumen:</strong> ${displayedFileName}<br>
+                                <strong>Tautan:</strong> <a href="${fullUrl}" target="_blank">ucarecdn.com/${displayedUuid}/...</a>
                                 <button class="copy-button" data-link="${fullUrl}">Salin Tautan</button>
                             `;
                         }).join('<br><br>');
-                    } else {
+                    } else { // Jika mengunggah satu file
                         const fullUrl = info.cdnUrl;
-                        const uuid = info.uuid; // Ambil UUID dari objek file
-                        const shortenedUuid = getShortenedUUID(uuid);
-                        // Buat URL yang ditampilkan dengan UUID yang dipersingkat
-                        const displayedUrl = `https://ucarecdn.com/${shortenedUuid}/.../${info.name}`;
+                        const uuid = info.uuid;
+                        const displayedUuid = getShortenedUUID(uuid);
+                        const displayedFileName = getUltraShortFileName(info.name); // <--- Menggunakan fungsi baru
                         
+                        // Baris pertama: "Dokumen [Nama Dokumen Singkat]"
+                        // Baris kedua: "Tautan: https://en.m.wiktionary.org/wiki/singkat [Tombol Salin]"
                         fileDetails = `
-                            <strong>Nama Dokumen:</strong> ${info.name}<br>
-                            <strong>Ukuran:</strong> ${(info.size / 1024 / 1024).toFixed(2)} MB<br>
-                            <strong>Tautan:</strong> <a href="${fullUrl}" target="_blank">${displayedUrl}</a>
+                            <strong>Dokumen:</strong> ${displayedFileName}<br>
+                            <strong>Tautan:</strong> <a href="${fullUrl}" target="_blank">ucarecdn.com/${displayedUuid}/...</a>
                             <button class="copy-button" data-link="${fullUrl}">Salin Tautan</button>
                         `;
                     }
