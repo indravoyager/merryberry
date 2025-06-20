@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unggah File Sederhana & Bisa Diklik (Background Hitam)</title>
+    <title>Unggah File ke Google Drive via Uploadcare</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,19 +12,18 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            /* --- Perubahan di sini: Background hitam --- */
-            background-color: #1a1a1a; /* Warna hitam pekat atau bisa #000000 */
-            color: #f0f0f0; /* Warna teks body diubah agar kontras dengan background hitam */
+            background-color: #1a1a1a; /* Background hitam */
+            color: #f0f0f0; /* Warna teks di body */
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
         }
 
         .container {
-            background-color: #2c2c2c; /* Warna container diubah agar kontras dengan background hitam */
+            background-color: #2c2c2c; /* Warna container kontras */
             padding: 40px 30px;
             border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow sedikit lebih gelap */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             text-align: center;
             max-width: 500px;
             width: 100%;
@@ -65,11 +64,11 @@
             margin-top: 25px;
             font-size: 1em;
             font-weight: 500;
-            color: #28a745; /* Green for success/progress */
+            color: #28a745; /* Hijau untuk sukses/progress */
         }
 
         #status-message.error {
-            color: #dc3545; /* Red for error */
+            color: #dc3545; /* Merah untuk error */
         }
 
         #file-info {
@@ -78,13 +77,13 @@
             color: #b0b0b0; /* Warna info file abu-abu terang */
             text-align: left;
             word-wrap: break-word;
-            border-top: 1px solid #444; /* Border sedikit lebih gelap */
+            border-top: 1px solid #444; /* Border abu-abu gelap */
             padding-top: 15px;
             line-height: 1.8;
         }
 
         #file-info a {
-            color: #0096ff; /* Warna link lebih terang agar terlihat di background hitam */
+            color: #0096ff; /* Warna link lebih terang */
             text-decoration: none;
         }
 
@@ -114,6 +113,10 @@
         }
     </style>
     <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+
+    <script>
+      UPLOADCARE_PUBLIC_KEY = 'c02c4148f12574e3489f';
+    </script>
 </head>
 <body>
 
@@ -128,38 +131,38 @@
     </div>
 
     <script>
-        // Ganti 'c02c4148f12574e3489f' dengan Public Key Anda dari dashboard Uploadcare
-        uploadcare.publickey = 'c02c4148f12574e3489f';
-
         const uploadTriggerButton = document.getElementById('upload-trigger-button');
         const statusMessage = document.getElementById('status-message');
         const fileInfoDiv = document.getElementById('file-info');
 
+        // Event listener saat tombol diklik
         uploadTriggerButton.addEventListener('click', function() {
+            // Memunculkan pop-up Uploadcare
             uploadcare.openDialog().done(function(file) {
+                // Handle progress, failure, and success of the upload
                 file.progress(function(info) {
                     statusMessage.textContent = `Mengunggah: ${info.progress}%`;
-                    statusMessage.style.color = '#007bff';
+                    statusMessage.style.color = '#007bff'; // Biru untuk progress
                     statusMessage.classList.remove('error');
                 }).fail(function(error) {
                     statusMessage.textContent = `Unggahan Gagal: ${error.message}`;
-                    statusMessage.classList.add('error');
+                    statusMessage.classList.add('error'); // Merah untuk error
                     fileInfoDiv.innerHTML = '';
                     console.error('Upload failed:', error);
                 }).done(function(info) {
                     console.log('File terunggah:', info);
                     statusMessage.textContent = 'Unggahan Berhasil!';
-                    statusMessage.style.color = '#28a745';
+                    statusMessage.style.color = '#28a745'; // Hijau untuk sukses
                     statusMessage.classList.remove('error');
 
                     let fileDetails = '';
-                    if (info.isGroup) {
+                    if (info.isGroup) { // Jika mengunggah banyak file
                         fileDetails = info.files.map(file => `
                             <strong>Nama File:</strong> ${file.name}<br>
                             <strong>Ukuran:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
                             <strong>URL:</strong> <a href="${file.cdnUrl}" target="_blank">${file.cdnUrl}</a>
                         `).join('<br><br>');
-                    } else {
+                    } else { // Jika mengunggah satu file
                         fileDetails = `
                             <strong>Nama File:</strong> ${info.name}<br>
                             <strong>Ukuran:</strong> ${(info.size / 1024 / 1024).toFixed(2)} MB<br>
