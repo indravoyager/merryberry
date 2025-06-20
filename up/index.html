@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unggah File Sederhana</title>
+    <title>Unggah File Sederhana & Bisa Diklik (Background Hitam)</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,34 +12,37 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background-color: #f0f2f5;
+            /* --- Perubahan di sini: Background hitam --- */
+            background-color: #1a1a1a; /* Warna hitam pekat atau bisa #000000 */
+            color: #f0f0f0; /* Warna teks body diubah agar kontras dengan background hitam */
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
         }
 
         .container {
-            background-color: #ffffff;
+            background-color: #2c2c2c; /* Warna container diubah agar kontras dengan background hitam */
             padding: 40px 30px;
             border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow sedikit lebih gelap */
             text-align: center;
             max-width: 500px;
             width: 100%;
         }
 
         h1 {
-            color: #333;
+            color: #ffffff; /* Warna judul putih */
             margin-bottom: 20px;
         }
 
         p {
-            color: #666;
+            color: #b0b0b0; /* Warna paragraf abu-abu terang */
             margin-bottom: 30px;
             line-height: 1.6;
         }
 
-        #upload-button-simple {
+        /* --- Tombol Utama --- */
+        #upload-trigger-button {
             background-color: #007bff;
             color: white;
             padding: 12px 25px;
@@ -52,7 +55,7 @@
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         }
 
-        #upload-button-simple:hover {
+        #upload-trigger-button:hover {
             background-color: #0056b3;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
@@ -72,16 +75,16 @@
         #file-info {
             margin-top: 15px;
             font-size: 0.9em;
-            color: #555;
+            color: #b0b0b0; /* Warna info file abu-abu terang */
             text-align: left;
             word-wrap: break-word;
-            border-top: 1px solid #eee;
+            border-top: 1px solid #444; /* Border sedikit lebih gelap */
             padding-top: 15px;
             line-height: 1.8;
         }
 
         #file-info a {
-            color: #007bff;
+            color: #0096ff; /* Warna link lebih terang agar terlihat di background hitam */
             text-decoration: none;
         }
 
@@ -101,7 +104,7 @@
             p {
                 font-size: 0.9em;
             }
-            #upload-button-simple {
+            #upload-trigger-button {
                 padding: 10px 20px;
                 font-size: 1em;
             }
@@ -118,13 +121,7 @@
         <h1>Unggah Dokumen Anda</h1>
         <p>Klik tombol di bawah ini untuk mengunggah file. Anda bisa memilih dari komputer atau melakukan seret & lepas saat jendela unggah muncul.</p>
 
-        <input type="hidden"
-               role="uploadcare-uploader"
-               data-public-key="c02c4148f12574e3489f"
-               data-multiple="true"
-               data-images-only="false" />
-
-        <button id="upload-button-simple">Unggah File</button>
+        <button id="upload-trigger-button">Unggah File</button>
 
         <div id="status-message"></div>
         <div id="file-info"></div>
@@ -134,56 +131,44 @@
         // Ganti 'c02c4148f12574e3489f' dengan Public Key Anda dari dashboard Uploadcare
         uploadcare.publickey = 'c02c4148f12574e3489f';
 
-        const uploaderInput = document.querySelector('input[role="uploadcare-uploader"]');
-        const uploadButton = document.getElementById('upload-button-simple');
+        const uploadTriggerButton = document.getElementById('upload-trigger-button');
         const statusMessage = document.getElementById('status-message');
         const fileInfoDiv = document.getElementById('file-info');
 
-        // Inisialisasi widget Uploadcare pada input
-        const widget = uploadcare.widget(uploaderInput);
+        uploadTriggerButton.addEventListener('click', function() {
+            uploadcare.openDialog().done(function(file) {
+                file.progress(function(info) {
+                    statusMessage.textContent = `Mengunggah: ${info.progress}%`;
+                    statusMessage.style.color = '#007bff';
+                    statusMessage.classList.remove('error');
+                }).fail(function(error) {
+                    statusMessage.textContent = `Unggahan Gagal: ${error.message}`;
+                    statusMessage.classList.add('error');
+                    fileInfoDiv.innerHTML = '';
+                    console.error('Upload failed:', error);
+                }).done(function(info) {
+                    console.log('File terunggah:', info);
+                    statusMessage.textContent = 'Unggahan Berhasil!';
+                    statusMessage.style.color = '#28a745';
+                    statusMessage.classList.remove('error');
 
-        // Event saat unggahan selesai
-        widget.onUploadComplete(function(info) {
-            console.log('File terunggah:', info);
-            statusMessage.textContent = 'Unggahan Berhasil!';
-            statusMessage.style.color = '#28a745'; // Green
-            statusMessage.classList.remove('error');
-
-            let fileDetails = '';
-            if (info.isGroup) { // Jika multiple files (group)
-                fileDetails = info.files.map(file => `
-                    <strong>Nama File:</strong> ${file.name}<br>
-                    <strong>Ukuran:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
-                    <strong>URL:</strong> <a href="${file.cdnUrl}" target="_blank">${file.cdnUrl}</a>
-                `).join('<br><br>');
-            } else { // Jika single file
-                fileDetails = `
-                    <strong>Nama File:</strong> ${info.name}<br>
-                    <strong>Ukuran:</strong> ${(info.size / 1024 / 1024).toFixed(2)} MB<br>
-                    <strong>URL:</strong> <a href="${info.cdnUrl}" target="_blank">${info.cdnUrl}</a>
-                `;
-            }
-            fileInfoDiv.innerHTML = fileDetails;
-        });
-
-        // Event saat proses unggah (untuk menampilkan progress)
-        widget.onProgress(function(progress) {
-            statusMessage.textContent = `Mengunggah: ${progress.progress}%`;
-            statusMessage.style.color = '#007bff'; // Blue
-            statusMessage.classList.remove('error');
-        });
-
-        // Event saat unggahan gagal
-        widget.onFail(function(error) {
-            statusMessage.textContent = `Unggahan Gagal: ${error.message}`;
-            statusMessage.classList.add('error'); // Add error class for red color
-            fileInfoDiv.innerHTML = '';
-            console.error('Upload failed:', error);
-        });
-
-        // Memicu klik pada input uploader tersembunyi saat tombol kustom diklik
-        uploadButton.addEventListener('click', function() {
-            uploaderInput.click();
+                    let fileDetails = '';
+                    if (info.isGroup) {
+                        fileDetails = info.files.map(file => `
+                            <strong>Nama File:</strong> ${file.name}<br>
+                            <strong>Ukuran:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
+                            <strong>URL:</strong> <a href="${file.cdnUrl}" target="_blank">${file.cdnUrl}</a>
+                        `).join('<br><br>');
+                    } else {
+                        fileDetails = `
+                            <strong>Nama File:</strong> ${info.name}<br>
+                            <strong>Ukuran:</strong> ${(info.size / 1024 / 1024).toFixed(2)} MB<br>
+                            <strong>URL:</strong> <a href="${info.cdnUrl}" target="_blank">${info.cdnUrl}</a>
+                        `;
+                    }
+                    fileInfoDiv.innerHTML = fileDetails;
+                });
+            });
         });
     </script>
 </body>
