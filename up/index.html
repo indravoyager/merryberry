@@ -3,98 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unggah File ke Google Drive via Uploadcare</title>
+    <title>Unggah File - Drag & Drop Responsif</title>
     <style>
+        /* --- CSS untuk Responsif dan Drag & Drop --- */
         body {
-            font-family: Arial, sans-serif;
-            margin: 50px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #555;
             text-align: center;
+            max-width: 600px;
+            line-height: 1.6;
         }
-        #upload-container {
-            border: 2px dashed #ccc;
-            padding: 40px;
-            max-width: 500px;
-            margin: 50px auto;
+
+        #main-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 700px;
+            width: 100%;
+            box-sizing: border-box; /* Pastikan padding dihitung dalam width */
+        }
+
+        #upload-area {
+            border: 3px dashed #a0d8b4; /* Warna border yang lebih menarik */
+            border-radius: 8px;
+            padding: 50px 20px;
+            text-align: center;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            position: relative; /* Penting untuk penempatan input tersembunyi */
         }
-        #upload-container:hover {
-            background-color: #f0f0f0;
+
+        #upload-area:hover {
+            background-color: #e6f7ef; /* Latar belakang saat hover */
+            border-color: #6bcc8b;
         }
+
+        #upload-area.dragover { /* Class saat file diseret di atas area */
+            background-color: #e6f7ef;
+            border-color: #3cb462;
+            box-shadow: 0 0 15px rgba(60, 180, 98, 0.3);
+        }
+
+        #upload-text {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
         #upload-button {
             display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
+            padding: 12px 25px;
+            background-color: #3cb462; /* Warna tombol hijau */
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
-            margin-top: 20px;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
+
+        #upload-button:hover {
+            background-color: #308f4e;
+            transform: translateY(-2px);
+        }
+
+        /* Input tersembunyi untuk Uploadcare */
+        .uploadcare--widget {
+            opacity: 0; /* Sembunyikan input asli */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 10; /* Pastikan di atas elemen lain di area */
+        }
+
         #status-message {
-            margin-top: 20px;
-            color: green;
+            margin-top: 25px;
+            font-size: 1.1em;
+            color: #28a745; /* Warna sukses */
             font-weight: bold;
         }
+
         #file-info {
-            margin-top: 20px;
-            font-size: 0.9em;
-            color: #555;
+            margin-top: 15px;
+            font-size: 0.95em;
+            color: #666;
+            text-align: left;
+            word-wrap: break-word; /* Memastikan URL panjang tidak merusak layout */
+        }
+
+        #file-info a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        #file-info a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            #main-container {
+                padding: 20px;
+                margin: 20px auto;
+            }
+            #upload-area {
+                padding: 30px 15px;
+            }
+            #upload-text {
+                font-size: 1em;
+            }
+            #upload-button {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
         }
     </style>
     <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
 </head>
 <body>
 
-    <h1>Unggah Dokumen Anda</h1>
-    <p>Pilih file dari komputer Anda atau seret ke area di bawah.</p>
+    <div id="main-container">
+        <h1>Unggah File Anda</h1>
+        <p>Silakan seret & jatuhkan file Anda ke area di bawah, atau klik tombol untuk memilih file dari perangkat Anda.</p>
 
-    <div id="upload-container">
-        <input type="hidden" role="uploadcare-uploader" data-public-key="c02c4148f12574e3489f" data-multiple="true" />
-        <p>Seret & jatuhkan file di sini, atau klik untuk memilih file.</p>
-        <button id="upload-button">Pilih File</button>
+        <div id="upload-area">
+            <input type="hidden"
+                   role="uploadcare-uploader"
+                   data-public-key="c02c4148f12574e3489f"
+                   data-multiple="true"
+                   data-images-only="false"
+                   class="uploadcare--widget" />
+
+            <p id="upload-text">Seret & jatuhkan file di sini</p>
+            <button id="upload-button">Atau Klik untuk Memilih File</button>
+        </div>
+
+        <div id="status-message"></div>
+        <div id="file-info"></div>
     </div>
 
-    <div id="status-message"></div>
-    <div id="file-info"></div>
-
     <script>
-        // Langkah 2: Ganti 'c02c4148f12574e3489f' dengan Public Key Anda
+        // --- JavaScript untuk Uploadcare dan Interaktivitas ---
+        // Ganti 'c02c4148f12574e3489f' dengan Public Key Anda dari dashboard Uploadcare
         uploadcare.publickey = 'c02c4148f12574e3489f';
 
-        // Opsional: Kustomisasi widget atau tangani event
         const uploaderInput = document.querySelector('input[role="uploadcare-uploader"]');
+        const uploadArea = document.getElementById('upload-area');
+        const uploadButton = document.getElementById('upload-button');
         const statusMessage = document.getElementById('status-message');
-        const fileInfo = document.getElementById('file-info');
+        const fileInfoDiv = document.getElementById('file-info');
 
-        uploadcare.widget(uploaderInput).onUploadComplete(function(fileInfoObj) {
-            console.log('File terunggah:', fileInfoObj);
+        // Inisialisasi widget Uploadcare pada input
+        const widget = uploadcare.widget(uploaderInput);
+
+        // Event saat unggahan selesai
+        widget.onUploadComplete(function(info) {
+            console.log('File terunggah:', info);
             statusMessage.textContent = 'Unggahan Berhasil!';
-            fileInfo.innerHTML = `
-                Nama File: ${fileInfoObj.name}<br>
-                Ukuran: ${(fileInfoObj.size / 1024 / 1024).toFixed(2)} MB<br>
-                URL: <a href="${fileInfoObj.cdnUrl}" target="_blank">${fileInfoObj.cdnUrl}</a>
-            `;
+            statusMessage.style.color = '#28a745'; // Warna hijau untuk sukses
 
-            // Di sini Anda bisa mengirim data (misalnya fileInfoObj.cdnUrl)
-            // ke layanan lain jika Anda ingin melakukan sesuatu dengan URL tersebut
-            // selain melalui Zapier/Make.
-        }).onProgress(function(info) {
-            statusMessage.textContent = `Mengunggah: ${info.progress}%`;
-        }).onFail(function(error) {
+            let fileDetails = '';
+            if (info.is
+                if (Array.isArray(info.files)) { // Jika multiple files
+                    fileDetails = info.files.map(file => `
+                        <strong>Nama File:</strong> ${file.name}<br>
+                        <strong>Ukuran:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
+                        <strong>URL:</strong> <a href="${file.cdnUrl}" target="_blank">${file.cdnUrl}</a>
+                    `).join('<br><br>');
+                } else { // Jika single file
+                    fileDetails = `
+                        <strong>Nama File:</strong> ${info.name}<br>
+                        <strong>Ukuran:</strong> ${(info.size / 1024 / 1024).toFixed(2)} MB<br>
+                        <strong>URL:</strong> <a href="${info.cdnUrl}" target="_blank">${info.cdnUrl}</a>
+                    `;
+                }
+            } else { // Handle case where it's a single file object, not a group
+                fileDetails = `
+                    <strong>Nama File:</strong> ${info.name}<br>
+                    <strong>Ukuran:</strong> ${(info.size / 1024 / 1024).toFixed(2)} MB<br>
+                    <strong>URL:</strong> <a href="${info.cdnUrl}" target="_blank">${info.cdnUrl}</a>
+                `;
+            }
+            fileInfoDiv.innerHTML = fileDetails;
+        });
+
+        // Event saat proses unggah (untuk menampilkan progress)
+        widget.onProgress(function(progress) {
+            statusMessage.textContent = `Mengunggah: ${progress.progress}%`;
+            statusMessage.style.color = '#007bff'; // Warna biru saat progress
+        });
+
+        // Event saat unggahan gagal
+        widget.onFail(function(error) {
             statusMessage.textContent = `Unggahan Gagal: ${error.message}`;
             statusMessage.style.color = 'red';
+            fileInfoDiv.innerHTML = ''; // Kosongkan info file jika gagal
+            console.error('Upload failed:', error);
         });
 
-        // Mengaitkan tombol kustom dengan input uploader
-        document.getElementById('upload-button').addEventListener('click', function() {
-            uploaderInput.click(); // Memicu klik pada input tersembunyi
+        // --- JavaScript untuk Interaksi Drag & Drop UI ---
+        // Mencegah perilaku default browser untuk drag
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false); // Untuk mencegah drop di luar area
         });
 
-        // Mengubah perilaku ketika area drag-and-drop diklik
-        document.getElementById('upload-container').addEventListener('click', function(event) {
-            // Pastikan klik tidak berasal dari tombol, agar tombol tetap bisa berfungsi
-            if (event.target.id !== 'upload-button') {
+        function preventDefaults (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Menambahkan/menghapus kelas 'dragover' untuk efek visual
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            uploadArea.classList.add('dragover');
+        }
+
+        function unhighlight() {
+            uploadArea.classList.remove('dragover');
+        }
+
+        // Event saat file di-drop
+        uploadArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            // Kita tidak perlu memproses file di sini, Uploadcare widget akan menanganinya
+            // Cukup pastikan area tidak lagi dalam status dragover
+            uploadArea.classList.remove('dragover');
+            // Uploadcare widget secara otomatis akan memproses file dari event drop ini
+        }
+
+        // Memicu klik pada input uploader ketika tombol custom diklik
+        uploadButton.addEventListener('click', function() {
+            uploaderInput.click();
+        });
+
+        // Memicu klik pada input uploader ketika area drag & drop diklik (selain tombol)
+        uploadArea.addEventListener('click', function(event) {
+            if (event.target.id !== 'upload-button') { // Hanya jika klik bukan dari tombol
                 uploaderInput.click();
             }
         });
