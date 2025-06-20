@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unggah File</title>
+    <title>Unggah File - GitHub Pages</title>
     <style>
+        /* --- CSS Dasar & Layout --- */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
@@ -12,23 +13,24 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background-color: #1a1a1a; /* Background hitam */
-            color: #f0f0f0; /* Warna teks di body */
+            background-color: #1a1a1a; /* Latar belakang hitam */
+            color: #f0f0f0; /* Warna teks umum */
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
         }
 
         .container {
-            background-color: #2c2c2c; /* Warna container kontras */
+            background-color: #2c2c2c; /* Warna container kontras dari background */
             padding: 40px 30px;
             border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Efek bayangan */
             text-align: center;
             max-width: 500px;
             width: 100%;
         }
 
+        /* --- Judul & Paragraf --- */
         h1 {
             color: #ffffff; /* Warna judul putih */
             margin-bottom: 20px;
@@ -40,9 +42,9 @@
             line-height: 1.6;
         }
 
-        /* --- Tombol Utama --- */
+        /* --- Tombol Utama Unggah --- */
         #upload-trigger-button {
-            background-color: #007bff;
+            background-color: #007bff; /* Warna biru cerah */
             color: white;
             padding: 12px 25px;
             border: none;
@@ -50,16 +52,17 @@
             font-size: 1.1em;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Transisi halus saat hover */
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         }
 
         #upload-trigger-button:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
+            background-color: #0056b3; /* Biru lebih gelap saat hover */
+            transform: translateY(-2px); /* Efek sedikit terangkat */
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
         }
 
+        /* --- Area Pesan Status & Info File --- */
         #status-message {
             margin-top: 25px;
             font-size: 1em;
@@ -76,14 +79,14 @@
             font-size: 0.9em;
             color: #b0b0b0; /* Warna info file abu-abu terang */
             text-align: left;
-            word-wrap: break-word;
-            border-top: 1px solid #444; /* Border abu-abu gelap */
+            word-wrap: break-word; /* Mengatasi URL panjang */
+            border-top: 1px solid #444; /* Garis pemisah abu-abu gelap */
             padding-top: 15px;
             line-height: 1.8;
         }
 
         #file-info a {
-            color: #0096ff; /* Warna link lebih terang */
+            color: #0096ff; /* Warna link biru yang lebih terang */
             text-decoration: none;
         }
 
@@ -91,7 +94,7 @@
             text-decoration: underline;
         }
 
-        /* Responsive adjustments */
+        /* --- Responsif --- */
         @media (max-width: 600px) {
             .container {
                 padding: 30px 20px;
@@ -135,41 +138,45 @@
         const statusMessage = document.getElementById('status-message');
         const fileInfoDiv = document.getElementById('file-info');
 
-        // Event listener saat tombol diklik
+        // Event listener saat tombol "Unggah File" diklik
         uploadTriggerButton.addEventListener('click', function() {
-            // Memunculkan pop-up Uploadcare
+            // Membuka dialog unggah Uploadcare
+            // Method openDialog() secara default mendukung multiple file dan drag-and-drop di pop-up-nya
             uploadcare.openDialog().done(function(file) {
-                // Handle progress, failure, and success of the upload
+                // Objek 'file' di sini bisa berupa file tunggal atau grup file (jika multiple diaktifkan)
+                
+                // Menangani progress unggahan
                 file.progress(function(info) {
                     statusMessage.textContent = `Mengunggah: ${info.progress}%`;
                     statusMessage.style.color = '#007bff'; // Biru untuk progress
                     statusMessage.classList.remove('error');
-                }).fail(function(error) {
+                }).fail(function(error) { // Menangani kegagalan unggahan
                     statusMessage.textContent = `Unggahan Gagal: ${error.message}`;
                     statusMessage.classList.add('error'); // Merah untuk error
-                    fileInfoDiv.innerHTML = '';
+                    fileInfoDiv.innerHTML = ''; // Kosongkan info file jika gagal
                     console.error('Upload failed:', error);
-                }).done(function(info) {
+                }).done(function(info) { // Menangani unggahan yang berhasil
                     console.log('File terunggah:', info);
                     statusMessage.textContent = 'Unggahan Berhasil!';
                     statusMessage.style.color = '#28a745'; // Hijau untuk sukses
                     statusMessage.classList.remove('error');
 
                     let fileDetails = '';
-                    if (info.isGroup) { // Jika mengunggah banyak file
+                    // Memeriksa apakah yang diunggah adalah grup file (multiple files)
+                    if (info.isGroup) {
                         fileDetails = info.files.map(file => `
                             <strong>Nama File:</strong> ${file.name}<br>
                             <strong>Ukuran:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
                             <strong>URL:</strong> <a href="${file.cdnUrl}" target="_blank">${file.cdnUrl}</a>
-                        `).join('<br><br>');
-                    } else { // Jika mengunggah satu file
+                        `).join('<br><br>'); // Gabungkan detail setiap file dengan baris baru
+                    } else { // Jika hanya satu file yang diunggah
                         fileDetails = `
                             <strong>Nama File:</strong> ${info.name}<br>
                             <strong>Ukuran:</strong> ${(info.size / 1024 / 1024).toFixed(2)} MB<br>
                             <strong>URL:</strong> <a href="${info.cdnUrl}" target="_blank">${info.cdnUrl}</a>
                         `;
                     }
-                    fileInfoDiv.innerHTML = fileDetails;
+                    fileInfoDiv.innerHTML = fileDetails; // Tampilkan detail file di halaman
                 });
             });
         });
