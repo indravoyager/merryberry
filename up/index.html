@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unggah File - GitHub Pages</title>
+    <title>Unggah File ke Google Drive via Uploadcare</title>
     <style>
         /* --- CSS Dasar & Layout --- */
         body {
@@ -94,7 +94,30 @@
             text-decoration: underline;
         }
 
-        /* --- Responsif --- */
+        /* --- Gaya Tombol Copy --- */
+        .copy-button {
+            background-color: #555; /* Abu-abu gelap */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 0.8em;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            white-space: nowrap; /* Pastikan tombol tidak pecah baris */
+        }
+
+        .copy-button:hover {
+            background-color: #777;
+            transform: translateY(-1px);
+        }
+
+        .copy-button:active {
+            transform: translateY(0);
+        }
+
+        /* Responsif */
         @media (max-width: 600px) {
             .container {
                 padding: 30px 20px;
@@ -112,6 +135,11 @@
             }
             #status-message, #file-info {
                 font-size: 0.85em;
+            }
+            /* Sesuaikan ukuran tombol copy di mobile jika perlu */
+            .copy-button {
+                padding: 4px 8px;
+                font-size: 0.75em;
             }
         }
     </style>
@@ -138,45 +166,62 @@
         const statusMessage = document.getElementById('status-message');
         const fileInfoDiv = document.getElementById('file-info');
 
+        // Fungsi untuk menyalin teks ke clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                console.log('Teks berhasil disalin:', text);
+                // Opsional: berikan feedback visual ke user
+                alert('Tautan berhasil disalin!');
+            }).catch(err => {
+                console.error('Gagal menyalin teks:', err);
+                alert('Gagal menyalin tautan. Silakan salin manual.');
+            });
+        }
+
         // Event listener saat tombol "Unggah File" diklik
         uploadTriggerButton.addEventListener('click', function() {
             // Membuka dialog unggah Uploadcare
-            // Method openDialog() secara default mendukung multiple file dan drag-and-drop di pop-up-nya
             uploadcare.openDialog().done(function(file) {
-                // Objek 'file' di sini bisa berupa file tunggal atau grup file (jika multiple diaktifkan)
-                
-                // Menangani progress unggahan
                 file.progress(function(info) {
                     statusMessage.textContent = `Mengunggah: ${info.progress}%`;
-                    statusMessage.style.color = '#007bff'; // Biru untuk progress
+                    statusMessage.style.color = '#007bff';
                     statusMessage.classList.remove('error');
-                }).fail(function(error) { // Menangani kegagalan unggahan
+                }).fail(function(error) {
                     statusMessage.textContent = `Unggahan Gagal: ${error.message}`;
-                    statusMessage.classList.add('error'); // Merah untuk error
-                    fileInfoDiv.innerHTML = ''; // Kosongkan info file jika gagal
+                    statusMessage.classList.add('error');
+                    fileInfoDiv.innerHTML = '';
                     console.error('Upload failed:', error);
-                }).done(function(info) { // Menangani unggahan yang berhasil
+                }).done(function(info) {
                     console.log('File terunggah:', info);
                     statusMessage.textContent = 'Unggahan Berhasil!';
-                    statusMessage.style.color = '#28a745'; // Hijau untuk sukses
+                    statusMessage.style.color = '#28a745';
                     statusMessage.classList.remove('error');
 
                     let fileDetails = '';
-                    // Memeriksa apakah yang diunggah adalah grup file (multiple files)
-                    if (info.isGroup) {
+                    if (info.isGroup) { // Jika mengunggah banyak file
                         fileDetails = info.files.map(file => `
                             <strong>Nama File:</strong> ${file.name}<br>
                             <strong>Ukuran:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
                             <strong>URL:</strong> <a href="${file.cdnUrl}" target="_blank">${file.cdnUrl}</a>
-                        `).join('<br><br>'); // Gabungkan detail setiap file dengan baris baru
-                    } else { // Jika hanya satu file yang diunggah
+                            <button class="copy-button" data-link="${file.cdnUrl}">Copy Link</button>
+                        `).join('<br><br>');
+                    } else { // Jika mengunggah satu file
                         fileDetails = `
                             <strong>Nama File:</strong> ${info.name}<br>
                             <strong>Ukuran:</strong> ${(info.size / 1024 / 1024).toFixed(2)} MB<br>
                             <strong>URL:</strong> <a href="${info.cdnUrl}" target="_blank">${info.cdnUrl}</a>
+                            <button class="copy-button" data-link="${info.cdnUrl}">Copy Link</button>
                         `;
                     }
-                    fileInfoDiv.innerHTML = fileDetails; // Tampilkan detail file di halaman
+                    fileInfoDiv.innerHTML = fileDetails;
+
+                    // Tambahkan event listener untuk semua tombol copy yang baru dibuat
+                    document.querySelectorAll('.copy-button').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const linkToCopy = this.getAttribute('data-link');
+                            copyToClipboard(linkToCopy);
+                        });
+                    });
                 });
             });
         });
