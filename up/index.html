@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unggah File ke Google Drive via Uploadcare</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            text-align: center;
+        }
+        #upload-container {
+            border: 2px dashed #ccc;
+            padding: 40px;
+            max-width: 500px;
+            margin: 50px auto;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #upload-container:hover {
+            background-color: #f0f0f0;
+        }
+        #upload-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        #status-message {
+            margin-top: 20px;
+            color: green;
+            font-weight: bold;
+        }
+        #file-info {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+    <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+</head>
+<body>
+
+    <h1>Unggah Dokumen Anda</h1>
+    <p>Pilih file dari komputer Anda atau seret ke area di bawah.</p>
+
+    <div id="upload-container">
+        <input type="hidden" role="uploadcare-uploader" data-public-key="c02c4148f12574e3489f" data-multiple="true" />
+        <p>Seret & jatuhkan file di sini, atau klik untuk memilih file.</p>
+        <button id="upload-button">Pilih File</button>
+    </div>
+
+    <div id="status-message"></div>
+    <div id="file-info"></div>
+
+    <script>
+        // Langkah 2: Ganti 'c02c4148f12574e3489f' dengan Public Key Anda
+        uploadcare.publickey = 'c02c4148f12574e3489f';
+
+        // Opsional: Kustomisasi widget atau tangani event
+        const uploaderInput = document.querySelector('input[role="uploadcare-uploader"]');
+        const statusMessage = document.getElementById('status-message');
+        const fileInfo = document.getElementById('file-info');
+
+        uploadcare.widget(uploaderInput).onUploadComplete(function(fileInfoObj) {
+            console.log('File terunggah:', fileInfoObj);
+            statusMessage.textContent = 'Unggahan Berhasil!';
+            fileInfo.innerHTML = `
+                Nama File: ${fileInfoObj.name}<br>
+                Ukuran: ${(fileInfoObj.size / 1024 / 1024).toFixed(2)} MB<br>
+                URL: <a href="${fileInfoObj.cdnUrl}" target="_blank">${fileInfoObj.cdnUrl}</a>
+            `;
+
+            // Di sini Anda bisa mengirim data (misalnya fileInfoObj.cdnUrl)
+            // ke layanan lain jika Anda ingin melakukan sesuatu dengan URL tersebut
+            // selain melalui Zapier/Make.
+        }).onProgress(function(info) {
+            statusMessage.textContent = `Mengunggah: ${info.progress}%`;
+        }).onFail(function(error) {
+            statusMessage.textContent = `Unggahan Gagal: ${error.message}`;
+            statusMessage.style.color = 'red';
+        });
+
+        // Mengaitkan tombol kustom dengan input uploader
+        document.getElementById('upload-button').addEventListener('click', function() {
+            uploaderInput.click(); // Memicu klik pada input tersembunyi
+        });
+
+        // Mengubah perilaku ketika area drag-and-drop diklik
+        document.getElementById('upload-container').addEventListener('click', function(event) {
+            // Pastikan klik tidak berasal dari tombol, agar tombol tetap bisa berfungsi
+            if (event.target.id !== 'upload-button') {
+                uploaderInput.click();
+            }
+        });
+
+    </script>
+</body>
+</html>
