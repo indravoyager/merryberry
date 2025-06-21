@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collage Maker - Ukuran Presisi</title>
+    <title>Collage Maker - Ukuran Output Tepat</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,25 +29,22 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
-        .container {
+        .main-controls {
             width: 90%;
             max-width: 900px;
             background-color: var(--container-bg);
-            padding: 40px;
+            padding: 30px;
             border-radius: 16px;
             border: 1px solid var(--border-color);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             text-align: center;
+            margin-bottom: 30px;
         }
 
-        h1, .controls, .settings {
-            margin-bottom: 20px;
-        }
+        h1 { color: #ffffff; font-weight: 700; margin-top: 0; }
         
         .controls, .settings {
             display: flex;
@@ -55,9 +52,10 @@
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
+            margin-bottom: 20px;
         }
         
-        .btn, .ratio-btn {
+        .btn {
             background-color: var(--accent-color);
             color: #121212;
             padding: 12px 28px;
@@ -66,28 +64,14 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 500;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        .btn:hover, .ratio-btn:hover {
-            background-color: var(--accent-hover);
-            transform: scale(1.05);
         }
         
-        .ratio-btn {
-            padding: 8px 16px;
-            font-size: 14px;
-            background-color: var(--border-color);
-            color: var(--text-color);
+        .settings input[type="number"], .settings input[type="range"] {
+            vertical-align: middle;
         }
 
-        .ratio-btn.active {
-            background-color: var(--accent-color);
-            color: #121212;
-        }
-        
         .settings input[type="number"] {
-            width: 80px;
+            width: 90px;
             background-color: var(--input-bg);
             color: var(--text-color);
             border: 1px solid var(--border-color);
@@ -105,117 +89,164 @@
         
         #image-input { display: none; }
 
-        #collage-container {
+        /* Kontainer untuk Kolase (area preview) */
+        #preview-wrapper {
             width: 100%;
-            margin-top: 20px;
-            background-color: #000;
-            overflow: auto;
-            border: 2px solid var(--border-color);
+            overflow: auto; /* Jika kontainer lebih besar dari layar, bisa di-scroll */
+            padding: 20px;
+            border: 2px dashed var(--border-color);
             border-radius: 8px;
+        }
+        
+        #collage-container {
+            background-color: #000;
             display: flex;
             flex-wrap: wrap;
             gap: 0;
+            /* Ukuran width dan height diatur oleh JS */
+            /* Ini membuat editor menjadi WYSIWYG */
+            margin: 0 auto; /* Menengahkan kontainer di dalam wrapper */
         }
         
         #collage-container img {
-            /* flex-grow: 1; DIHAPUS atau dinonaktifkan agar ukuran tidak meregang */
+            flex-grow: 1;
             object-fit: cover;
-            /* Lebar dan tinggi diatur oleh JS. Tidak ada lagi peregangan */
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Collage Maker - Ukuran Presisi</h1>
+
+    <div class="main-controls">
+        <h1>Collage Maker - Ukuran Output Tepat</h1>
         
         <div class="controls">
-            <button class="btn" onclick="document.getElementById('image-input').click();">Pilih Gambar</button>
+            <button class="btn" onclick="document.getElementById('image-input').click();">1. Pilih Gambar</button>
             <input type="file" id="image-input" accept="image/*" multiple>
-            <button id="download-btn" class="btn">Unduh Kolase</button>
+            <button id="download-btn" class="btn">3. Unduh Hasil</button>
         </div>
-        
-        <div class="settings" id="ratio-controls">
-            <label>Rasio Kontainer:</label>
-            <button class="ratio-btn active" data-ratio="">Otomatis</button>
-            <button class="ratio-btn" data-ratio="1/1">1:1</button>
-            <button class="ratio-btn" data-ratio="16/9">16:9</button>
-            <button class="ratio-btn" data-ratio="9/16">9:16</button>
-        </div>
+        <hr style="border-color: var(--border-color);">
         
         <div class="settings">
-            <label>Ukuran Tepat (X &times; Y):</label>
-            <input type="number" id="imageWidth" value="250" min="50">
+            <label><b>2. Tentukan Ukuran Output Final:</b></label>
+            <input type="number" id="outputWidth" value="1920" min="100">
             <label>&times;</label>
-            <input type="number" id="imageHeight" value="200" min="50">
+            <input type="number" id="outputHeight" value="1080" min="100">
             <span>px</span>
         </div>
         
+        <div class="settings">
+            <label>Kepadatan/Skala Gambar:</label>
+            <input type="range" id="imageIdealHeight" min="50" max="500" value="150">
+            <span id="idealHeightValue">150px</span>
+        </div>
+    </div>
+    
+    <div id="preview-wrapper">
         <div id="collage-container">
-            </div>
+            <p style="color: #888; padding: 20px;">Silakan pilih gambar...</p>
+        </div>
     </div>
 
     <script>
     const imageInput = document.getElementById('image-input');
     const collageContainer = document.getElementById('collage-container');
     const downloadBtn = document.getElementById('download-btn');
-    const ratioButtons = document.querySelectorAll('.ratio-btn');
-    const imageWidthInput = document.getElementById('imageWidth');
-    const imageHeightInput = document.getElementById('imageHeight');
-
-    const updateImageDimensions = () => {
-        // PERUBAHAN DI SINI: kita atur width, bukan flex-basis
-        const width = imageWidthInput.value + 'px';
-        const height = imageHeightInput.value + 'px';
-        const images = collageContainer.querySelectorAll('img');
-        
-        images.forEach(img => {
-            img.style.width = width;  // Mengatur lebar (X) secara kaku
-            img.style.height = height; // Mengatur tinggi (Y)
-        });
-    };
     
+    // Mengambil elemen kontrol baru
+    const outputWidthInput = document.getElementById('outputWidth');
+    const outputHeightInput = document.getElementById('outputHeight');
+    const imageIdealHeightSlider = document.getElementById('imageIdealHeight');
+    const idealHeightValue = document.getElementById('idealHeightValue');
+
+    // Fungsi untuk mengubah ukuran kontainer preview
+    const updateContainerSize = () => {
+        const width = outputWidthInput.value;
+        const height = outputHeightInput.value;
+        
+        // Mencegah ukuran 0 atau negatif
+        if (width > 0 && height > 0) {
+            collageContainer.style.width = width + 'px';
+            collageContainer.style.height = height + 'px';
+        }
+        // Setelah ukuran kontainer diubah, render ulang layout gambar
+        displayImages(); 
+    };
+
+    // Fungsi utama untuk me-render gambar di dalam kontainer
     const displayImages = () => {
-        collageContainer.innerHTML = '';
         const files = imageInput.files;
-        const width = imageWidthInput.value + 'px';
-        const height = imageHeightInput.value + 'px';
+        if (files.length === 0) {
+            collageContainer.innerHTML = '<p style="color: #888; padding: 20px;">Silakan pilih gambar...</p>';
+            return;
+        }
+
+        collageContainer.innerHTML = ''; // Selalu bersihkan sebelum render
+        const idealHeight = imageIdealHeightSlider.value;
 
         for (const file of files) {
             const img = document.createElement('img');
             img.src = URL.createObjectURL(file);
-            img.style.width = width;  // Mengatur lebar (X) secara kaku
-            img.style.height = height; // Mengatur tinggi (Y)
+            // Tinggi gambar menjadi "anjuran" untuk kepadatan
+            img.style.height = idealHeight + 'px';
+            // Lebar dasar bisa kita set sama dengan tinggi untuk proporsi awal 1:1
+            img.style.flexBasis = idealHeight + 'px'; 
             collageContainer.appendChild(img);
         }
     };
 
-    imageInput.addEventListener('change', displayImages);
-    imageWidthInput.addEventListener('input', updateImageDimensions);
-    imageHeightInput.addEventListener('input', updateImageDimensions);
-    ratioButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            ratioButtons.forEach(btn => btn.classList.remove('active'));
-            const clickedButton = e.currentTarget;
-            clickedButton.classList.add('active');
-            collageContainer.style.aspectRatio = clickedButton.dataset.ratio;
-        });
+    // --- Event Listeners ---
+
+    imageInput.addEventListener('change', () => {
+        // Saat gambar baru dipilih, pertama atur ukuran kontainer, lalu tampilkan gambar
+        updateContainerSize();
     });
+    
+    // Jika ukuran output diubah, update ukuran kontainer
+    outputWidthInput.addEventListener('input', updateContainerSize);
+    outputHeightInput.addEventListener('input', updateContainerSize);
+
+    // Jika slider kepadatan diubah, cukup render ulang gambar
+    imageIdealHeightSlider.addEventListener('input', (event) => {
+        idealHeightValue.textContent = `${event.target.value}px`;
+        displayImages();
+    });
+
     downloadBtn.addEventListener('click', () => {
         if (imageInput.files.length === 0) {
             alert("Silakan pilih gambar terlebih dahulu!");
             return;
         }
-        alert("Mempersiapkan file unduhan...");
+
+        const finalWidth = parseInt(outputWidthInput.value);
+        const finalHeight = parseInt(outputHeightInput.value);
+
+        if (!(finalWidth > 0 && finalHeight > 0)) {
+            alert("Ukuran output final tidak valid!");
+            return;
+        }
+
+        alert(`Mempersiapkan file ${finalWidth}x${finalHeight}px...`);
+
+        // Logika download dengan `html2canvas` yang disesuaikan
         html2canvas(collageContainer, {
-            backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'),
-            scale: 2
+            // Memberi tahu html2canvas ukuran render yang tepat
+            width: finalWidth,
+            height: finalHeight,
+            // Opsi lain untuk kualitas
+            scale: 1, // Skala 1 karena kita sudah menentukan width/height secara manual
+            useCORS: true,
+            logging: false
         }).then(canvas => {
+            // Hasil 'canvas' akan memiliki dimensi TEPAT sesuai input
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'kolase-presisi.png';
+            link.download = `kolase-${finalWidth}x${finalHeight}.png`;
             link.click();
         });
     });
+    
+    // Inisialisasi ukuran kontainer saat halaman pertama kali dimuat
+    updateContainerSize();
     </script>
 </body>
 </html>
