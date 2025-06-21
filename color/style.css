@@ -184,10 +184,11 @@ input[type="file"] {
     cursor: grabbing;
 }
 
+/* --- PERUBAHAN DI SINI --- */
 .side-content-wrapper {
     flex: 2;
     display: flex;
-    flex-direction: row;
+    flex-direction: column; /* Diubah kembali ke column (ke bawah) */
     gap: 20px;
     align-items: stretch;
 }
@@ -207,7 +208,7 @@ input[type="file"] {
 }
 
 #color-palette-container {
-    flex: 2;
+    flex: 2; /* Properti ini sekarang akan mempengaruhi tinggi, bukan lebar */
 }
 
 
@@ -247,7 +248,6 @@ h2 {
     flex-shrink: 0;
 }
 
-/* --- PERUBAHAN DI SINI --- */
 #color-palette {
     display: flex;
     flex-wrap: wrap;
@@ -255,11 +255,9 @@ h2 {
     gap: 12px;
     width: 100%;
     flex-grow: 1;
-    overflow-y: auto;   /* Izinkan scroll vertikal */
-    overflow-x: hidden;  /* Sembunyikan scroll horizontal */
+    overflow-y: auto;
+    overflow-x: hidden;
     padding: 5px;
-    
-    /* Untuk Firefox */
     scrollbar-width: thin;
     scrollbar-color: var(--accent-color) #2a2a2a;
 }
@@ -413,6 +411,8 @@ h2 {
         width: 100%;
     }
 
+    /* Aturan flex-direction: column di sini sekarang tidak lagi diperlukan karena
+       sudah sama dengan gaya desktop, tapi tidak apa-apa jika dibiarkan. */
     .side-content-wrapper {
         flex-direction: column;
     }
@@ -427,22 +427,21 @@ h2 {
     }
 }
 
-/* --- PERUBAHAN BARU: Gaya Scrollbar Modern untuk Chrome/Safari/Edge --- */
 #color-palette::-webkit-scrollbar {
-  width: 8px; /* Lebar scrollbar */
+  width: 8px;
 }
 
 #color-palette::-webkit-scrollbar-track {
-  background: #2a2a2a; /* Warna latar belakang track */
+  background: #2a2a2a;
   border-radius: 10px;
 }
 
 #color-palette::-webkit-scrollbar-thumb {
-  background-color: var(--accent-color); /* Warna scrollbar */
-  border-radius: 10px; /* Membuat ujungnya bulat */
-  border: 2px solid #2a2a2a; /* Memberi sedikit padding di sekitar thumb */
+  background-color: var(--accent-color);
+  border-radius: 10px;
+  border: 2px solid #2a2a2a;
 }
 
 #color-palette::-webkit-scrollbar-thumb:hover {
-  background-color: var(--accent-hover-color); /* Warna saat dihover */
+  background-color: var(--accent-hover-color);
 }
