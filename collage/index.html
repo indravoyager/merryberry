@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collage Maker - Metode Fleksibel Rapat</title>
+    <title>Collage Maker - Kontrol Pixel X Y</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,6 +18,7 @@
             --accent-color: #00ff99;
             --accent-hover: #00e68a;
             --border-color: #333333;
+            --input-bg: #2a2a2a;
         }
 
         body {
@@ -84,6 +85,24 @@
             background-color: var(--accent-color);
             color: #121212;
         }
+
+        /* Styling untuk input angka X dan Y */
+        .settings input[type="number"] {
+            width: 80px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            font-size: 16px;
+            -moz-appearance: textfield; /* Sembunyikan panah di Firefox */
+        }
+        .settings input[type="number"]::-webkit-outer-spin-button,
+        .settings input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none; /* Sembunyikan panah di Chrome/Safari */
+            margin: 0;
+        }
         
         #image-input { display: none; }
 
@@ -96,24 +115,19 @@
             border-radius: 8px;
             display: flex;
             flex-wrap: wrap;
-            
-            /* PERUBAHAN CSS: Jarak dihilangkan */
             gap: 0;
         }
         
         #collage-container img {
             flex-grow: 1;
             object-fit: cover;
-            flex-basis: 200px; 
-            
-            /* Border radius dihilangkan agar terlihat menyatu sempurna */
-            border-radius: 0; 
+            /* Lebar dasar (X) dan tinggi (Y) diatur oleh JS */
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Collage Maker - Metode Fleksibel Rapat</h1>
+        <h1>Collage Maker - Kontrol Pixel</h1>
         
         <div class="controls">
             <button class="btn" onclick="document.getElementById('image-input').click();">Pilih Gambar</button>
@@ -130,9 +144,11 @@
         </div>
         
         <div class="settings">
-            <label for="rowHeight">Tinggi Gambar:</label>
-            <input type="range" id="rowHeight" min="100" max="400" value="200">
-            <span id="rowHeightValue">200px</span>
+            <label>Ukuran Dasar (X &times; Y):</label>
+            <input type="number" id="imageWidth" value="250" min="50">
+            <label>&times;</label>
+            <input type="number" id="imageHeight" value="200" min="50">
+            <span>px</span>
         </div>
         
         <div id="collage-container">
@@ -140,40 +156,52 @@
     </div>
 
     <script>
+    // === PERUBAHAN UTAMA DI JAVASCRIPT ===
+
     const imageInput = document.getElementById('image-input');
     const collageContainer = document.getElementById('collage-container');
     const downloadBtn = document.getElementById('download-btn');
-    const rowHeightSlider = document.getElementById('rowHeight');
-    const rowHeightValue = document.getElementById('rowHeightValue');
     const ratioButtons = document.querySelectorAll('.ratio-btn');
+    
+    // Mengambil elemen input X dan Y yang baru
+    const imageWidthInput = document.getElementById('imageWidth');
+    const imageHeightInput = document.getElementById('imageHeight');
 
+    // Fungsi untuk menerapkan ukuran ke semua gambar
+    const updateImageDimensions = () => {
+        const width = imageWidthInput.value + 'px';
+        const height = imageHeightInput.value + 'px';
+        const images = collageContainer.querySelectorAll('img');
+        
+        images.forEach(img => {
+            img.style.flexBasis = width; // Mengatur lebar dasar (X)
+            img.style.height = height;   // Mengatur tinggi (Y)
+        });
+    };
+    
+    // Fungsi untuk menampilkan gambar-gambar yang baru dipilih
     const displayImages = () => {
         collageContainer.innerHTML = '';
         const files = imageInput.files;
-        const height = rowHeightSlider.value + 'px';
+        const width = imageWidthInput.value + 'px';
+        const height = imageHeightInput.value + 'px';
 
         for (const file of files) {
             const img = document.createElement('img');
             img.src = URL.createObjectURL(file);
-            img.style.height = height;
+            img.style.flexBasis = width; // Mengatur lebar dasar (X)
+            img.style.height = height;   // Mengatur tinggi (Y)
             collageContainer.appendChild(img);
         }
     };
-    
-    const updateImageHeights = () => {
-        const height = rowHeightSlider.value + 'px';
-        const images = collageContainer.querySelectorAll('img');
-        images.forEach(img => {
-            img.style.height = height;
-        });
-    };
+
+    // --- Event Listeners ---
 
     imageInput.addEventListener('change', displayImages);
-
-    rowHeightSlider.addEventListener('input', (event) => {
-        rowHeightValue.textContent = `${event.target.value}px`;
-        updateImageHeights();
-    });
+    
+    // Tambahkan event listener untuk kedua input X dan Y
+    imageWidthInput.addEventListener('input', updateImageDimensions);
+    imageHeightInput.addEventListener('input', updateImageDimensions);
 
     ratioButtons.forEach(button => {
         button.addEventListener('click', (e) => {
@@ -196,7 +224,7 @@
         }).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'kolase-rapat.png';
+            link.download = 'kolase-pixel.png';
             link.click();
         });
     });
