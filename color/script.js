@@ -82,8 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mainContent.style.display = 'none';
         progressContainer.style.display = 'block';
         progressBar.style.width = '0%';
-        progressBar.textContent = '0%'; // Reset teks persentase
-        fileInfo.textContent = `File dipilih: ${file.name}`;
+        progressBar.textContent = '0%';
         
         const reader = new FileReader();
 
@@ -91,13 +90,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.lengthComputable) {
                 const percent = Math.round((e.loaded / e.total) * 100);
                 progressBar.style.width = percent + '%';
-                // --- PERUBAHAN DI SINI ---
-                progressBar.textContent = percent + '%'; // Menampilkan teks persentase
+                progressBar.textContent = percent + '%';
             }
         };
 
         reader.onload = (e) => {
-            // Pastikan bar mencapai 100% saat selesai
             progressBar.style.width = '100%';
             progressBar.textContent = '100%';
             setTimeout(() => { progressContainer.style.display = 'none'; }, 500);
@@ -199,6 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     imagePreview.addEventListener('mousedown', (event) => {
         isPicking = true;
+        // --- PERUBAHAN BARU: Menambahkan kelas CSS saat mouse ditekan ---
+        imagePreview.classList.add('is-picking-cursor');
         pickColorAt(event);
     });
 
@@ -210,10 +209,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('mouseup', () => {
         isPicking = false;
+        // --- PERUBAHAN BARU: Menghapus kelas CSS saat mouse dilepas ---
+        imagePreview.classList.remove('is-picking-cursor');
     });
 
     imagePreview.addEventListener('mouseleave', () => {
         isPicking = false;
+        // --- PERUBAHAN BARU: Menghapus kelas CSS saat mouse keluar dari gambar ---
+        imagePreview.classList.remove('is-picking-cursor');
     });
 
 
