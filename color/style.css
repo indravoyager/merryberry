@@ -184,11 +184,10 @@ input[type="file"] {
     cursor: grabbing;
 }
 
-/* --- PERUBAHAN DI SINI --- */
 .side-content-wrapper {
     flex: 2;
     display: flex;
-    flex-direction: column; /* Diubah kembali ke column (ke bawah) */
+    flex-direction: column;
     gap: 20px;
     align-items: stretch;
 }
@@ -202,13 +201,15 @@ input[type="file"] {
     flex-direction: column;
 }
 
+/* --- PERUBAHAN DI SINI --- */
 #picked-color-section {
-    flex: 1;
+    flex: none; /* Dibuat agar ukurannya pas dengan konten, tidak ikut membesar */
     align-items: center;
 }
 
 #color-palette-container {
-    flex: 2; /* Properti ini sekarang akan mempengaruhi tinggi, bukan lebar */
+    flex-grow: 1; /* Dibuat agar mengisi semua sisa ruang yang ada */
+    min-height: 0; /* Mencegah bug overflow pada flexbox */
 }
 
 
@@ -411,8 +412,6 @@ h2 {
         width: 100%;
     }
 
-    /* Aturan flex-direction: column di sini sekarang tidak lagi diperlukan karena
-       sudah sama dengan gaya desktop, tapi tidak apa-apa jika dibiarkan. */
     .side-content-wrapper {
         flex-direction: column;
     }
