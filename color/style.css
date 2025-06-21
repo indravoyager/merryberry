@@ -14,7 +14,7 @@ body {
     font-family: 'Poppins', sans-serif;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Ubah agar container bisa scroll */
+    align-items: flex-start;
     padding: 40px 20px;
     background-color: var(--bg-color);
     color: var(--primary-text-color);
@@ -50,7 +50,7 @@ header p {
 }
 
 .reset-button {
-    margin-bottom: 20px; /* Jarak dari bawah header */
+    margin-bottom: 20px;
     background-color: var(--accent-color);
     color: #fff;
     border: none;
@@ -61,7 +61,7 @@ header p {
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-    display: flex; /* Ganti dengan inline-flex di JS */
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
@@ -76,7 +76,6 @@ header p {
     box-shadow: 0 4px 10px rgba(138, 43, 226, 0.4);
 }
 
-/* Area Unggah & Drag-and-Drop */
 #upload-area {
     width: 100%;
     margin-bottom: 20px;
@@ -125,7 +124,6 @@ input[type="file"] {
     display: none;
 }
 
-/* Progress Bar */
 #upload-progress-container {
     width: 100%;
     background-color: #333;
@@ -135,6 +133,7 @@ input[type="file"] {
     height: 10px;
     display: none;
 }
+
 #upload-progress-bar {
     width: 0%;
     height: 100%;
@@ -142,9 +141,8 @@ input[type="file"] {
     transition: width 0.3s ease;
 }
 
-/* Konten Utama */
 .main-content-wrapper {
-    display: none; /* Awalnya disembunyikan */
+    display: none;
     flex-direction: row;
     justify-content: center;
     align-items: flex-start;
@@ -170,7 +168,6 @@ input[type="file"] {
     object-fit: contain;
 }
 
-/* Kontainer Samping (Picker & Palet) */
 .side-content-wrapper {
     flex: 2;
     max-width: 35%;
@@ -192,13 +189,13 @@ h2 {
     margin-top: 0;
     margin-bottom: 5px;
 }
+
 #picked-color-section p, #color-palette-container p {
     font-size: 0.9em;
     color: var(--secondary-text-color);
     margin-bottom: 15px;
 }
 
-/* Picker Warna */
 #picked-color-display {
     width: 100px;
     height: 100px;
@@ -208,16 +205,16 @@ h2 {
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
     background-color: #444;
 }
+
 #picked-color-value {
     font-size: 1em;
     font-weight: 400;
     color: var(--primary-text-color);
     word-break: break-all;
     margin-bottom: 15px;
-    min-height: 1.2em; /* Mencegah lompat saat teks muncul */
+    min-height: 1.2em;
 }
 
-/* Palet Warna */
 #color-palette {
     display: flex;
     flex-wrap: wrap;
@@ -233,6 +230,7 @@ h2 {
     width: calc(25% - 15px);
     min-width: 80px;
 }
+
 .color-box {
     width: 60px;
     height: 60px;
@@ -242,6 +240,7 @@ h2 {
     transition: transform 0.2s ease;
     cursor: pointer;
 }
+
 .color-box:hover {
     transform: scale(1.1);
 }
@@ -252,9 +251,8 @@ h2 {
     font-weight: 600;
 }
 
-/* Loading Spinner untuk Palet */
 .palette-loader-container {
-    display: none; /* Awalnya disembunyikan */
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -262,6 +260,7 @@ h2 {
     width: 100%;
     color: var(--secondary-text-color);
 }
+
 .palette-loader {
     border: 4px solid #444;
     border-top: 4px solid var(--accent-color);
@@ -271,12 +270,12 @@ h2 {
     animation: spin 1s linear infinite;
     margin-bottom: 10px;
 }
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
-/* Tombol Salin */
 .copy-button {
     background-color: #333;
     color: var(--primary-text-color);
@@ -288,11 +287,12 @@ h2 {
     font-weight: 400;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-    display: none; /* Awalnya disembunyikan */
+    display: none;
     align-items: center;
     justify-content: center;
     gap: 8px;
 }
+
 .copy-button:hover {
     background-color: var(--accent-color);
     border-color: var(--accent-color);
@@ -300,16 +300,17 @@ h2 {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(138, 43, 226, 0.3);
 }
+
 .color-item .copy-button {
     display: flex;
     font-size: 0.8em;
     padding: 5px 10px;
 }
+
 #copyPickedColorButton {
     min-width: 120px;
 }
 
-/* Pop-up Notifikasi */
 #notification-popup {
     position: fixed;
     bottom: 20px;
@@ -336,6 +337,7 @@ h2 {
     visibility: visible;
     transform: translateY(0);
 }
+
 #notification-popup i {
     color: var(--success-color);
     width: 20px;
