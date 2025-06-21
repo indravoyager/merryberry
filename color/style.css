@@ -10,32 +10,30 @@
     --success-color: #00ff99;
 }
 
-/* PERUBAHAN UTAMA: Membuat layout mengisi seluruh layar */
 html, body {
     height: 100%;
     margin: 0;
-    overflow: hidden; /* Mencegah scroll di level body */
+    overflow: hidden;
 }
 
 body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--bg-color);
     color: var(--primary-text-color);
-    display: flex; /* Menggunakan flexbox untuk body */
+    display: flex;
 }
 
-/* PERUBAHAN UTAMA: Container sekarang mengisi 100% layar, bukan kotak di tengah */
 .container {
     display: flex;
-    flex-direction: column; /* Mengatur header dan konten utama secara vertikal */
+    flex-direction: column;
     width: 100%;
     height: 100%;
     padding: 30px 40px;
-    box-sizing: border-box; /* Padding tidak menambah ukuran total */
+    box-sizing: border-box;
 }
 
 header {
-    flex-shrink: 0; /* Header tidak akan menyusut */
+    flex-shrink: 0;
     text-align: center;
 }
 
@@ -146,35 +144,35 @@ input[type="file"] {
     transition: width 0.3s ease;
 }
 
-/* PERUBAHAN UTAMA: Konten utama akan mengisi sisa ruang vertikal */
 .main-content-wrapper {
     display: none;
     flex-direction: row;
     gap: 30px;
     width: 100%;
-    flex-grow: 1; /* Ini membuat wrapper mengisi sisa tinggi layar */
-    min-height: 0; /* Mencegah bug overflow pada flexbox */
+    flex-grow: 1;
+    min-height: 0;
 }
 
-/* PERUBAHAN UTAMA: Membuat gambar jadi center */
 #image-display-area {
     flex: 3;
     background-color: var(--surface-color);
     border-radius: 10px;
     padding: 15px;
-    /* Menambahkan properti flex untuk menengahkan gambar di dalamnya */
     display: flex;
-    justify-content: center; /* Center horizontal */
-    align-items: center;     /* Center vertikal */
+    justify-content: center;
+    align-items: center;
 }
 
 #image-preview {
     max-width: 100%;
-    max-height: 100%; /* Gambar akan mengisi area tapi tidak melebihi batas */
+    max-height: 100%;
     height: auto;
     border-radius: 8px;
-    object-fit: contain; /* Memastikan rasio gambar tetap terjaga */
+    object-fit: contain;
     cursor: crosshair;
+    /* --- PERUBAHAN DI SINI --- */
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 .side-content-wrapper {
@@ -208,7 +206,7 @@ h2 {
     font-weight: 600;
     margin-top: 0;
     margin-bottom: 5px;
-    flex-shrink: 0; /* Mencegah judul menyusut */
+    flex-shrink: 0;
 }
 
 #picked-color-section p, #color-palette-container p {
@@ -245,8 +243,8 @@ h2 {
     justify-content: center;
     gap: 12px;
     width: 100%;
-    flex-grow: 1; /* Membuat area palet mengisi sisa ruang */
-    overflow-y: auto; /* Jika palet terlalu banyak, hanya area ini yang scroll */
+    flex-grow: 1;
+    overflow-y: auto;
     padding: 5px;
 }
 
@@ -339,11 +337,10 @@ h2 {
     min-width: 120px;
 }
 
-/* --- PERUBAHAN DI SINI: dari right menjadi left --- */
 #notification-popup {
     position: fixed;
     bottom: 20px;
-    left: 20px; /* Diubah dari 'right' */
+    left: 20px;
     background-color: #2a2a2a;
     color: var(--primary-text-color);
     padding: 12px 20px;
