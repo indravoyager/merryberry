@@ -122,8 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 paletteLoader.style.display = 'flex';
                 setTimeout(() => {
                     try {
-                        // --- PERUBAHAN DI SINI: dari 6 menjadi 9 ---
-                        const palette = colorThief.getPalette(img, 9);
+                        // --- PERUBAHAN DI SINI: dari 9 menjadi 10 ---
+                        const palette = colorThief.getPalette(img, 10);
                         displayColorPalette(palette);
                     } catch (error) {
                         console.error("Gagal memproses gambar:", error);
