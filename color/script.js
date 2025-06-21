@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const colorThief = new ColorThief();
 
     let popupTimeout;
+    // --- PERUBAHAN BARU: State untuk melacak aksi mouse ---
+    let isPicking = false;
 
     // === Functions ===
 
@@ -118,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 paletteLoader.style.display = 'flex';
                 setTimeout(() => {
                     try {
-                        // --- PERUBAHAN DI SINI: dari 8 menjadi 6 ---
                         const palette = colorThief.getPalette(img, 6);
                         displayColorPalette(palette);
                     } catch (error) {
@@ -146,6 +147,34 @@ document.addEventListener('DOMContentLoaded', () => {
         imageUpload.value = '';
     }
 
+    // --- PERUBAHAN BARU: Membuat fungsi khusus untuk memilih warna ---
+    const pickColorAt = (event) => {
+        const rect = imagePreview.getBoundingClientRect();
+        const scaleX = imageCanvas.width / rect.width;
+        const scaleY = imageCanvas.height / rect.height;
+        const x = (event.clientX - rect.left) * scaleX;
+        const y = (event.clientY - rect.top) * scaleY;
+        
+        // Pastikan koordinat berada dalam batas canvas untuk menghindari error
+        if (x < 0 || x >= imageCanvas.width || y < 0 || y >= imageCanvas.height) {
+            return;
+        }
+
+        try {
+            const pixelData = ctx.getImageData(x, y, 1, 1).data;
+            const [r, g, b] = pixelData;
+            const hexColor = rgbToHex(r, g, b);
+
+            pickedColorDisplay.style.backgroundColor = hexColor;
+            pickedColorValue.textContent = `${hexColor}`;
+            copyPickedColorButton.style.display = 'inline-flex';
+        } catch (error) {
+            // Error ini bisa terjadi karena cross-origin, tapi kita sudah coba atasi
+            // dengan crossOrigin="Anonymous". Kita biarkan catch ini untuk keamanan.
+            console.error("Gagal mengambil warna piksel:", error);
+        }
+    };
+
     // === Event Listeners ===
     dropZone.addEventListener('click', () => imageUpload.click());
     imageUpload.addEventListener('change', (e) => handleFile(e.target.files[0]));
@@ -167,25 +196,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    imagePreview.addEventListener('click', (event) => {
-        const rect = imagePreview.getBoundingClientRect();
-        const scaleX = imageCanvas.width / rect.width;
-        const scaleY = imageCanvas.height / rect.height;
-        const x = (event.clientX - rect.left) * scaleX;
-        const y = (event.clientY - rect.top) * scaleY;
-        
-        try {
-            const pixelData = ctx.getImageData(x, y, 1, 1).data;
-            const [r, g, b] = pixelData;
-            const hexColor = rgbToHex(r, g, b);
+    // --- PERUBAHAN BARU: Mengganti 'click' dengan event-event mouse yang lebih lengkap ---
+    imagePreview.addEventListener('mousedown', (event) => {
+        isPicking = true;
+        pickColorAt(event); // Langsung pilih warna saat mouse ditekan
+    });
 
-            pickedColorDisplay.style.backgroundColor = hexColor;
-            pickedColorValue.textContent = `${hexColor}`;
-            copyPickedColorButton.style.display = 'inline-flex';
-        } catch (error) {
-            console.error("Gagal mengambil warna piksel:", error);
+    imagePreview.addEventListener('mousemove', (event) => {
+        if (isPicking) {
+            pickColorAt(event); // Terus pilih warna saat mouse digeser (jika ditahan)
         }
     });
+
+    // Kita pasang listener mouseup dan mouseleave di window untuk memastikan
+    // proses picking berhenti bahkan jika mouse dilepas di luar gambar.
+    window.addEventListener('mouseup', () => {
+        isPicking = false;
+    });
+
+    imagePreview.addEventListener('mouseleave', () => {
+        isPicking = false; // Berhenti jika mouse keluar dari area gambar
+    });
+
 
     copyPickedColorButton.addEventListener('click', () => {
         const colorToCopy = pickedColorValue.textContent;
