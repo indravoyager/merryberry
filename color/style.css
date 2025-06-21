@@ -10,33 +10,40 @@
     --success-color: #00ff99;
 }
 
-body {
-    font-family: 'Poppins', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 40px 20px;
-    background-color: var(--bg-color);
-    color: var(--primary-text-color);
+/* PERUBAHAN UTAMA: Membuat layout mengisi seluruh layar */
+html, body {
+    height: 100%;
     margin: 0;
-    min-height: 100vh;
+    overflow: hidden; /* Mencegah scroll di level body */
 }
 
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--primary-text-color);
+    display: flex; /* Menggunakan flexbox untuk body */
+}
+
+/* PERUBAHAN UTAMA: Container sekarang mengisi 100% layar, bukan kotak di tengah */
 .container {
-    background-color: var(--surface-color);
+    display: flex;
+    flex-direction: column; /* Mengatur header dan konten utama secara vertikal */
+    width: 100%;
+    height: 100%;
     padding: 30px 40px;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    width: 95%;
-    max-width: 1500px;
+    box-sizing: border-box; /* Padding tidak menambah ukuran total */
+}
+
+header {
+    flex-shrink: 0; /* Header tidak akan menyusut */
     text-align: center;
-    border: 1px solid var(--border-color);
 }
 
 header h1 {
-    font-size: 2.5em;
+    font-size: 2.2em;
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-top: 0;
+    margin-bottom: 5px;
     background: linear-gradient(90deg, var(--accent-color), var(--success-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -44,30 +51,27 @@ header h1 {
 
 header p {
     color: var(--secondary-text-color);
-    margin-bottom: 20px;
-    font-size: 1.1em;
+    margin-bottom: 15px;
+    font-size: 1em;
     font-weight: 300;
 }
 
 .reset-button {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     background-color: var(--accent-color);
     color: #fff;
     border: none;
     border-radius: 8px;
     padding: 10px 20px;
-    font-size: 1em;
+    font-size: 0.9em;
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    max-width: 250px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .reset-button:hover {
@@ -78,7 +82,7 @@ header p {
 
 #upload-area {
     width: 100%;
-    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 #drop-zone {
@@ -110,6 +114,7 @@ header p {
     margin: 0;
     font-size: 1.1em;
 }
+
 #drop-zone p b {
     font-weight: 600;
 }
@@ -141,100 +146,108 @@ input[type="file"] {
     transition: width 0.3s ease;
 }
 
+/* PERUBAHAN UTAMA: Konten utama akan mengisi sisa ruang vertikal */
 .main-content-wrapper {
     display: none;
     flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
     gap: 30px;
-    margin-top: 20px;
     width: 100%;
+    flex-grow: 1; /* Ini membuat wrapper mengisi sisa tinggi layar */
+    min-height: 0; /* Mencegah bug overflow pada flexbox */
 }
 
+/* PERUBAHAN UTAMA: Membuat gambar jadi center */
 #image-display-area {
     flex: 3;
-    max-width: 65%;
+    background-color: var(--surface-color);
+    border-radius: 10px;
+    padding: 15px;
+    /* Menambahkan properti flex untuk menengahkan gambar di dalamnya */
+    display: flex;
+    justify-content: center; /* Center horizontal */
+    align-items: center;     /* Center vertikal */
 }
 
 #image-preview {
     max-width: 100%;
-    max-height: calc(100vh - 350px);
+    max-height: 100%; /* Gambar akan mengisi area tapi tidak melebihi batas */
     height: auto;
-    border: 1px solid var(--border-color);
     border-radius: 8px;
-    display: block;
+    object-fit: contain; /* Memastikan rasio gambar tetap terjaga */
     cursor: crosshair;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    object-fit: contain;
 }
-
-/* KODE YANG DIPERBARUI DI BAWAH INI */
 
 .side-content-wrapper {
     flex: 2;
-    max-width: 35%;
     display: flex;
-    flex-direction: row; /* Mengatur item berdampingan secara horizontal */
+    flex-direction: row;
     gap: 20px;
-    align-items: stretch; /* Membuat kedua kolom sama tinggi */
+    align-items: stretch;
 }
 
-#picked-color-section {
-    background-color: #2a2a2a;
+#picked-color-section, #color-palette-container {
+    background-color: var(--surface-color);
     padding: 20px;
     border-radius: 10px;
     text-align: center;
-    flex: 1; /* Ambil 1 bagian dari ruang yang tersedia */
-}
-
-#color-palette-container {
-    background-color: #2a2a2a;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    flex: 2; /* Ambil 2 bagian dari ruang, membuatnya lebih lebar */
     display: flex;
     flex-direction: column;
 }
 
+#picked-color-section {
+    flex: 1;
+}
+
+#color-palette-container {
+    flex: 2;
+}
+
+
 h2 {
-    font-size: 1.5em;
+    font-size: 1.3em;
     font-weight: 600;
     margin-top: 0;
     margin-bottom: 5px;
+    flex-shrink: 0; /* Mencegah judul menyusut */
 }
 
 #picked-color-section p, #color-palette-container p {
-    font-size: 0.9em;
+    font-size: 0.8em;
     color: var(--secondary-text-color);
     margin-bottom: 15px;
+    flex-shrink: 0;
 }
 
 #picked-color-display {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     margin: 10px auto;
     border-radius: 50%;
     border: 4px solid #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
     background-color: #444;
+    flex-shrink: 0;
 }
 
 #picked-color-value {
-    font-size: 1em;
+    font-size: 0.9em;
     font-weight: 400;
     color: var(--primary-text-color);
     word-break: break-all;
     margin-bottom: 15px;
     min-height: 1.2em;
+    flex-shrink: 0;
 }
 
 #color-palette {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 15px;
+    gap: 12px;
     width: 100%;
+    flex-grow: 1; /* Membuat area palet mengisi sisa ruang */
+    overflow-y: auto; /* Jika palet terlalu banyak, hanya area ini yang scroll */
+    padding: 5px;
 }
 
 .color-item {
@@ -246,8 +259,8 @@ h2 {
 }
 
 .color-box {
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
     border-radius: 12px;
     margin-bottom: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
@@ -260,7 +273,7 @@ h2 {
 }
 
 .color-info {
-    font-size: 0.9em;
+    font-size: 0.8em;
     margin-bottom: 5px;
     font-weight: 600;
 }
@@ -305,6 +318,7 @@ h2 {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    flex-shrink: 0;
 }
 
 .copy-button:hover {
