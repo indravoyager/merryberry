@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palet Warna Gambar Modern</title>
+    <title>Palet Warna Gambar (Optimasi & Salin)</title>
     <style>
         /* Gaya Umum */
         body {
@@ -44,22 +44,59 @@
             margin: 40px 0;
         }
 
-        /* Input File */
+        /* Input File (Disembunyikan) */
         input[type="file"] {
-            display: block;
+            display: none; /* Sembunyikan input file asli */
+        }
+
+        /* Tombol Unggah Kustom */
+        .custom-file-upload {
+            display: inline-block;
             margin: 0 auto 30px auto;
-            padding: 12px 20px;
+            padding: 12px 25px; /* Padding lebih besar */
             border: 2px solid #007bff; /* Warna border biru cerah */
             border-radius: 8px;
-            background-color: #3a3a3a;
+            background-color: #007bff; /* Warna background biru */
             color: #fff;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase; /* Huruf kapital */
+            letter-spacing: 0.8px;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* Bayangan biru */
         }
 
-        input[type="file"]:hover {
-            background-color: #007bff;
-            border-color: #007bff;
+        .custom-file-upload:hover {
+            background-color: #0056b3; /* Warna biru lebih gelap saat hover */
+            border-color: #0056b3;
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+            transform: translateY(-2px); /* Efek angkat sedikit */
+        }
+
+        .custom-file-upload:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+        }
+
+        /* Progress Bar */
+        #upload-progress-container {
+            width: 100%;
+            background-color: #444;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            height: 25px; /* Tinggi progress bar */
+            display: none; /* Sembunyikan secara default */
+        }
+
+        #upload-progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #28a745; /* Warna hijau untuk progress */
+            text-align: center;
+            line-height: 25px;
+            color: white;
+            transition: width 0.3s ease;
         }
 
         /* Pratinjau Gambar */
@@ -91,6 +128,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative; /* Penting untuk posisi tombol salin */
+            padding-bottom: 10px; /* Ruang untuk tombol */
         }
 
         .color-box {
@@ -101,6 +140,7 @@
             cursor: pointer;
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative; /* Untuk menempatkan tombol salin di dalamnya jika diperlukan */
         }
 
         .color-box:hover {
@@ -114,6 +154,22 @@
             margin-top: 8px;
             text-align: center;
             font-weight: bold;
+        }
+
+        .copy-button {
+            background-color: #007bff; /* Warna biru untuk tombol */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 8px;
+            font-size: 0.75em;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: 5px; /* Jarak dari info warna */
+        }
+
+        .copy-button:hover {
+            background-color: #0056b3;
         }
 
         /* Pemilih Warna Langsung */
@@ -141,6 +197,14 @@
         <p>Unggah gambar Anda untuk mendapatkan palet warnanya dan pilih warna langsung dari gambar!</p>
 
         <input type="file" id="imageUpload" accept="image/*">
+        
+        <label for="imageUpload" class="custom-file-upload">
+            Pilih Gambar
+        </label>
+
+        <div id="upload-progress-container">
+            <div id="upload-progress-bar">0%</div>
+        </div>
 
         <canvas id="imageCanvas" style="display: none;"></canvas>
 
@@ -148,7 +212,7 @@
 
         <div id="color-palette-container">
             <h2>Palet Warna</h2>
-            <p>Klik pada kotak warna untuk menyalin kode HEX-nya.</p>
+            <p>Klik pada tombol salin di bawah setiap warna untuk menyalin kode HEX-nya.</p>
             <div id="color-palette">
                 </div>
         </div>
@@ -169,8 +233,14 @@
         const colorPaletteDiv = document.getElementById('color-palette');
         const pickedColorDisplay = document.getElementById('picked-color-display');
         const pickedColorValue = document.getElementById('picked-color-value');
+        const uploadProgressContainer = document.getElementById('upload-progress-container');
+        const uploadProgressBar = document.getElementById('upload-progress-bar');
         const ctx = imageCanvas.getContext('2d');
         const colorThief = new ColorThief();
+
+        // Resolusi maksimum untuk gambar yang akan diproses
+        const MAX_WIDTH = 800; // Lebar maksimum gambar setelah diresize
+        const MAX_HEIGHT = 600; // Tinggi maksimum gambar setelah diresize
 
         // Fungsi bantu untuk mengubah RGB ke HEX
         function rgbToHex(r, g, b) {
@@ -192,10 +262,17 @@
                 const colorBox = document.createElement('div');
                 colorBox.className = 'color-box';
                 colorBox.style.backgroundColor = hex;
-                colorBox.title = `Klik untuk menyalin: ${hex}`; // Tooltip
+                colorBox.title = `Warna: ${hex}`; 
 
-                // Salin ke clipboard saat diklik
-                colorBox.addEventListener('click', () => {
+                const colorInfo = document.createElement('div');
+                colorInfo.className = 'color-info';
+                colorInfo.textContent = hex;
+
+                const copyButton = document.createElement('button');
+                copyButton.className = 'copy-button';
+                copyButton.textContent = 'Salin';
+                copyButton.title = `Salin ${hex}`;
+                copyButton.addEventListener('click', () => {
                     navigator.clipboard.writeText(hex)
                         .then(() => {
                             alert(`Warna ${hex} telah disalin ke clipboard!`);
@@ -206,52 +283,119 @@
                         });
                 });
 
-                const colorInfo = document.createElement('div');
-                colorInfo.className = 'color-info';
-                colorInfo.textContent = hex;
-
                 const paletteItem = document.createElement('div');
                 paletteItem.className = 'color-item';
                 paletteItem.appendChild(colorBox);
                 paletteItem.appendChild(colorInfo);
+                paletteItem.appendChild(copyButton); // Tambahkan tombol salin
 
                 colorPaletteDiv.appendChild(paletteItem);
             });
+        }
+
+        // Fungsi untuk resize gambar
+        function resizeImage(img, maxWidth, maxHeight, callback) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            let width = img.width;
+            let height = img.height;
+
+            // Hitung rasio untuk menjaga aspek rasio
+            if (width > height) {
+                if (width > maxWidth) {
+                    height *= maxWidth / width;
+                    width = maxWidth;
+                }
+            } else {
+                if (height > maxHeight) {
+                    width *= maxHeight / height;
+                    height = maxHeight;
+                }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            ctx.drawImage(img, 0, 0, width, height);
+            // Gunakan promise untuk toDataURL agar lebih fleksibel
+            canvas.toBlob((blob) => {
+                const resizedDataUrl = URL.createObjectURL(blob);
+                callback(resizedDataUrl);
+            }, 'image/jpeg', 0.8); // Kompresi JPEG kualitas 80%
         }
 
         // Event listener saat gambar diunggah
         imageUpload.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
+                uploadProgressContainer.style.display = 'block'; // Tampilkan progress bar
+                uploadProgressBar.style.width = '0%';
+                uploadProgressBar.textContent = '0%';
+
                 const reader = new FileReader();
 
+                // Update progress bar saat membaca file
+                reader.onprogress = function(e) {
+                    if (e.lengthComputable) {
+                        const percent = (e.loaded / e.total) * 100;
+                        uploadProgressBar.style.width = percent + '%';
+                        uploadProgressBar.textContent = Math.round(percent) + '%';
+                    }
+                };
+
                 reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
-                    imagePreview.style.display = 'block'; // Tampilkan pratinjau gambar
+                    uploadProgressBar.style.width = '100%';
+                    uploadProgressBar.textContent = '100%';
+                    // Sembunyikan progress bar setelah selesai (opsional, bisa juga dihide setelah gambar dirender)
+                    setTimeout(() => { uploadProgressContainer.style.display = 'none'; }, 500);
 
-                    // Pastikan gambar sudah benar-benar dimuat sebelum diproses
-                    imagePreview.onload = function() {
-                        try {
-                            // Mengatur ukuran canvas sesuai gambar asli untuk akurasi
-                            imageCanvas.width = imagePreview.naturalWidth;
-                            imageCanvas.height = imagePreview.naturalHeight;
-                            ctx.drawImage(imagePreview, 0, 0); // Gambar ke canvas
 
-                            const palette = colorThief.getPalette(imagePreview, 8); // Ambil 8 warna
-                            displayColorPalette(palette);
+                    const img = new Image();
+                    img.src = e.target.result;
 
-                        } catch (error) {
-                            console.error("Gagal memproses gambar atau mengambil warna:", error);
-                            alert("Terjadi kesalahan saat memproses gambar. Pastikan gambar valid dan bukan dari domain lain (masalah CORS).");
-                            imagePreview.style.display = 'none';
-                            colorPaletteDiv.innerHTML = '<p style="color:#b0b0b0;">Gagal memproses gambar.</p>';
-                            pickedColorDisplay.style.backgroundColor = '#444';
-                            pickedColorValue.textContent = 'Warna Dipilih: N/A';
-                        }
+                    img.onload = function() {
+                        // Resize gambar sebelum ditampilkan dan diproses
+                        resizeImage(img, MAX_WIDTH, MAX_HEIGHT, (resizedDataUrl) => {
+                            imagePreview.src = resizedDataUrl;
+                            imagePreview.style.display = 'block';
+
+                            // Pastikan gambar yang sudah diresize dimuat sepenuhnya ke imagePreview
+                            imagePreview.onload = function() {
+                                try {
+                                    // Mengatur ukuran canvas sesuai gambar asli (setelah diresize)
+                                    imageCanvas.width = imagePreview.naturalWidth;
+                                    imageCanvas.height = imagePreview.naturalHeight;
+                                    ctx.drawImage(imagePreview, 0, 0); // Gambar ke canvas
+
+                                    const palette = colorThief.getPalette(imagePreview, 8); // Ambil 8 warna
+                                    displayColorPalette(palette);
+
+                                } catch (error) {
+                                    console.error("Gagal memproses gambar atau mengambil warna:", error);
+                                    alert("Terjadi kesalahan saat memproses gambar. Pastikan gambar valid dan bukan dari domain lain (masalah CORS).");
+                                    imagePreview.style.display = 'none';
+                                    colorPaletteDiv.innerHTML = '<p style="color:#b0b0b0;">Gagal memproses gambar.</p>';
+                                    pickedColorDisplay.style.backgroundColor = '#444';
+                                    pickedColorValue.textContent = 'Warna Dipilih: N/A';
+                                } finally {
+                                    // Revoke object URL setelah selesai digunakan untuk membebaskan memori
+                                    URL.revokeObjectURL(resizedDataUrl);
+                                }
+                            };
+                            imagePreview.onerror = function() {
+                                alert("Gagal memuat gambar yang diresize. Pastikan ini adalah file gambar yang valid.");
+                                imagePreview.style.display = 'none';
+                                colorPaletteDiv.innerHTML = '<p style="color:#b0b0b0;">Gagal memuat gambar.</p>';
+                                pickedColorDisplay.style.backgroundColor = '#444';
+                                pickedColorValue.textContent = 'Warna Dipilih: N/A';
+                                URL.revokeObjectURL(resizedDataUrl); // Pastikan URL dibersihkan
+                            };
+                        });
                     };
-                    // Tambahkan penanganan error jika gambar tidak bisa dimuat
-                    imagePreview.onerror = function() {
-                        alert("Gagal memuat gambar. Pastikan ini adalah file gambar yang valid.");
+                    img.onerror = function() {
+                        alert("Gagal memuat gambar asli. Pastikan ini adalah file gambar yang valid.");
+                        uploadProgressContainer.style.display = 'none';
                         imagePreview.style.display = 'none';
                         colorPaletteDiv.innerHTML = '<p style="color:#b0b0b0;">Gagal memuat gambar.</p>';
                         pickedColorDisplay.style.backgroundColor = '#444';
@@ -261,8 +405,9 @@
                 reader.readAsDataURL(file); // Memulai pembacaan file sebagai URL data
             } else {
                 // Reset tampilan jika tidak ada file yang dipilih
+                uploadProgressContainer.style.display = 'none';
                 imagePreview.style.display = 'none';
-                imagePreview.src = '#'; // Hapus src agar tidak ada gambar kosong
+                imagePreview.src = '#';
                 colorPaletteDiv.innerHTML = '';
                 pickedColorDisplay.style.backgroundColor = '#444';
                 pickedColorValue.textContent = 'Warna Dipilih: N/A';
@@ -273,32 +418,26 @@
         imagePreview.addEventListener('click', function(event) {
             if (!imagePreview.src || imagePreview.src === window.location.href + '#') {
                 alert("Silakan unggah gambar terlebih dahulu.");
-                return; // Jangan lakukan apa-apa jika tidak ada gambar yang dimuat
+                return;
             }
 
-            // Hitung koordinat klik relatif terhadap gambar yang ditampilkan
-            // Penting: Sesuaikan koordinat klik pada gambar di DOM ke koordinat piksel pada Canvas
             const rect = imagePreview.getBoundingClientRect();
-            const naturalWidth = imagePreview.naturalWidth;
-            const naturalHeight = imagePreview.naturalHeight;
+            const naturalWidth = imageCanvas.width; // Gunakan lebar canvas (gambar yang sudah diresize)
+            const naturalHeight = imageCanvas.height; // Gunakan tinggi canvas (gambar yang sudah diresize)
 
             const displayWidth = rect.width;
             const displayHeight = rect.height;
 
-            // Hitung rasio skala
             const scaleX = naturalWidth / displayWidth;
             const scaleY = naturalHeight / displayHeight;
 
-            // Dapatkan koordinat klik pada gambar yang ditampilkan
             const clientX = event.clientX;
             const clientY = event.clientY;
 
-            // Transformasi ke koordinat pada gambar asli (canvas)
             const x = (clientX - rect.left) * scaleX;
             const y = (clientY - rect.top) * scaleY;
 
             try {
-                // Dapatkan data piksel dari canvas pada koordinat tersebut
                 const pixelData = ctx.getImageData(x, y, 1, 1).data;
                 const r = pixelData[0];
                 const g = pixelData[1];
@@ -308,7 +447,6 @@
                 pickedColorDisplay.style.backgroundColor = hexColor;
                 pickedColorValue.textContent = `Warna Dipilih: ${hexColor} (RGB: ${r}, ${g}, ${b})`;
 
-                // Salin warna yang dipilih ke clipboard
                 navigator.clipboard.writeText(hexColor)
                     .then(() => {
                         console.log(`Warna ${hexColor} disalin!`);
