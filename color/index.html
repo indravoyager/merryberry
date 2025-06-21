@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palet Warna Gambar (Optimasi & Salin)</title>
+    <title>Palet Warna Gambar (Desktop Layout)</title>
     <style>
         /* Gaya Umum */
         body {
@@ -23,7 +23,7 @@
             border-radius: 12px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4); /* Bayangan lebih gelap */
             width: 90%;
-            max-width: 900px;
+            max-width: 1200px; /* Lebar maksimum container diperbesar */
             text-align: center;
             border: 1px solid #444; /* Border halus */
         }
@@ -99,13 +99,43 @@
             transition: width 0.3s ease;
         }
 
+        /* Kontainer Utama untuk Gambar dan Palet */
+        .image-palette-wrapper {
+            display: flex; /* Aktifkan Flexbox */
+            flex-direction: column; /* Default untuk mobile: kolom */
+            align-items: center;
+            gap: 30px; /* Jarak antara gambar dan palet */
+            margin-top: 20px;
+        }
+
+        @media (min-width: 768px) { /* Tampilan Desktop */
+            .image-palette-wrapper {
+                flex-direction: row; /* Untuk desktop: baris */
+                justify-content: center;
+                align-items: flex-start; /* Elemen akan rata atas */
+                text-align: left; /* Teks di dalam akan rata kiri */
+            }
+
+            #image-display-area {
+                flex: 2; /* Gambar mengambil lebih banyak ruang */
+                max-width: 60%; /* Batasi lebar gambar */
+            }
+
+            #color-palette-container {
+                flex: 1; /* Palet mengambil sisa ruang */
+                max-width: 35%; /* Batasi lebar palet */
+                text-align: center; /* Teks judul palet tetap di tengah */
+            }
+        }
+
+
         /* Pratinjau Gambar */
         #image-preview {
             max-width: 100%;
             height: auto;
             border: 2px solid #555;
             border-radius: 8px;
-            margin-bottom: 30px;
+            margin-bottom: 0; /* Hapus margin bawah karena sudah ada gap */
             display: none; /* Awalnya tersembunyi */
             cursor: crosshair;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
@@ -113,13 +143,14 @@
 
         /* Palet Warna */
         #color-palette-container {
-            margin-top: 30px;
+            /* margin-top: 30px; dihapus, karena sudah diatur oleh gap flexbox */
+            min-width: 250px; /* Agar palet tidak terlalu kecil */
         }
 
         #color-palette {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
+            justify-content: center; /* Tetap rata tengah untuk kotak warna di dalam palet */
             gap: 15px; /* Jarak antar kotak warna */
             margin-top: 25px;
         }
@@ -128,19 +159,19 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative; /* Penting untuk posisi tombol salin */
-            padding-bottom: 10px; /* Ruang untuk tombol */
+            position: relative;
+            padding-bottom: 10px;
         }
 
         .color-box {
-            width: 60px; /* Ukuran kotak lebih besar */
+            width: 60px;
             height: 60px;
             border-radius: 8px;
             border: 1px solid #666;
             cursor: pointer;
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            position: relative; /* Untuk menempatkan tombol salin di dalamnya jika diperlukan */
+            position: relative;
         }
 
         .color-box:hover {
@@ -157,7 +188,7 @@
         }
 
         .copy-button {
-            background-color: #007bff; /* Warna biru untuk tombol */
+            background-color: #007bff;
             color: white;
             border: none;
             border-radius: 4px;
@@ -165,7 +196,7 @@
             font-size: 0.75em;
             cursor: pointer;
             transition: background-color 0.2s ease;
-            margin-top: 5px; /* Jarak dari info warna */
+            margin-top: 5px;
         }
 
         .copy-button:hover {
@@ -179,14 +210,14 @@
             border: 2px solid #666;
             margin: 25px auto;
             border-radius: 8px;
-            background-color: #444; /* Warna default display */
+            background-color: #444;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         #picked-color-value {
             margin-top: 15px;
             font-weight: bold;
-            color: #00ff99; /* Warna cerah untuk nilai warna yang dipilih */
+            color: #00ff99;
             font-size: 1.1em;
         }
     </style>
@@ -206,15 +237,18 @@
             <div id="upload-progress-bar">0%</div>
         </div>
 
-        <canvas id="imageCanvas" style="display: none;"></canvas>
+        <div class="image-palette-wrapper">
+            <div id="image-display-area">
+                <canvas id="imageCanvas" style="display: none;"></canvas>
+                <img id="image-preview" src="#" alt="Pratinjau Gambar">
+            </div>
 
-        <img id="image-preview" src="#" alt="Pratinjau Gambar">
-
-        <div id="color-palette-container">
-            <h2>Palet Warna</h2>
-            <p>Klik pada tombol salin di bawah setiap warna untuk menyalin kode HEX-nya.</p>
-            <div id="color-palette">
-                </div>
+            <div id="color-palette-container">
+                <h2>Palet Warna</h2>
+                <p>Klik pada tombol salin di bawah setiap warna untuk menyalin kode HEX-nya.</p>
+                <div id="color-palette">
+                    </div>
+            </div>
         </div>
 
         <hr>
