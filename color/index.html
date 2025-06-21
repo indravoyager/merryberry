@@ -195,7 +195,7 @@
         /* Palet Warna (di kanan side-content-wrapper) */
         #color-palette-container {
             flex: 1;
-            max-width: 60%; /* Memberi lebih banyak ruang untuk palet */
+            max-width: 60%;
             min-width: 200px;
             display: flex;
             flex-direction: column;
@@ -370,7 +370,7 @@
     </div>
 
     <div id="notification-popup">
-        <span>www.merry.my.id says</span>
+        <span id="popup-message">www.merry.my.id says</span>
         <button class="close-button">&times;</button>
     </div>
 
@@ -385,10 +385,14 @@
         const uploadProgressContainer = document.getElementById('upload-progress-container');
         const uploadProgressBar = document.getElementById('upload-progress-bar');
         const copyPickedColorButton = document.getElementById('copyPickedColorButton');
-        const notificationPopup = document.getElementById('notification-popup'); // Ambil elemen pop-up
-        const closePopupButton = notificationPopup.querySelector('.close-button'); // Tombol tutup pop-up
+        const notificationPopup = document.getElementById('notification-popup');
+        const popupMessage = document.getElementById('popup-message'); // Elemen untuk pesan pop-up
+        const closePopupButton = notificationPopup.querySelector('.close-button');
         const ctx = imageCanvas.getContext('2d');
         const colorThief = new ColorThief();
+
+        // Variabel untuk menyimpan timeout pop-up agar bisa dibersihkan
+        let popupTimeout;
 
         // Resolusi maksimum untuk gambar yang akan diproses
         const MAX_WIDTH = 800; 
@@ -427,11 +431,11 @@
                 copyButton.addEventListener('click', () => {
                     navigator.clipboard.writeText(hex)
                         .then(() => {
-                            alert(`Warna ${hex} telah disalin ke clipboard!`);
+                            showCustomPopup(`Warna ${hex} telah disalin!`); // Gunakan pop-up kustom
                         })
                         .catch(err => {
                             console.error('Gagal menyalin warna:', err);
-                            alert('Gagal menyalin warna. Silakan coba lagi.');
+                            showCustomPopup('Gagal menyalin warna. Silakan coba lagi.'); // Gunakan pop-up kustom
                         });
                 });
 
@@ -475,7 +479,7 @@
             }, 'image/jpeg', 0.8);
         }
 
-        // Fungsi untuk mereset tampilan utama
+        // Fungsi untuk mereset tampilan utama dan menyembunyikan pop-up
         function resetDisplay() {
             uploadProgressContainer.style.display = 'none';
             imagePreview.style.display = 'none';
@@ -484,20 +488,23 @@
             pickedColorDisplay.style.backgroundColor = '#444';
             pickedColorValue.textContent = 'Warna Dipilih: N/A';
             copyPickedColorButton.style.display = 'none'; 
-            hidePopup(); // Pastikan pop-up juga tersembunyi saat reset
+            hideCustomPopup(); // Pastikan pop-up juga tersembunyi saat reset
         }
 
-        // Fungsi untuk menampilkan pop-up
-        function showPopup() {
+        // Fungsi untuk menampilkan pop-up kustom dengan pesan
+        function showCustomPopup(message, duration = 3000) { // Default 3 detik
+            if (popupTimeout) {
+                clearTimeout(popupTimeout); // Bersihkan timeout sebelumnya jika ada
+            }
+            popupMessage.textContent = `www.merry.my.id says: ${message}`;
             notificationPopup.classList.add('show');
-            // Atur agar pop-up hilang otomatis setelah beberapa detik (opsional)
-            setTimeout(() => {
-                hidePopup();
-            }, 5000); // Tampilkan selama 5 detik
+            popupTimeout = setTimeout(() => {
+                hideCustomPopup();
+            }, duration);
         }
 
-        // Fungsi untuk menyembunyikan pop-up
-        function hidePopup() {
+        // Fungsi untuk menyembunyikan pop-up kustom
+        function hideCustomPopup() {
             notificationPopup.classList.remove('show');
         }
 
@@ -542,11 +549,11 @@
 
                                     const palette = colorThief.getPalette(imagePreview, 8);
                                     displayColorPalette(palette);
-                                    showPopup(); // Tampilkan pop-up setelah semua dimuat
+                                    // showCustomPopup("Gambar berhasil diunggah!", 2000); // Opsional: pesan setelah unggah
 
                                 } catch (error) {
                                     console.error("Gagal memproses gambar atau mengambil warna:", error);
-                                    alert("Terjadi kesalahan saat memproses gambar atau mengambil warna. Ini mungkin masalah CORS jika Anda memuat gambar dari URL eksternal, atau gambar rusak.");
+                                    showCustomPopup("Terjadi kesalahan saat memproses gambar."); // Gunakan pop-up kustom
                                     resetDisplay();
                                 } finally {
                                     URL.revokeObjectURL(resizedDataUrl);
@@ -555,7 +562,7 @@
                         });
                     };
                     img.onerror = function() {
-                        alert("Gagal memuat gambar asli. Pastikan ini adalah file gambar yang valid dan bukan dari domain lain (masalah CORS).");
+                        showCustomPopup("Gagal memuat gambar. Pastikan ini adalah file gambar yang valid."); // Gunakan pop-up kustom
                         resetDisplay();
                     };
                 };
@@ -568,7 +575,7 @@
         // Event listener untuk memilih warna pada gambar
         imagePreview.addEventListener('click', function(event) {
             if (!imagePreview.src || imagePreview.src === window.location.href + '#') {
-                alert("Silakan unggah gambar terlebih dahulu.");
+                showCustomPopup("Silakan unggah gambar terlebih dahulu."); // Gunakan pop-up kustom
                 return;
             }
 
@@ -601,7 +608,7 @@
 
             } catch (error) {
                 console.error("Gagal mengambil piksel warna:", error);
-                alert("Tidak dapat mengambil warna piksel. Pastikan gambar sudah dimuat sepenuhnya.");
+                showCustomPopup("Tidak dapat mengambil warna piksel."); // Gunakan pop-up kustom
                 copyPickedColorButton.style.display = 'none';
             }
         });
@@ -627,27 +634,25 @@
             if (colorToCopy && colorToCopy !== 'N/A') {
                 navigator.clipboard.writeText(colorToCopy)
                     .then(() => {
-                        alert(`Warna ${colorToCopy} telah disalin ke clipboard!`);
+                        showCustomPopup(`Warna ${colorToCopy} telah disalin!`); // Gunakan pop-up kustom
                     })
                     .catch(err => {
                         console.error('Gagal menyalin warna:', err);
-                        alert('Gagal menyalin warna. Silakan coba lagi.');
+                        showCustomPopup('Gagal menyalin warna. Silakan coba lagi.'); // Gunakan pop-up kustom
                     });
             } else {
-                alert("Tidak ada warna yang dipilih untuk disalin.");
+                showCustomPopup("Tidak ada warna yang dipilih untuk disalin."); // Gunakan pop-up kustom
             }
         });
 
         // Event listener untuk tombol tutup pop-up
-        closePopupButton.addEventListener('click', hidePopup);
+        closePopupButton.addEventListener('click', hideCustomPopup);
 
-        // Pastikan semua tampilan direset saat halaman pertama kali dimuat, dan tampilkan pop-up
+        // Pastikan semua tampilan direset saat halaman pertama kali dimuat
         document.addEventListener('DOMContentLoaded', () => {
             resetDisplay();
-            // Tampilkan pop-up setelah reset (misalnya, setelah 1 detik)
-            setTimeout(() => {
-                showPopup();
-            }, 1000); 
+            // Tampilkan pesan sambutan awal
+            showCustomPopup("Selamat datang di Palet Warna Merry!", 4000); // Tampilkan 4 detik
         });
     </script>
 </body>
