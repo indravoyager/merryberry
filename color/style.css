@@ -203,7 +203,7 @@ input[type="file"] {
 
 #picked-color-section {
     flex: 1;
-    align-items: center; /* <-- PERUBAHAN DI SINI */
+    align-items: center;
 }
 
 #color-palette-container {
@@ -247,6 +247,7 @@ h2 {
     flex-shrink: 0;
 }
 
+/* --- PERUBAHAN DI SINI --- */
 #color-palette {
     display: flex;
     flex-wrap: wrap;
@@ -254,8 +255,13 @@ h2 {
     gap: 12px;
     width: 100%;
     flex-grow: 1;
-    overflow-y: auto;
+    overflow-y: auto;   /* Izinkan scroll vertikal */
+    overflow-x: hidden;  /* Sembunyikan scroll horizontal */
     padding: 5px;
+    
+    /* Untuk Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-color) #2a2a2a;
 }
 
 .color-item {
@@ -380,10 +386,6 @@ h2 {
     height: 20px;
 }
 
-/* ======================================================= */
-/* --- GAYA KHUSUS UNTUK MOBILE --- */
-/* ======================================================= */
-
 @media (max-width: 768px) {
     
     html, body {
@@ -423,4 +425,24 @@ h2 {
         width: 100%;
         box-sizing: border-box;
     }
+}
+
+/* --- PERUBAHAN BARU: Gaya Scrollbar Modern untuk Chrome/Safari/Edge --- */
+#color-palette::-webkit-scrollbar {
+  width: 8px; /* Lebar scrollbar */
+}
+
+#color-palette::-webkit-scrollbar-track {
+  background: #2a2a2a; /* Warna latar belakang track */
+  border-radius: 10px;
+}
+
+#color-palette::-webkit-scrollbar-thumb {
+  background-color: var(--accent-color); /* Warna scrollbar */
+  border-radius: 10px; /* Membuat ujungnya bulat */
+  border: 2px solid #2a2a2a; /* Memberi sedikit padding di sekitar thumb */
+}
+
+#color-palette::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent-hover-color); /* Warna saat dihover */
 }
