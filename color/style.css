@@ -339,10 +339,11 @@ h2 {
     min-width: 120px;
 }
 
+/* --- PERUBAHAN DI SINI: dari right menjadi left --- */
 #notification-popup {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    left: 20px; /* Diubah dari 'right' */
     background-color: #2a2a2a;
     color: var(--primary-text-color);
     padding: 12px 20px;
