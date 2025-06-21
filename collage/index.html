@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collage Maker - Metode Fleksibel</title>
+    <title>Collage Maker - Metode Fleksibel Rapat</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -87,7 +87,6 @@
         
         #image-input { display: none; }
 
-        /* === PERUBAHAN UTAMA DI CSS === */
         #collage-container {
             width: 100%;
             margin-top: 20px;
@@ -95,36 +94,26 @@
             overflow: auto;
             border: 2px solid var(--border-color);
             border-radius: 8px;
-
-            /* Menggunakan Flexbox untuk layout otomatis */
             display: flex;
-            flex-wrap: wrap; /* Izinkan item pindah ke baris baru */
-            gap: 5px; /* Memberi sedikit jarak antar gambar */
+            flex-wrap: wrap;
+            
+            /* PERUBAHAN CSS: Jarak dihilangkan */
+            gap: 0;
         }
         
-        /* Styling untuk setiap gambar di dalam kontainer */
         #collage-container img {
-            /* flex-grow: 1; membuat gambar meregang untuk mengisi ruang kosong di barisnya.
-              Ini yang membuat ukuran bingkai fleksibel.
-            */
             flex-grow: 1;
-            
-            /* object-fit: cover; adalah kuncinya.
-              Ini mencegah gambar menjadi penyet. Gambar akan di-crop agar pas.
-            */
             object-fit: cover;
-            
-            /* Tinggi akan diatur oleh JS. Lebar akan diatur oleh flexbox.
-              Kita beri nilai basis agar flexbox tahu ukuran awal.
-            */
             flex-basis: 200px; 
-            border-radius: 4px;
+            
+            /* Border radius dihilangkan agar terlihat menyatu sempurna */
+            border-radius: 0; 
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Collage Maker - Metode Fleksibel</h1>
+        <h1>Collage Maker - Metode Fleksibel Rapat</h1>
         
         <div class="controls">
             <button class="btn" onclick="document.getElementById('image-input').click();">Pilih Gambar</button>
@@ -151,8 +140,6 @@
     </div>
 
     <script>
-    // === JAVASCRIPT YANG JAUH LEBIH SEDERHANA ===
-
     const imageInput = document.getElementById('image-input');
     const collageContainer = document.getElementById('collage-container');
     const downloadBtn = document.getElementById('download-btn');
@@ -160,21 +147,19 @@
     const rowHeightValue = document.getElementById('rowHeightValue');
     const ratioButtons = document.querySelectorAll('.ratio-btn');
 
-    // Fungsi untuk menampilkan gambar
     const displayImages = () => {
-        collageContainer.innerHTML = ''; // Kosongkan kontainer
+        collageContainer.innerHTML = '';
         const files = imageInput.files;
         const height = rowHeightSlider.value + 'px';
 
         for (const file of files) {
             const img = document.createElement('img');
             img.src = URL.createObjectURL(file);
-            img.style.height = height; // Atur tinggi gambar
+            img.style.height = height;
             collageContainer.appendChild(img);
         }
     };
     
-    // Fungsi untuk mengubah tinggi semua gambar yang ada
     const updateImageHeights = () => {
         const height = rowHeightSlider.value + 'px';
         const images = collageContainer.querySelectorAll('img');
@@ -182,8 +167,6 @@
             img.style.height = height;
         });
     };
-
-    // --- Event Listeners ---
 
     imageInput.addEventListener('change', displayImages);
 
@@ -213,7 +196,7 @@
         }).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'kolase-fleksibel.png';
+            link.download = 'kolase-rapat.png';
             link.click();
         });
     });
