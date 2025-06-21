@@ -99,17 +99,25 @@
             transition: width 0.3s ease;
         }
 
-        /* Kontainer Utama untuk Gambar dan Palet */
-        .image-palette-wrapper {
+        /* Kontainer Utama untuk Gambar dan Side Content */
+        .main-content-wrapper {
             display: flex; /* Aktifkan Flexbox */
             flex-direction: column; /* Default untuk mobile: kolom */
             align-items: center;
-            gap: 30px; /* Jarak antara gambar dan palet */
+            gap: 30px; /* Jarak antara gambar dan side content */
             margin-top: 20px;
         }
 
+        /* Kontainer untuk Palet Warna & Pemilih Warna (Side Content) */
+        .side-content-wrapper {
+            display: flex;
+            flex-direction: column; /* Selalu kolom untuk palet dan picker */
+            gap: 30px; /* Jarak antara palet dan picker */
+            width: 100%; /* Lebar default penuh untuk mobile */
+        }
+
         @media (min-width: 768px) { /* Tampilan Desktop */
-            .image-palette-wrapper {
+            .main-content-wrapper {
                 flex-direction: row; /* Untuk desktop: baris */
                 justify-content: center;
                 align-items: flex-start; /* Elemen akan rata atas */
@@ -121,10 +129,10 @@
                 max-width: 60%; /* Batasi lebar gambar */
             }
 
-            #color-palette-container {
-                flex: 1; /* Palet mengambil sisa ruang */
-                max-width: 35%; /* Batasi lebar palet */
-                text-align: center; /* Teks judul palet tetap di tengah */
+            .side-content-wrapper {
+                flex: 1; /* Side content mengambil sisa ruang */
+                max-width: 35%; /* Batasi lebar side content */
+                text-align: center; /* Konten di dalamnya tetap rata tengah */
             }
         }
 
@@ -204,6 +212,10 @@
         }
 
         /* Pemilih Warna Langsung */
+        #picked-color-section { /* ID baru untuk bagian pemilih warna */
+            padding-top: 20px; /* Jarak dari palet warna di atasnya */
+        }
+
         #picked-color-display {
             width: 120px;
             height: 120px;
@@ -237,27 +249,30 @@
             <div id="upload-progress-bar">0%</div>
         </div>
 
-        <div class="image-palette-wrapper">
+        <div class="main-content-wrapper">
             <div id="image-display-area">
                 <canvas id="imageCanvas" style="display: none;"></canvas>
                 <img id="image-preview" src="#" alt="Pratinjau Gambar">
             </div>
 
-            <div id="color-palette-container">
-                <h2>Palet Warna</h2>
-                <p>Klik pada tombol salin di bawah setiap warna untuk menyalin kode HEX-nya.</p>
-                <div id="color-palette">
-                    </div>
+            <div class="side-content-wrapper">
+                <div id="color-palette-container">
+                    <h2>Palet Warna</h2>
+                    <p>Klik pada tombol salin di bawah setiap warna untuk menyalin kode HEX-nya.</p>
+                    <div id="color-palette">
+                        </div>
+                </div>
+
+                <div id="picked-color-section">
+                    <h2>Pilih Warna Langsung dari Gambar</h2>
+                    <p>Arahkan kursor ke gambar di atas dan klik di mana saja untuk memilih warna.</p>
+                    <div id="picked-color-display"></div>
+                    <div id="picked-color-value">Warna Dipilih: N/A</div>
+                </div>
             </div>
         </div>
 
-        <hr>
-
-        <h2>Pilih Warna Langsung dari Gambar</h2>
-        <p>Arahkan kursor ke gambar di atas dan klik di mana saja untuk memilih warna.</p>
-        <div id="picked-color-display"></div>
-        <div id="picked-color-value">Warna Dipilih: N/A</div>
-    </div>
+        </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
     <script>
