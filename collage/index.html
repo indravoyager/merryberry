@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collage Maker - Kontrol Pixel X Y</title>
+    <title>Collage Maker - Ukuran Presisi</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -85,8 +85,7 @@
             background-color: var(--accent-color);
             color: #121212;
         }
-
-        /* Styling untuk input angka X dan Y */
+        
         .settings input[type="number"] {
             width: 80px;
             background-color: var(--input-bg);
@@ -96,11 +95,11 @@
             padding: 8px;
             text-align: center;
             font-size: 16px;
-            -moz-appearance: textfield; /* Sembunyikan panah di Firefox */
+            -moz-appearance: textfield;
         }
         .settings input[type="number"]::-webkit-outer-spin-button,
         .settings input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none; /* Sembunyikan panah di Chrome/Safari */
+            -webkit-appearance: none;
             margin: 0;
         }
         
@@ -119,15 +118,15 @@
         }
         
         #collage-container img {
-            flex-grow: 1;
+            /* flex-grow: 1; DIHAPUS atau dinonaktifkan agar ukuran tidak meregang */
             object-fit: cover;
-            /* Lebar dasar (X) dan tinggi (Y) diatur oleh JS */
+            /* Lebar dan tinggi diatur oleh JS. Tidak ada lagi peregangan */
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Collage Maker - Kontrol Pixel</h1>
+        <h1>Collage Maker - Ukuran Presisi</h1>
         
         <div class="controls">
             <button class="btn" onclick="document.getElementById('image-input').click();">Pilih Gambar</button>
@@ -144,7 +143,7 @@
         </div>
         
         <div class="settings">
-            <label>Ukuran Dasar (X &times; Y):</label>
+            <label>Ukuran Tepat (X &times; Y):</label>
             <input type="number" id="imageWidth" value="250" min="50">
             <label>&times;</label>
             <input type="number" id="imageHeight" value="200" min="50">
@@ -156,30 +155,25 @@
     </div>
 
     <script>
-    // === PERUBAHAN UTAMA DI JAVASCRIPT ===
-
     const imageInput = document.getElementById('image-input');
     const collageContainer = document.getElementById('collage-container');
     const downloadBtn = document.getElementById('download-btn');
     const ratioButtons = document.querySelectorAll('.ratio-btn');
-    
-    // Mengambil elemen input X dan Y yang baru
     const imageWidthInput = document.getElementById('imageWidth');
     const imageHeightInput = document.getElementById('imageHeight');
 
-    // Fungsi untuk menerapkan ukuran ke semua gambar
     const updateImageDimensions = () => {
+        // PERUBAHAN DI SINI: kita atur width, bukan flex-basis
         const width = imageWidthInput.value + 'px';
         const height = imageHeightInput.value + 'px';
         const images = collageContainer.querySelectorAll('img');
         
         images.forEach(img => {
-            img.style.flexBasis = width; // Mengatur lebar dasar (X)
-            img.style.height = height;   // Mengatur tinggi (Y)
+            img.style.width = width;  // Mengatur lebar (X) secara kaku
+            img.style.height = height; // Mengatur tinggi (Y)
         });
     };
     
-    // Fungsi untuk menampilkan gambar-gambar yang baru dipilih
     const displayImages = () => {
         collageContainer.innerHTML = '';
         const files = imageInput.files;
@@ -189,20 +183,15 @@
         for (const file of files) {
             const img = document.createElement('img');
             img.src = URL.createObjectURL(file);
-            img.style.flexBasis = width; // Mengatur lebar dasar (X)
-            img.style.height = height;   // Mengatur tinggi (Y)
+            img.style.width = width;  // Mengatur lebar (X) secara kaku
+            img.style.height = height; // Mengatur tinggi (Y)
             collageContainer.appendChild(img);
         }
     };
 
-    // --- Event Listeners ---
-
     imageInput.addEventListener('change', displayImages);
-    
-    // Tambahkan event listener untuk kedua input X dan Y
     imageWidthInput.addEventListener('input', updateImageDimensions);
     imageHeightInput.addEventListener('input', updateImageDimensions);
-
     ratioButtons.forEach(button => {
         button.addEventListener('click', (e) => {
             ratioButtons.forEach(btn => btn.classList.remove('active'));
@@ -211,7 +200,6 @@
             collageContainer.style.aspectRatio = clickedButton.dataset.ratio;
         });
     });
-
     downloadBtn.addEventListener('click', () => {
         if (imageInput.files.length === 0) {
             alert("Silakan pilih gambar terlebih dahulu!");
@@ -224,7 +212,7 @@
         }).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'kolase-pixel.png';
+            link.download = 'kolase-presisi.png';
             link.click();
         });
     });
