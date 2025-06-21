@@ -15,8 +15,8 @@
             background-color: #1a1a1a;
             color: #f0f0f0;
             margin: 0;
-            min-height: 100vh; /* Pastikan body mengambil tinggi penuh viewport */
-            overflow-y: auto; /* Izinkan scroll vertikal jika diperlukan */
+            min-height: 100vh;
+            overflow-y: auto;
         }
 
         .container {
@@ -31,28 +31,25 @@
             display: flex;
             flex-direction: column; /* Konten utama dalam container tetap kolom */
             align-items: center;
-            /* Hapus flex-grow dan margin-bottom dari sini agar lebih fleksibel */
-            /* flex-grow: 1; */
-            /* margin-bottom: 0; */
         }
 
         h1 {
             color: #e0e0e0;
             margin-bottom: 20px;
-            font-size: 2.2em; /* Ukuran font H1 sedikit lebih besar untuk desktop */
+            font-size: 2.2em;
         }
 
         h2 {
             color: #e0e0e0;
             margin-bottom: 15px;
-            font-size: 1.6em; /* Ukuran font H2 sedikit lebih besar untuk desktop */
+            font-size: 1.6em;
         }
 
         p {
             color: #b0b0b0;
             line-height: 1.5;
             margin-bottom: 15px;
-            font-size: 1em; /* Ukuran font paragraf normal */
+            font-size: 1em;
         }
 
         /* Tombol Unggah Kustom */
@@ -74,7 +71,7 @@
             text-transform: uppercase;
             letter-spacing: 0.8px;
             box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-            font-size: 1em; /* Ukuran font tombol normal */
+            font-size: 1em;
         }
 
         .custom-file-upload:hover {
@@ -120,57 +117,54 @@
             gap: 30px;
             margin-top: 20px;
             width: 100%;
-            /* Hapus max-height yang terlalu ketat, biarkan konten menentukan tingginya */
-            /* max-height: calc(100vh - 220px); */
-            flex-grow: 1; /* Biarkan mengisi ruang yang tersisa */
+            flex-grow: 1;
         }
 
         #image-display-area {
             flex: 2; /* Gambar mengambil lebih banyak ruang */
-            max-width: 65%; /* Batasi lebar gambar */
+            max-width: 60%; /* Sedikit mengurangi lebar gambar untuk memberi ruang lebih ke palet */
             display: flex;
             flex-direction: column;
             justify-content: center;
-            min-height: 300px; /* Minimal tinggi gambar */
-            overflow: hidden; /* Pastikan gambar tidak keluar dari area */
+            min-height: 300px;
+            overflow: hidden;
         }
 
         #image-preview {
             max-width: 100%;
-            /* Hapus max-height yang mungkin menyebabkan masalah, biarkan height: auto */
-            /* max-height: calc(100vh - 270px); */
-            height: auto; /* Penting: Agar gambar menyesuaikan tinggi secara proporsional */
+            max-height: calc(100vh - 270px); /* Batasan tinggi disesuaikan */
+            height: auto;
             border: 2px solid #555;
             border-radius: 8px;
             margin-bottom: 0;
             display: none;
             cursor: crosshair;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            object-fit: contain; /* Penting: Agar gambar menyesuaikan dan tidak terpotong */
+            object-fit: contain;
         }
 
         /* Kontainer untuk Palet Warna & Pemilih Warna (Side Content - Selalu Horizontal) */
         .side-content-wrapper {
-            flex: 1; /* Side content mengambil sisa ruang */
-            max-width: 35%; /* Batasi lebar side content */
-            min-width: 300px; /* Minimal lebar side content */
+            flex: 1;
+            max-width: 40%; /* Menambah lebar side content secara keseluruhan */
+            min-width: 350px; /* Minimal lebar side content sedikit ditingkatkan */
             display: flex;
-            flex-direction: row; /* Ubah menjadi horizontal di dalam side content */
+            flex-direction: row; /* Tetap horizontal di dalam side content */
             justify-content: space-between;
-            align-items: flex-start; /* Rata atas */
-            gap: 15px; /* Jarak antara picker dan palet */
-            height: auto; /* Biarkan tinggi menyesuaikan konten */
+            align-items: flex-start;
+            gap: 15px;
+            height: auto;
         }
 
         /* Pemilih Warna Langsung (di kiri side-content-wrapper) */
         #picked-color-section {
-            flex: 1; /* Ambil bagian dari ruang horizontal */
-            max-width: 45%; /* Batasi lebar */
-            min-width: 130px; /* Minimal lebar picker */
-            padding-right: 15px; /* Tambah padding kanan untuk jarak */
-            border-right: 1px solid #444; /* Border pemisah vertikal */
+            flex: 1; /* Ambil sebagian ruang horizontal */
+            max-width: 35%; /* Mengurangi lebar picker agar palet dapat lebih lebar */
+            min-width: 120px; /* Minimal lebar picker */
+            padding-right: 15px;
+            border-right: 1px solid #444;
             text-align: center;
-            display: flex; /* Untuk menengahkan konten */
+            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
@@ -199,9 +193,9 @@
 
         /* Palet Warna (di kanan side-content-wrapper) */
         #color-palette-container {
-            flex: 1;
-            max-width: 55%;
-            min-width: 150px;
+            flex: 1; /* Ambil sisa ruang horizontal */
+            max-width: 65%; /* Memberi lebih banyak ruang untuk palet */
+            min-width: 200px; /* Minimal lebar palet lebih besar */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -223,12 +217,12 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 10px; /* Jarak antar kotak warna */
+            gap: 10px;
             margin-top: 15px;
             width: 100%;
-            flex-grow: 1; /* Biarkan palet mengisi ruang vertikal yang tersedia */
-            overflow-y: auto; /* Tambah scroll jika terlalu banyak warna */
-            padding-right: 5px; /* Untuk estetika scrollbar */
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 5px;
         }
 
         .color-item {
@@ -236,15 +230,16 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            width: calc(50% - 10px); /* Target 2 kolom dengan gap */
-            max-width: 70px; /* Maksimal lebar per item */
-            min-width: 55px; /* Minimal lebar */
+            /* Sesuaikan width calc() agar pas dengan 3 kolom di lebar yang lebih besar */
+            width: calc(33.33% - 10px); 
+            max-width: 80px; /* Maksimal lebar per item lebih besar */
+            min-width: 60px; /* Minimal lebar lebih besar */
         }
 
         .color-box {
-            width: 50px;
-            height: 50px;
-            border-radius: 6px;
+            width: 55px; /* Ukuran kotak warna lebih besar */
+            height: 55px;
+            border-radius: 8px; /* Radius sudut lebih besar */
         }
 
         .color-info {
@@ -253,11 +248,31 @@
             word-break: break-all;
         }
 
+        /* Tombol Salin Modern */
         .copy-button {
-            padding: 4px 6px;
-            font-size: 0.7em;
-            margin-top: 3px;
-            border-radius: 4px;
+            background-color: #333; /* Warna gelap */
+            color: #00ff99; /* Warna teks cerah */
+            border: 1px solid #00ff99; /* Border cerah */
+            border-radius: 5px; /* Radius sudut lebih halus */
+            padding: 5px 8px; /* Padding lebih besar */
+            font-size: 0.75em; /* Ukuran font sedikit lebih besar */
+            cursor: pointer;
+            transition: all 0.2s ease-in-out; /* Transisi lebih halus */
+            margin-top: 5px; /* Jarak dari info warna */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Bayangan halus */
+        }
+
+        .copy-button:hover {
+            background-color: #00ff99; /* Balik warna saat hover */
+            color: #1a1a1a; /* Teks gelap saat hover */
+            box-shadow: 0 4px 8px rgba(0, 255, 153, 0.3); /* Bayangan cerah */
+            transform: translateY(-1px); /* Efek angkat sedikit */
+        }
+
+        .copy-button:active {
+            background-color: #00cc7a; /* Warna lebih gelap saat ditekan */
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
