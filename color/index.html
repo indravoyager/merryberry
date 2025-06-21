@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palet Warna dari Gambar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        input[type="file"] {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #image-preview {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            cursor: crosshair; /* Mengubah kursor saat hover di gambar */
+        }
+
+        #color-palette-container {
+            margin-top: 20px;
+        }
+
+        #color-palette {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .color-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            border: 1px solid #eee;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .color-box:hover {
+            transform: scale(1.1);
+        }
+
+        .color-info {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        #picked-color-display {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #ccc;
+            margin: 20px auto;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+        }
+
+        #picked-color-value {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Palet Warna & Pemilih Warna dari Gambar</h1>
+
+        <input type="file" id="imageUpload" accept="image/*">
+
+        <canvas id="imageCanvas" style="display: none;"></canvas>
+        <img id="image-preview" src="#" alt="Pratinjau Gambar" style="display: none;">
+
+        <div id="color-palette-container">
+            <h2>Palet Warna</h2>
+            <p>Klik pada kotak warna untuk menyalin kodenya.</p>
+            <div id="color-palette">
+                </div>
+        </div>
+
+        <hr>
+
+        <h2>Pilih Warna Langsung</h2>
+        <p>Arahkan kursor ke gambar di atas dan klik untuk memilih warna.</p>
+        <div id="picked-color-display"></div>
+        <div id="picked-color-value">Warna Dipilih: N/A</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+    <script>
+        const imageUpload = document.getElementById('imageUpload');
+        const imagePreview = document.getElementById('image-preview');
+        const imageCanvas = document.getElementById('imageCanvas');
+        const colorPaletteDiv = document.getElementById('color-palette');
+        const pickedColorDisplay = document.getElementById('picked-color-display');
+        const pickedColorValue = document.getElementById('picked-color-value');
+        const ctx = imageCanvas.getContext('2d');
+        const colorThief = new ColorThief();
+
+        // Fungsi untuk mengonversi array RGB ke format HEX
+        function rgbToHex(r, g, b) {
+            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+        }
+
+        // Fungsi untuk menampilkan palet warna
+        function displayColorPalette(colors) {
+            colorPaletteDiv.innerHTML = ''; // Bersihkan palet sebelumnya
+            colors.forEach(color => {
+                const [r, g, b] = color;
+                const hex = rgbToHex(r, g, b);
+
+                const colorBox = document.createElement('div');
+                colorBox.className = 'color-box';
+                colorBox.style.backgroundColor = hex;
+                colorBox.title = hex; // Tooltip
+                colorBox.addEventListener('click', () => {
+                    navigator.clipboard.writeText(hex).then(() => {
+                        alert(`Warna ${hex} telah disalin!`);
+                    }).catch(err => {
+                        console.error('Gagal menyalin:', err);
+                    });
+                });
+
+                const colorInfo = document.createElement('div');
+                colorInfo.className = 'color-info';
+                colorInfo.textContent = hex;
+
+                const paletteItem = document.createElement('div');
+                paletteItem.style.display = 'flex';
+                paletteItem.style.flexDirection = 'column';
+                paletteItem.style.alignItems = 'center';
+                paletteItem.appendChild(colorBox);
+                paletteItem.appendChild(colorInfo);
+
+                colorPaletteDiv.appendChild(paletteItem);
+            });
+        }
+
+        // Event listener saat gambar diunggah
+        imageUpload.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block'; // Tampilkan pratinjau gambar
+
+                    imagePreview.onload = function() {
+                        // Gambar sudah dimuat, sekarang ambil palet warnanya
+                        try {
+                            const dominantColor = colorThief.getColor(imagePreview);
+                            const palette = colorThief.getPalette(imagePreview, 8); // Ambil 8 warna utama
+                            const allColors = [dominantColor, ...palette]; // Gabungkan warna dominan dengan palet
+                            displayColorPalette(allColors);
+
+                            // Atur ukuran canvas sesuai gambar
+                            imageCanvas.width = imagePreview.naturalWidth;
+                            imageCanvas.height = imagePreview.naturalHeight;
+                            ctx.drawImage(imagePreview, 0, 0); // Gambar gambar ke canvas untuk pengambilan piksel
+                        } catch (error) {
+                            console.error("Gagal mengambil warna:", error);
+                            alert("Tidak dapat mengambil palet warna dari gambar ini. Pastikan gambar valid.");
+                        }
+                    };
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.style.display = 'none';
+                colorPaletteDiv.innerHTML = '';
+                pickedColorDisplay.style.backgroundColor = '#f0f0f0';
+                pickedColorValue.textContent = 'Warna Dipilih: N/A';
+            }
+        });
+
+        // Event listener untuk memilih warna pada gambar
+        imagePreview.addEventListener('click', function(event) {
+            if (!imagePreview.src || imagePreview.src === '#') {
+                return; // Jangan lakukan apa-apa jika tidak ada gambar
+            }
+
+            // Hitung koordinat klik relatif terhadap gambar yang ditampilkan
+            const rect = imagePreview.getBoundingClientRect();
+            const scaleX = imageCanvas.width / rect.width;
+            const scaleY = imageCanvas.height / rect.height;
+            const x = (event.clientX - rect.left) * scaleX;
+            const y = (event.clientY - rect.top) * scaleY;
+
+            // Dapatkan data piksel dari canvas pada koordinat tersebut
+            const pixelData = ctx.getImageData(x, y, 1, 1).data;
+            const r = pixelData[0];
+            const g = pixelData[1];
+            const b = pixelData[2];
+            const hexColor = rgbToHex(r, g, b);
+
+            pickedColorDisplay.style.backgroundColor = hexColor;
+            pickedColorValue.textContent = `Warna Dipilih: ${hexColor} (RGB: ${r}, ${g}, ${b})`;
+
+            // Opsional: Salin warna yang dipilih ke clipboard
+            navigator.clipboard.writeText(hexColor).then(() => {
+                console.log(`Warna ${hexColor} disalin!`);
+            }).catch(err => {
+                console.error('Gagal menyalin warna yang dipilih:', err);
+            });
+        });
+    </script>
+</body>
+</html>
