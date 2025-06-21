@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palet Warna Gambar Super Kompak</title>
+    <title>Palet Warna Gambar Super Kompak & Horizontal</title>
     <style>
         /* Gaya Umum */
         body {
@@ -11,7 +11,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 15px; /* Padding body sedikit dikurangi lagi */
+            padding: 15px;
             background-color: #1a1a1a;
             color: #f0f0f0;
             margin: 0;
@@ -21,11 +21,11 @@
 
         .container {
             background-color: #2c2c2c;
-            padding: 25px; /* Padding container dikurangi */
-            border-radius: 10px; /* Radius sudut sedikit dikurangi */
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* Bayangan sedikit disesuaikan */
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
             width: 90%;
-            max-width: 950px; /* Lebar maksimum container lebih kecil */
+            max-width: 950px;
             text-align: center;
             border: 1px solid #444;
             display: flex;
@@ -35,27 +35,27 @@
 
         h1 {
             color: #e0e0e0;
-            margin-bottom: 15px; /* Margin dikurangi */
-            font-size: 1.8em; /* Ukuran font H1 lebih kecil */
+            margin-bottom: 15px;
+            font-size: 1.8em;
         }
 
         h2 {
             color: #e0e0e0;
-            margin-bottom: 10px; /* Margin dikurangi */
-            font-size: 1.3em; /* Ukuran font H2 lebih kecil */
+            margin-bottom: 10px;
+            font-size: 1.3em;
         }
 
         p {
             color: #b0b0b0;
-            line-height: 1.4; /* Line height lebih rapat */
-            margin-bottom: 10px; /* Margin dikurangi */
-            font-size: 0.9em; /* Ukuran font paragraf lebih kecil */
+            line-height: 1.4;
+            margin-bottom: 10px;
+            font-size: 0.9em;
         }
 
         hr {
             border: none;
             border-top: 1px solid #444;
-            margin: 25px 0; /* Margin dikurangi */
+            margin: 25px 0;
         }
 
         /* Input File (Disembunyikan) */
@@ -66,10 +66,10 @@
         /* Tombol Unggah Kustom */
         .custom-file-upload {
             display: inline-block;
-            margin: 0 auto 15px auto; /* Margin dikurangi */
-            padding: 8px 18px; /* Padding dikurangi */
+            margin: 0 auto 15px auto;
+            padding: 8px 18px;
             border: 2px solid #007bff;
-            border-radius: 6px; /* Radius sudut sedikit dikurangi */
+            border-radius: 6px;
             background-color: #007bff;
             color: #fff;
             cursor: pointer;
@@ -77,15 +77,15 @@
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3); /* Bayangan disesuaikan */
-            font-size: 0.8em; /* Ukuran font tombol lebih kecil */
+            box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3);
+            font-size: 0.8em;
         }
 
         .custom-file-upload:hover {
             background-color: #0056b3;
             border-color: #0056b3;
             box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
-            transform: translateY(-1px); /* Efek angkat lebih halus */
+            transform: translateY(-1px);
         }
 
         .custom-file-upload:active {
@@ -97,11 +97,11 @@
         #upload-progress-container {
             width: 100%;
             background-color: #444;
-            border-radius: 4px; /* Radius sudut dikurangi */
+            border-radius: 4px;
             overflow: hidden;
-            margin-bottom: 10px; /* Margin dikurangi */
-            height: 18px; /* Tinggi progress bar dikurangi */
-            display: none; 
+            margin-bottom: 10px;
+            height: 18px;
+            display: none;
         }
 
         #upload-progress-bar {
@@ -109,10 +109,10 @@
             height: 100%;
             background-color: #28a745;
             text-align: center;
-            line-height: 18px; /* Menyesuaikan line-height */
+            line-height: 18px;
             color: white;
             transition: width 0.3s ease;
-            font-size: 0.7em; /* Ukuran font progress bar lebih kecil */
+            font-size: 0.7em;
         }
 
         /* Kontainer Utama untuk Gambar dan Side Content */
@@ -120,7 +120,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px; /* Gap dikurangi */
+            gap: 15px;
             margin-top: 15px;
             width: 100%;
             flex-grow: 1;
@@ -129,8 +129,8 @@
         /* Kontainer untuk Palet Warna & Pemilih Warna (Side Content) */
         .side-content-wrapper {
             display: flex;
-            flex-direction: column;
-            gap: 15px; /* Gap dikurangi */
+            flex-direction: column; /* Default: tumpuk vertikal (mobile) */
+            gap: 15px;
             width: 100%;
             align-items: center;
         }
@@ -142,9 +142,9 @@
             border: 2px solid #555;
             border-radius: 8px;
             margin-bottom: 0;
-            display: none; 
+            display: none;
             cursor: crosshair;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Bayangan sedikit dikurangi */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         @media (min-width: 768px) { /* Tampilan Desktop */
@@ -157,86 +157,95 @@
 
             #image-display-area {
                 flex: 2;
-                max-width: 60%; 
+                max-width: 60%;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                min-height: 250px; /* Tinggi minimal gambar dikurangi */
+                min-height: 250px;
             }
 
             #image-preview {
-                max-height: calc(100vh - 200px); /* Batasi tinggi gambar lebih ketat */
+                max-height: calc(100vh - 200px);
                 object-fit: contain;
                 margin-bottom: 0;
             }
 
             .side-content-wrapper {
                 flex: 1;
-                max-width: 38%; /* Lebar side content sedikit diperluas untuk memberi ruang */
-                min-width: 250px; /* Minimal lebar dikurangi */
+                max-width: 40%; /* Beri sedikit lebih banyak ruang untuk side content */
+                min-width: 280px; /* Minimal lebar disesuaikan */
                 height: 100%;
-                flex-direction: column;
-                justify-content: flex-start;
-                text-align: center;
-                padding-left: 15px; /* Tambah sedikit padding kiri */
+                
+                /* Ini adalah perubahan KUNCI untuk desktop layout */
+                flex-direction: row; /* Ubah menjadi horizontal */
+                justify-content: space-between; /* Jarak antara picker dan palet */
+                align-items: flex-start; /* Rata atas */
+                gap: 10px; /* Jarak antar picker dan palet */
+                padding-left: 15px; /* Tetap beri padding kiri */
             }
 
-            /* Pemilih Warna Langsung - Lebih Kompak */
+            /* Pemilih Warna Langsung (di kiri side-content-wrapper) */
             #picked-color-section {
-                padding-bottom: 10px; /* Padding dikurangi */
-                border-bottom: 1px solid #444;
+                flex: 1; /* Ambil bagian dari ruang horizontal */
+                max-width: 45%; /* Batasi lebar agar tidak terlalu besar */
+                padding-bottom: 0; /* Hapus padding bawah */
+                border-bottom: none; /* Hapus border bawah */
+                padding-right: 10px; /* Tambah padding kanan untuk jarak */
+                border-right: 1px solid #444; /* Tambah border pemisah vertikal */
                 margin-bottom: 0;
-                flex-shrink: 0;
-                width: 100%;
             }
 
             #picked-color-section h2 {
-                font-size: 1.2em; /* Ukuran H2 lebih kecil */
+                font-size: 1.2em;
                 margin-bottom: 8px;
             }
 
             #picked-color-section p {
-                font-size: 0.85em; /* Ukuran paragraf lebih kecil */
+                font-size: 0.85em;
                 margin-bottom: 10px;
             }
 
             #picked-color-display {
-                width: 80px; /* Ukuran display warna lebih kecil */
+                width: 80px;
                 height: 80px;
-                margin: 10px auto; /* Margin dikurangi */
-                border-radius: 6px; /* Radius sudut lebih kecil */
+                margin: 10px auto;
+                border-radius: 6px;
             }
 
             #picked-color-value {
-                font-size: 0.9em; /* Ukuran font nilai warna lebih kecil */
+                font-size: 0.9em;
             }
 
-            /* Palet Warna - Lebih Kompak */
+            /* Palet Warna (di kanan side-content-wrapper) */
             #color-palette-container {
-                padding-top: 10px; /* Padding dikurangi */
+                flex: 1; /* Ambil bagian dari ruang horizontal */
+                max-width: 55%; /* Beri lebih banyak ruang untuk palet */
+                padding-top: 0; /* Hapus padding atas */
                 margin: 0;
-                flex-grow: 1;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: flex-start;
+                text-align: center; /* Pastikan teks di dalamnya rata tengah */
             }
 
             #color-palette-container h2 {
-                font-size: 1.2em; /* Ukuran H2 lebih kecil */
+                font-size: 1.2em;
                 margin-bottom: 8px;
             }
 
             #color-palette-container p {
-                font-size: 0.85em; /* Ukuran paragraf lebih kecil */
+                font-size: 0.85em;
                 margin-bottom: 10px;
             }
 
             #color-palette {
-                gap: 8px; /* Jarak antar kotak warna dikurangi */
-                margin-top: 10px; /* Margin dikurangi */
-                width: 100%;
-                justify-content: center; /* Pastikan tetap rata tengah */
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+                margin-top: 10px;
+                width: 100%; /* Pastikan palet mengisi lebar kontainernya */
             }
 
             .color-item {
@@ -244,28 +253,29 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: space-between;
-                width: calc(33.33% - 8px); /* Disesuaikan dengan gap */
-                max-width: 65px; /* Maksimal lebar per item lebih kecil */
-                min-width: 50px; /* Minimal lebar dikurangi */
+                /* Sesuaikan width calc() agar pas dengan 2 kolom */
+                width: calc(50% - 8px); /* Target 2 kolom dengan gap */
+                max-width: 65px;
+                min-width: 50px;
             }
 
             .color-box {
-                width: 45px; /* Ukuran kotak warna lebih kecil */
+                width: 45px;
                 height: 45px;
-                border-radius: 5px; /* Radius sudut lebih kecil */
+                border-radius: 5px;
             }
 
             .color-info {
-                font-size: 0.75em; /* Ukuran font info warna lebih kecil */
+                font-size: 0.75em;
                 margin-top: 4px;
                 word-break: break-all;
             }
 
             .copy-button {
-                padding: 3px 5px; /* Padding tombol salin dikurangi */
-                font-size: 0.65em; /* Ukuran font tombol salin lebih kecil */
+                padding: 3px 5px;
+                font-size: 0.65em;
                 margin-top: 3px;
-                border-radius: 3px; /* Radius sudut lebih kecil */
+                border-radius: 3px;
             }
         }
     </style>
