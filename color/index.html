@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palet Warna Gambar Kompak</title>
+    <title>Palet Warna Gambar Kompak & Stabil</title>
     <style>
         /* Gaya Umum */
         body {
@@ -100,12 +100,11 @@
             overflow: hidden;
             margin-bottom: 15px;
             height: 20px;
-            /* Pastikan tersembunyi secara default */
             display: none; 
         }
 
         #upload-progress-bar {
-            width: 0%; /* Mulai dari 0% */
+            width: 0%;
             height: 100%;
             background-color: #28a745;
             text-align: center;
@@ -130,9 +129,21 @@
         .side-content-wrapper {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 20px; /* Jarak antara Picked Color dan Color Palette */
             width: 100%;
             align-items: center;
+        }
+
+        /* Pratinjau Gambar */
+        #image-preview {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #555;
+            border-radius: 8px;
+            margin-bottom: 0;
+            display: none; 
+            cursor: crosshair;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         @media (min-width: 768px) { /* Tampilan Desktop */
@@ -163,14 +174,34 @@
                 max-width: 35%;
                 min-width: 280px;
                 height: 100%;
-                justify-content: space-between;
+                /* Mengubah urutan elemen di desktop */
+                flex-direction: column;
+                justify-content: flex-start; /* Mulai dari atas */
                 text-align: center;
             }
 
+            #picked-color-section { /* ID baru untuk bagian pemilih warna */
+                padding-bottom: 15px; /* Jarak dari palet warna di bawahnya */
+                border-bottom: 1px solid #444; /* Border pemisah visual */
+                margin-bottom: 0; /* Hapus margin bawah default */
+                flex-shrink: 0;
+                width: 100%; /* Pastikan mengisi lebar */
+            }
+
+            #picked-color-display {
+                width: 100px;
+                height: 100px;
+                margin: 15px auto;
+            }
+
+            #picked-color-value {
+                font-size: 1em;
+            }
+
             #color-palette-container {
-                padding: 0;
+                padding-top: 15px; /* Jarak dari picked color di atasnya */
                 margin: 0;
-                flex-grow: 1;
+                flex-grow: 1; /* Palet akan mengisi ruang sisa */
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -178,17 +209,22 @@
             }
 
             #color-palette {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
                 gap: 10px;
                 margin-top: 15px;
+                width: 100%;
             }
 
             .color-item {
-                /* Make color-item flexible to allow space distribution if needed */
-                flex-basis: calc(33% - 10px); /* 3 items per row approx */
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                justify-content: space-between; /* push text and button away if height allows */
+                justify-content: space-between;
+                width: calc(33.33% - 10px);
+                max-width: 80px;
+                min-width: 60px;
             }
 
             .color-box {
@@ -200,29 +236,13 @@
             .color-info {
                 font-size: 0.8em;
                 margin-top: 5px;
+                word-break: break-all;
             }
 
             .copy-button {
                 padding: 4px 6px;
                 font-size: 0.7em;
-                margin-top: auto; /* Push button to the bottom of color-item */
-            }
-            
-            #picked-color-section {
-                padding-top: 15px;
-                border-top: 1px solid #444;
                 margin-top: auto;
-                flex-shrink: 0;
-            }
-
-            #picked-color-display {
-                width: 100px;
-                height: 100px;
-                margin: 15px auto;
-            }
-
-            #picked-color-value {
-                font-size: 1em;
             }
         }
     </style>
@@ -249,18 +269,18 @@
             </div>
 
             <div class="side-content-wrapper">
-                <div id="color-palette-container">
-                    <h2>Palet Warna</h2>
-                    <p>Klik pada tombol salin di bawah setiap warna untuk menyalin kode HEX-nya.</p>
-                    <div id="color-palette">
-                        </div>
-                </div>
-
                 <div id="picked-color-section">
                     <h2>Pilih Warna Langsung dari Gambar</h2>
                     <p>Arahkan kursor ke gambar di atas dan klik di mana saja untuk memilih warna.</p>
                     <div id="picked-color-display"></div>
                     <div id="picked-color-value">Warna Dipilih: N/A</div>
+                </div>
+
+                <div id="color-palette-container">
+                    <h2>Palet Warna</h2>
+                    <p>Klik pada tombol salin di bawah setiap warna untuk menyalin kode HEX-nya.</p>
+                    <div id="color-palette">
+                        </div>
                 </div>
             </div>
         </div>
@@ -368,10 +388,10 @@
         imageUpload.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
-                // Tampilkan progress bar saat file dipilih
                 uploadProgressContainer.style.display = 'block'; 
                 uploadProgressBar.style.width = '0%';
                 uploadProgressBar.textContent = '0%';
+                imagePreview.style.display = 'none';
 
                 const reader = new FileReader();
 
@@ -380,125 +400,3 @@
                         const percent = (e.loaded / e.total) * 100;
                         uploadProgressBar.style.width = percent + '%';
                         uploadProgressBar.textContent = Math.round(percent) + '%';
-                    }
-                };
-
-                reader.onload = function(e) {
-                    uploadProgressBar.style.width = '100%';
-                    uploadProgressBar.textContent = '100%';
-                    // Sembunyikan progress bar setelah selesai (opsional, bisa juga dihide setelah gambar dirender)
-                    setTimeout(() => { uploadProgressContainer.style.display = 'none'; }, 500);
-
-
-                    const img = new Image();
-                    img.src = e.target.result;
-
-                    img.onload = function() {
-                        resizeImage(img, MAX_WIDTH, MAX_HEIGHT, (resizedDataUrl) => {
-                            imagePreview.src = resizedDataUrl;
-                            imagePreview.style.display = 'block';
-
-                            imagePreview.onload = function() {
-                                try {
-                                    imageCanvas.width = imagePreview.naturalWidth;
-                                    imageCanvas.height = imagePreview.naturalHeight;
-                                    ctx.drawImage(imagePreview, 0, 0);
-
-                                    const palette = colorThief.getPalette(imagePreview, 8);
-                                    displayColorPalette(palette);
-
-                                } catch (error) {
-                                    console.error("Gagal memproses gambar atau mengambil warna:", error);
-                                    alert("Terjadi kesalahan saat memproses gambar. Pastikan gambar valid dan bukan dari domain lain (masalah CORS).");
-                                    imagePreview.style.display = 'none';
-                                    colorPaletteDiv.innerHTML = '<p style="color:#b0b0b0;">Gagal memproses gambar.</p>';
-                                    pickedColorDisplay.style.backgroundColor = '#444';
-                                    pickedColorValue.textContent = 'Warna Dipilih: N/A';
-                                } finally {
-                                    URL.revokeObjectURL(resizedDataUrl);
-                                }
-                            };
-                            imagePreview.onerror = function() {
-                                alert("Gagal memuat gambar yang diresize. Pastikan ini adalah file gambar yang valid.");
-                                imagePreview.style.display = 'none';
-                                colorPaletteDiv.innerHTML = '<p style="color:#b0b0b0;">Gagal memuat gambar.</p>';
-                                pickedColorDisplay.style.backgroundColor = '#444';
-                                pickedColorValue.textContent = 'Warna Dipilih: N/A';
-                                URL.revokeObjectURL(resizedDataUrl);
-                            };
-                        });
-                    };
-                    img.onerror = function() {
-                        alert("Gagal memuat gambar asli. Pastikan ini adalah file gambar yang valid.");
-                        uploadProgressContainer.style.display = 'none';
-                        imagePreview.style.display = 'none';
-                        colorPaletteDiv.innerHTML = '<p style="color:#b0b0b0;">Gagal memuat gambar.</p>';
-                        pickedColorDisplay.style.backgroundColor = '#444';
-                        pickedColorValue.textContent = 'Warna Dipilih: N/A';
-                    };
-                };
-                reader.readAsDataURL(file);
-            } else {
-                // Reset tampilan dan sembunyikan progress bar jika tidak ada file yang dipilih
-                uploadProgressContainer.style.display = 'none'; 
-                imagePreview.style.display = 'none';
-                imagePreview.src = '#';
-                colorPaletteDiv.innerHTML = '';
-                pickedColorDisplay.style.backgroundColor = '#444';
-                pickedColorValue.textContent = 'Warna Dipilih: N/A';
-            }
-        });
-
-        // Event listener untuk memilih warna pada gambar
-        imagePreview.addEventListener('click', function(event) {
-            if (!imagePreview.src || imagePreview.src === window.location.href + '#') {
-                alert("Silakan unggah gambar terlebih dahulu.");
-                return;
-            }
-
-            const rect = imagePreview.getBoundingClientRect();
-            const naturalWidth = imageCanvas.width;
-            const naturalHeight = imageCanvas.height;
-
-            const displayWidth = rect.width;
-            const displayHeight = rect.height;
-
-            const scaleX = naturalWidth / displayWidth;
-            const scaleY = naturalHeight / displayHeight;
-
-            const clientX = event.clientX;
-            const clientY = event.clientY;
-
-            const x = (clientX - rect.left) * scaleX;
-            const y = (clientY - rect.top) * scaleY;
-
-            try {
-                const pixelData = ctx.getImageData(x, y, 1, 1).data;
-                const r = pixelData[0];
-                const g = pixelData[1];
-                const b = pixelData[2];
-                const hexColor = rgbToHex(r, g, b);
-
-                pickedColorDisplay.style.backgroundColor = hexColor;
-                pickedColorValue.textContent = `Warna Dipilih: ${hexColor} (RGB: ${r}, ${g}, ${b})`;
-
-                navigator.clipboard.writeText(hexColor)
-                    .then(() => {
-                        console.log(`Warna ${hexColor} disalin!`);
-                    })
-                    .catch(err => {
-                        console.error('Gagal menyalin warna yang dipilih:', err);
-                    });
-            } catch (error) {
-                console.error("Gagal mengambil piksel warna:", error);
-                alert("Tidak dapat mengambil warna piksel. Pastikan gambar sudah dimuat sepenuhnya.");
-            }
-        });
-
-        // Pastikan progress bar tersembunyi saat halaman pertama kali dimuat
-        document.addEventListener('DOMContentLoaded', () => {
-            uploadProgressContainer.style.display = 'none';
-        });
-    </script>
-</body>
-</html>
