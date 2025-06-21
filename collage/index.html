@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Justified Collage Maker</title>
+    <title>Justified Collage Maker - Rapat</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -90,24 +90,25 @@
             display: none;
         }
 
-        /* Kontainer utama tidak lagi menggunakan Grid */
         #collage-container {
             width: 100%;
             margin-top: 20px;
+            background-color: #000; /* Latar belakang hitam jika ada celah kecil */
         }
         
-        /* Setiap baris gambar akan dibungkus dalam div ini */
         .collage-row {
             display: flex;
-            gap: 5px; /* Jarak antar gambar */
-            margin-bottom: 5px; /* Jarak antar baris */
+            /* PERUBAHAN CSS: Menghilangkan jarak antar gambar dan baris */
+            gap: 0; 
+            margin-bottom: 0;
+            /* Mencegah adanya celah vertikal aneh pada beberapa browser */
+            line-height: 0; 
         }
         
         .collage-row img {
-            /* Tinggi akan diatur oleh JS, lebar akan otomatis menyesuaikan */
             height: auto; 
             max-width: 100%;
-            flex-grow: 1; /* Memastikan gambar mengisi ruang jika ada sisa */
+            flex-grow: 1;
             object-fit: cover;
         }
 
@@ -116,7 +117,7 @@
 <body>
 
     <div class="container">
-        <h1>Justified Collage Maker</h1>
+        <h1>Justified Collage Maker - Rapat</h1>
         
         <div class="controls">
             <button class="btn" onclick="document.getElementById('image-input').click();">Pilih Gambar</button>
@@ -135,8 +136,6 @@
     </div>
 
     <script>
-    // == JavaScript Logic - Justified Layout Algorithm ==
-
     const imageInput = document.getElementById('image-input');
     const collageContainer = document.getElementById('collage-container');
     const downloadBtn = document.getElementById('download-btn');
@@ -145,7 +144,6 @@
 
     let imageFiles = [];
 
-    // Fungsi untuk me-render layout kolase
     const renderJustifiedLayout = async () => {
         if (imageFiles.length === 0) {
             collageContainer.innerHTML = '<p style="color: #888;">Pilih gambar untuk memulai...</p>';
@@ -156,9 +154,10 @@
 
         const containerWidth = collageContainer.clientWidth;
         const idealHeight = parseInt(rowHeightSlider.value);
-        const gap = 5; // Jarak antar gambar (sesuaikan dengan CSS)
+        
+        // PERUBAHAN JAVASCRIPT: Nilai jarak diubah menjadi 0
+        const gap = 0; 
 
-        // 1. Dapatkan dimensi setiap gambar
         const imageDimensions = await Promise.all(
             Array.from(imageFiles).map(file => {
                 return new Promise((resolve) => {
@@ -167,7 +166,6 @@
                     img.onload = () => {
                         resolve({
                             src: img.src,
-                            // Hitung aspect ratio untuk digunakan nanti
                             ratio: img.naturalWidth / img.naturalHeight
                         });
                     };
@@ -175,50 +173,39 @@
             })
         );
 
-        collageContainer.innerHTML = ''; // Bersihkan container
+        collageContainer.innerHTML = ''; 
 
-        // 2. Proses gambar untuk membuat baris
         let currentRow = [];
         let currentRowWidth = 0;
 
         imageDimensions.forEach((img, index) => {
             currentRow.push(img);
-            // Lebar gambar jika tingginya disetel ke 'idealHeight'
             const resizedWidth = img.ratio * idealHeight;
             currentRowWidth += resizedWidth;
 
-            // Jika baris sudah cukup lebar, atau ini gambar terakhir
             if (currentRowWidth + (currentRow.length - 1) * gap > containerWidth || index === imageDimensions.length - 1) {
-                // Hitung total ratio untuk baris ini
                 const totalRatio = currentRow.reduce((sum, item) => sum + item.ratio, 0);
-                
-                // Lebar kontainer dikurangi total jarak
                 const availableWidth = containerWidth - (currentRow.length - 1) * gap;
-                
-                // Tinggi baris yang sebenarnya agar pas
                 const finalRowHeight = availableWidth / totalRatio;
                 
-                // Buat elemen baris
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'collage-row';
                 
                 currentRow.forEach(item => {
                     const imgElement = document.createElement('img');
                     imgElement.src = item.src;
-                    imgElement.style.height = `${finalRowHeight}px`; // Atur tinggi, lebar akan menyesuaikan
+                    imgElement.style.height = `${finalRowHeight}px`;
                     rowDiv.appendChild(imgElement);
                 });
 
                 collageContainer.appendChild(rowDiv);
 
-                // Reset untuk baris berikutnya
                 currentRow = [];
                 currentRowWidth = 0;
             }
         });
     };
 
-    // Event Listeners
     imageInput.addEventListener('change', (event) => {
         imageFiles = event.target.files;
         renderJustifiedLayout();
@@ -236,19 +223,18 @@
         }
         alert("Mempersiapkan file unduhan... Ini mungkin butuh beberapa detik.");
         html2canvas(collageContainer, {
-            backgroundColor: getComputedStyle(document.body).getPropertyValue('--container-bg'),
+            backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'),
             scale: 2,
             useCORS: true,
             logging: false
         }).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'kolase-justified.png';
+            link.download = 'kolase-rapat.png';
             link.click();
         });
     });
     
-    // Tampilkan pesan awal
     renderJustifiedLayout();
     </script>
 
