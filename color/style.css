@@ -13,7 +13,7 @@
 html, body {
     height: 100%;
     margin: 0;
-    overflow: hidden; /* Mencegah scroll di level body untuk desktop */
+    overflow: hidden;
 }
 
 body {
@@ -203,11 +203,13 @@ input[type="file"] {
 
 #picked-color-section {
     flex: 1;
+    align-items: center; /* <-- PERUBAHAN DI SINI */
 }
 
 #color-palette-container {
     flex: 2;
 }
+
 
 h2 {
     font-size: 1.3em;
@@ -379,49 +381,46 @@ h2 {
 }
 
 /* ======================================================= */
-/* --- PERUBAHAN BARU: GAYA KHUSUS UNTUK MOBILE --- */
+/* --- GAYA KHUSUS UNTUK MOBILE --- */
 /* ======================================================= */
 
 @media (max-width: 768px) {
     
-    /* Izinkan scrolling di mobile */
     html, body {
         height: auto;
         overflow: auto;
     }
 
     .container {
-        padding: 20px 15px; /* Kurangi padding di mobile */
+        padding: 20px 15px;
         height: auto;
     }
 
     header h1 {
-        font-size: 1.8em; /* Kecilkan judul */
+        font-size: 1.8em;
     }
 
-    /* Tumpuk gambar dan panel samping ke bawah */
     .main-content-wrapper {
         flex-direction: column;
-        align-items: center; /* Tengahkan item */
+        align-items: center;
     }
 
     #image-display-area, .side-content-wrapper {
-        flex: none; /* Hapus flex-grow/shrink */
-        max-width: 100%; /* Gunakan lebar penuh */
+        flex: none;
+        max-width: 100%;
         width: 100%;
     }
 
-    /* Tumpuk color picker dan color palette ke bawah */
     .side-content-wrapper {
         flex-direction: column;
     }
 
     #image-preview {
-        max-height: 50vh; /* Batasi tinggi gambar agar tidak terlalu dominan */
+        max-height: 50vh;
     }
 
     #picked-color-section, #color-palette-container {
         width: 100%;
-        box-sizing: border-box; /* Pastikan padding tidak merusak lebar */
+        box-sizing: border-box;
     }
 }
