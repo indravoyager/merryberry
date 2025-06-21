@@ -11,7 +11,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px 0; /* Padding atas dan bawah yang simetris */
+            /* Mengurangi padding horizontal menjadi 10px atau 0px */
+            padding: 20px 10px; /* Padding atas bawah 20px, kiri kanan 10px */
             background-color: #1a1a1a;
             color: #f0f0f0;
             margin: 0;
@@ -21,15 +22,15 @@
 
         .container {
             background-color: #2c2c2c;
-            padding: 30px; /* Padding container */
+            padding: 30px;
             border-radius: 10px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-            width: 90%; /* Ambil 90% lebar layar */
-            max-width: 1200px; /* Lebar maksimum container lebih luas */
+            width: 95%; /* Mengambil 95% lebar layar */
+            max-width: 1400px; /* Meningkatkan lebar maksimum container */
             text-align: center;
             border: 1px solid #444;
             display: flex;
-            flex-direction: column; /* Konten utama dalam container tetap kolom */
+            flex-direction: column;
             align-items: center;
         }
 
@@ -121,8 +122,8 @@
         }
 
         #image-display-area {
-            flex: 2; /* Gambar mengambil lebih banyak ruang */
-            max-width: 60%; /* Sedikit mengurangi lebar gambar untuk memberi ruang lebih ke palet */
+            flex: 3; /* Gambar mengambil lebih banyak ruang (3 bagian) */
+            max-width: 68%; /* Meningkatkan lebar maksimum gambar */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -132,7 +133,7 @@
 
         #image-preview {
             max-width: 100%;
-            max-height: calc(100vh - 270px); /* Batasan tinggi disesuaikan */
+            max-height: calc(100vh - 270px);
             height: auto;
             border: 2px solid #555;
             border-radius: 8px;
@@ -145,11 +146,11 @@
 
         /* Kontainer untuk Palet Warna & Pemilih Warna (Side Content - Selalu Horizontal) */
         .side-content-wrapper {
-            flex: 1;
-            max-width: 40%; /* Menambah lebar side content secara keseluruhan */
-            min-width: 350px; /* Minimal lebar side content sedikit ditingkatkan */
+            flex: 1; /* Side content mengambil sisa ruang (1 bagian) */
+            max-width: 32%; /* Mengurangi lebar side content untuk mengimbangi gambar yang lebih besar */
+            min-width: 350px;
             display: flex;
-            flex-direction: row; /* Tetap horizontal di dalam side content */
+            flex-direction: row;
             justify-content: space-between;
             align-items: flex-start;
             gap: 15px;
@@ -158,9 +159,9 @@
 
         /* Pemilih Warna Langsung (di kiri side-content-wrapper) */
         #picked-color-section {
-            flex: 1; /* Ambil sebagian ruang horizontal */
-            max-width: 45%; /* Batasi lebar picker agar palet dapat lebih lebar */
-            min-width: 120px; /* Minimal lebar picker */
+            flex: 1;
+            max-width: 40%; /* Menyesuaikan lebar picker */
+            min-width: 120px;
             padding-right: 15px;
             border-right: 1px solid #444;
             text-align: center;
@@ -189,13 +190,13 @@
 
         #picked-color-value {
             font-size: 1em;
-            margin-bottom: 10px; /* Tambah margin bawah untuk tombol Salin */
+            margin-bottom: 10px;
         }
 
         /* Palet Warna (di kanan side-content-wrapper) */
         #color-palette-container {
             flex: 1;
-            max-width: 55%;
+            max-width: 60%; /* Memberi lebih banyak ruang untuk palet */
             min-width: 200px;
             display: flex;
             flex-direction: column;
@@ -250,37 +251,37 @@
 
         /* Tombol Salin Modern */
         .copy-button {
-            background-color: #333; /* Warna gelap */
-            color: #00ff99; /* Warna teks cerah */
-            border: 1px solid #00ff99; /* Border cerah */
-            border-radius: 5px; /* Radius sudut lebih halus */
-            padding: 5px 8px; /* Padding lebih besar */
-            font-size: 0.75em; /* Ukuran font sedikit lebih besar */
+            background-color: #333;
+            color: #00ff99;
+            border: 1px solid #00ff99;
+            border-radius: 5px;
+            padding: 5px 8px;
+            font-size: 0.75em;
             cursor: pointer;
-            transition: all 0.2s ease-in-out; /* Transisi lebih halus */
-            margin-top: 5px; /* Jarak dari info warna */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Bayangan halus */
-            min-width: 60px; /* Minimal lebar tombol */
+            transition: all 0.2s ease-in-out;
+            margin-top: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            min-width: 60px;
         }
 
         .copy-button:hover {
-            background-color: #00ff99; /* Balik warna saat hover */
-            color: #1a1a1a; /* Teks gelap saat hover */
-            box-shadow: 0 4px 8px rgba(0, 255, 153, 0.3); /* Bayangan cerah */
-            transform: translateY(-1px); /* Efek angkat sedikit */
+            background-color: #00ff99;
+            color: #1a1a1a;
+            box-shadow: 0 4px 8px rgba(0, 255, 153, 0.3);
+            transform: translateY(-1px);
         }
 
         .copy-button:active {
-            background-color: #00cc7a; /* Warna lebih gelap saat ditekan */
+            background-color: #00cc7a;
             transform: translateY(0);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         /* Gaya tombol salin khusus untuk picked color */
         #picked-color-section .copy-button {
-            margin-top: 10px; /* Jarak dari nilai warna */
-            font-size: 0.85em; /* Ukuran font sedikit lebih besar dari tombol palet */
-            padding: 8px 12px; /* Padding lebih besar */
+            margin-top: 10px;
+            font-size: 0.85em;
+            padding: 8px 12px;
         }
     </style>
 </head>
@@ -334,7 +335,7 @@
         const pickedColorValue = document.getElementById('picked-color-value');
         const uploadProgressContainer = document.getElementById('upload-progress-container');
         const uploadProgressBar = document.getElementById('upload-progress-bar');
-        const copyPickedColorButton = document.getElementById('copyPickedColorButton'); // Ambil elemen tombol baru
+        const copyPickedColorButton = document.getElementById('copyPickedColorButton');
         const ctx = imageCanvas.getContext('2d');
         const colorThief = new ColorThief();
 
@@ -431,7 +432,7 @@
             colorPaletteDiv.innerHTML = '';
             pickedColorDisplay.style.backgroundColor = '#444';
             pickedColorValue.textContent = 'Warna Dipilih: N/A';
-            copyPickedColorButton.style.display = 'none'; // Sembunyikan tombol salin picked color saat reset
+            copyPickedColorButton.style.display = 'none';
         }
 
 
@@ -533,13 +534,14 @@
                 copyPickedColorButton.style.display = 'inline-block'; // Tampilkan tombol salin
 
                 // Langsung salin ke clipboard saat diklik (sesuai perilaku sebelumnya)
-                navigator.clipboard.writeText(hexColor)
-                    .then(() => {
-                        console.log(`Warna ${hexColor} disalin secara otomatis!`);
-                    })
-                    .catch(err => {
-                        console.error('Gagal menyalin warna yang dipilih secara otomatis:', err);
-                    });
+                // Behavior ini sudah dihapus dari sini, pindah ke event listener tombol Salin
+                // navigator.clipboard.writeText(hexColor)
+                //     .then(() => {
+                //         console.log(`Warna ${hexColor} disalin secara otomatis!`);
+                //     })
+                //     .catch(err => {
+                //         console.error('Gagal menyalin warna yang dipilih secara otomatis:', err);
+                //     });
 
             } catch (error) {
                 console.error("Gagal mengambil piksel warna:", error);
@@ -550,11 +552,27 @@
 
         // Event listener untuk tombol salin di picked color
         copyPickedColorButton.addEventListener('click', () => {
-            const currentPickedColor = pickedColorValue.textContent.split(': ')[1]; // Ambil hanya nilai HEX/RGB
-            if (currentPickedColor && currentPickedColor !== 'N/A') {
-                const hexMatch = currentPickedColor.match(/#([0-9A-Fa-f]{6})/);
-                const colorToCopy = hexMatch ? hexMatch[0] : currentPickedColor; // Prioritaskan HEX
+            // Ambil teks HEX (misal: #RRGGBB) atau teks RGB (misal: RGB: R, G, B)
+            const pickedText = pickedColorValue.textContent;
+            let colorToCopy = 'N/A';
 
+            // Coba ambil HEX pertama
+            const hexMatch = pickedText.match(/#([0-9A-Fa-f]{6})/);
+            if (hexMatch && hexMatch[0]) {
+                colorToCopy = hexMatch[0];
+            } else {
+                // Jika tidak ada HEX, coba ambil bagian setelah "Warna Dipilih: "
+                const parts = pickedText.split(': ');
+                if (parts.length > 1) {
+                    colorToCopy = parts[1];
+                    // Jika ada (RGB: ...), ambil hanya RGB tanpa kurung
+                    if (colorToCopy.includes('(RGB:')) {
+                        colorToCopy = colorToCopy.split(' ')[0]; // Ambil #HEX
+                    }
+                }
+            }
+            
+            if (colorToCopy && colorToCopy !== 'N/A') {
                 navigator.clipboard.writeText(colorToCopy)
                     .then(() => {
                         alert(`Warna ${colorToCopy} telah disalin ke clipboard!`);
