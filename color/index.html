@@ -9,8 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
-    <script src="https://unpkg.com/lucide-react@0.378.0/dist/umd/lucide-react.js"></script>
-    <script src="https://unpkg.com/lucide-icons@0.378.0"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     
     <link rel="stylesheet" href="style.css">
 </head>
@@ -19,6 +18,9 @@
         <header>
             <h1>Image Color Palette</h1>
             <p>Unggah gambar untuk mengekstrak palet warnanya, atau pilih warna secara manual.</p>
+            <button id="resetButton" class="reset-button">
+                <i data-lucide="image-plus"></i> Pilih Gambar Lain
+            </button>
         </header>
 
         <div id="upload-area">
@@ -31,7 +33,7 @@
         </div>
 
         <div id="upload-progress-container">
-            <div id="upload-progress-bar">0%</div>
+            <div id="upload-progress-bar"></div>
         </div>
 
         <div class="main-content-wrapper">
