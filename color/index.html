@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palet Warna Gambar Kompak & Stabil</title>
+    <title>Palet Warna Gambar Super Kompak</title>
     <style>
         /* Gaya Umum */
         body {
@@ -11,7 +11,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 15px; /* Padding body sedikit dikurangi lagi */
             background-color: #1a1a1a;
             color: #f0f0f0;
             margin: 0;
@@ -21,11 +21,11 @@
 
         .container {
             background-color: #2c2c2c;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            padding: 25px; /* Padding container dikurangi */
+            border-radius: 10px; /* Radius sudut sedikit dikurangi */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* Bayangan sedikit disesuaikan */
             width: 90%;
-            max-width: 1000px;
+            max-width: 950px; /* Lebar maksimum container lebih kecil */
             text-align: center;
             border: 1px solid #444;
             display: flex;
@@ -35,26 +35,27 @@
 
         h1 {
             color: #e0e0e0;
-            margin-bottom: 20px;
-            font-size: 2em;
+            margin-bottom: 15px; /* Margin dikurangi */
+            font-size: 1.8em; /* Ukuran font H1 lebih kecil */
         }
 
         h2 {
             color: #e0e0e0;
-            margin-bottom: 15px;
-            font-size: 1.5em;
+            margin-bottom: 10px; /* Margin dikurangi */
+            font-size: 1.3em; /* Ukuran font H2 lebih kecil */
         }
 
         p {
             color: #b0b0b0;
-            line-height: 1.5;
-            margin-bottom: 15px;
+            line-height: 1.4; /* Line height lebih rapat */
+            margin-bottom: 10px; /* Margin dikurangi */
+            font-size: 0.9em; /* Ukuran font paragraf lebih kecil */
         }
 
         hr {
             border: none;
             border-top: 1px solid #444;
-            margin: 30px 0;
+            margin: 25px 0; /* Margin dikurangi */
         }
 
         /* Input File (Disembunyikan) */
@@ -65,10 +66,10 @@
         /* Tombol Unggah Kustom */
         .custom-file-upload {
             display: inline-block;
-            margin: 0 auto 20px auto;
-            padding: 10px 20px;
+            margin: 0 auto 15px auto; /* Margin dikurangi */
+            padding: 8px 18px; /* Padding dikurangi */
             border: 2px solid #007bff;
-            border-radius: 8px;
+            border-radius: 6px; /* Radius sudut sedikit dikurangi */
             background-color: #007bff;
             color: #fff;
             cursor: pointer;
@@ -76,30 +77,30 @@
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-            font-size: 0.9em;
+            box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3); /* Bayangan disesuaikan */
+            font-size: 0.8em; /* Ukuran font tombol lebih kecil */
         }
 
         .custom-file-upload:hover {
             background-color: #0056b3;
             border-color: #0056b3;
-            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
-            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
+            transform: translateY(-1px); /* Efek angkat lebih halus */
         }
 
         .custom-file-upload:active {
             transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+            box-shadow: 0 1px 3px rgba(0, 123, 255, 0.2);
         }
 
         /* Progress Bar */
         #upload-progress-container {
             width: 100%;
             background-color: #444;
-            border-radius: 5px;
+            border-radius: 4px; /* Radius sudut dikurangi */
             overflow: hidden;
-            margin-bottom: 15px;
-            height: 20px;
+            margin-bottom: 10px; /* Margin dikurangi */
+            height: 18px; /* Tinggi progress bar dikurangi */
             display: none; 
         }
 
@@ -108,10 +109,10 @@
             height: 100%;
             background-color: #28a745;
             text-align: center;
-            line-height: 20px;
+            line-height: 18px; /* Menyesuaikan line-height */
             color: white;
             transition: width 0.3s ease;
-            font-size: 0.8em;
+            font-size: 0.7em; /* Ukuran font progress bar lebih kecil */
         }
 
         /* Kontainer Utama untuk Gambar dan Side Content */
@@ -119,7 +120,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 15px; /* Gap dikurangi */
             margin-top: 15px;
             width: 100%;
             flex-grow: 1;
@@ -129,7 +130,7 @@
         .side-content-wrapper {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px; /* Gap dikurangi */
             width: 100%;
             align-items: center;
         }
@@ -143,7 +144,7 @@
             margin-bottom: 0;
             display: none; 
             cursor: crosshair;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Bayangan sedikit dikurangi */
         }
 
         @media (min-width: 768px) { /* Tampilan Desktop */
@@ -160,45 +161,59 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                min-height: 300px;
+                min-height: 250px; /* Tinggi minimal gambar dikurangi */
             }
 
             #image-preview {
-                max-height: calc(100vh - 250px);
+                max-height: calc(100vh - 200px); /* Batasi tinggi gambar lebih ketat */
                 object-fit: contain;
                 margin-bottom: 0;
             }
 
             .side-content-wrapper {
                 flex: 1;
-                max-width: 35%;
-                min-width: 280px;
+                max-width: 38%; /* Lebar side content sedikit diperluas untuk memberi ruang */
+                min-width: 250px; /* Minimal lebar dikurangi */
                 height: 100%;
                 flex-direction: column;
                 justify-content: flex-start;
                 text-align: center;
+                padding-left: 15px; /* Tambah sedikit padding kiri */
             }
 
+            /* Pemilih Warna Langsung - Lebih Kompak */
             #picked-color-section {
-                padding-bottom: 15px;
+                padding-bottom: 10px; /* Padding dikurangi */
                 border-bottom: 1px solid #444;
                 margin-bottom: 0;
                 flex-shrink: 0;
                 width: 100%;
             }
 
+            #picked-color-section h2 {
+                font-size: 1.2em; /* Ukuran H2 lebih kecil */
+                margin-bottom: 8px;
+            }
+
+            #picked-color-section p {
+                font-size: 0.85em; /* Ukuran paragraf lebih kecil */
+                margin-bottom: 10px;
+            }
+
             #picked-color-display {
-                width: 100px;
-                height: 100px;
-                margin: 15px auto;
+                width: 80px; /* Ukuran display warna lebih kecil */
+                height: 80px;
+                margin: 10px auto; /* Margin dikurangi */
+                border-radius: 6px; /* Radius sudut lebih kecil */
             }
 
             #picked-color-value {
-                font-size: 1em;
+                font-size: 0.9em; /* Ukuran font nilai warna lebih kecil */
             }
 
+            /* Palet Warna - Lebih Kompak */
             #color-palette-container {
-                padding-top: 15px;
+                padding-top: 10px; /* Padding dikurangi */
                 margin: 0;
                 flex-grow: 1;
                 display: flex;
@@ -207,13 +222,21 @@
                 justify-content: flex-start;
             }
 
+            #color-palette-container h2 {
+                font-size: 1.2em; /* Ukuran H2 lebih kecil */
+                margin-bottom: 8px;
+            }
+
+            #color-palette-container p {
+                font-size: 0.85em; /* Ukuran paragraf lebih kecil */
+                margin-bottom: 10px;
+            }
+
             #color-palette {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 10px;
-                margin-top: 15px;
+                gap: 8px; /* Jarak antar kotak warna dikurangi */
+                margin-top: 10px; /* Margin dikurangi */
                 width: 100%;
+                justify-content: center; /* Pastikan tetap rata tengah */
             }
 
             .color-item {
@@ -221,27 +244,28 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: space-between;
-                width: calc(33.33% - 10px);
-                max-width: 80px;
-                min-width: 60px;
+                width: calc(33.33% - 8px); /* Disesuaikan dengan gap */
+                max-width: 65px; /* Maksimal lebar per item lebih kecil */
+                min-width: 50px; /* Minimal lebar dikurangi */
             }
 
             .color-box {
-                width: 50px;
-                height: 50px;
-                border-radius: 6px;
+                width: 45px; /* Ukuran kotak warna lebih kecil */
+                height: 45px;
+                border-radius: 5px; /* Radius sudut lebih kecil */
             }
 
             .color-info {
-                font-size: 0.8em;
-                margin-top: 5px;
+                font-size: 0.75em; /* Ukuran font info warna lebih kecil */
+                margin-top: 4px;
                 word-break: break-all;
             }
 
             .copy-button {
-                padding: 4px 6px;
-                font-size: 0.7em;
-                margin-top: auto;
+                padding: 3px 5px; /* Padding tombol salin dikurangi */
+                font-size: 0.65em; /* Ukuran font tombol salin lebih kecil */
+                margin-top: 3px;
+                border-radius: 3px; /* Radius sudut lebih kecil */
             }
         }
     </style>
@@ -387,10 +411,10 @@
         function resetDisplay() {
             uploadProgressContainer.style.display = 'none';
             imagePreview.style.display = 'none';
-            imagePreview.src = '#'; // Hapus sumber gambar
-            colorPaletteDiv.innerHTML = ''; // Kosongkan palet
-            pickedColorDisplay.style.backgroundColor = '#444'; // Reset warna display
-            pickedColorValue.textContent = 'Warna Dipilih: N/A'; // Reset teks warna
+            imagePreview.src = '#';
+            colorPaletteDiv.innerHTML = '';
+            pickedColorDisplay.style.backgroundColor = '#444';
+            pickedColorValue.textContent = 'Warna Dipilih: N/A';
         }
 
 
@@ -398,7 +422,6 @@
         imageUpload.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
-                // Sembunyikan semua elemen tampilan sebelum memulai unggahan baru
                 resetDisplay(); 
                 uploadProgressContainer.style.display = 'block'; 
                 uploadProgressBar.style.width = '0%';
@@ -420,9 +443,6 @@
                     setTimeout(() => { uploadProgressContainer.style.display = 'none'; }, 500);
 
                     const img = new Image();
-                    // Penting: Atur crossOrigin = "Anonymous" untuk mengatasi masalah CORS
-                    // Ini hanya berfungsi jika server tempat gambar dihosting mendukung CORS.
-                    // Jika Anda menjalankan lokal, Anda mungkin tetap perlu server lokal.
                     img.crossOrigin = "Anonymous"; 
                     img.src = e.target.result;
 
@@ -431,8 +451,6 @@
                             imagePreview.src = resizedDataUrl;
                             imagePreview.style.display = 'block';
 
-                            // Gunakan setTimeout kecil untuk memastikan DOM sudah update
-                            // sebelum ColorThief dan Canvas berinteraksi
                             setTimeout(() => { 
                                 try {
                                     imageCanvas.width = imagePreview.naturalWidth;
@@ -445,21 +463,21 @@
                                 } catch (error) {
                                     console.error("Gagal memproses gambar atau mengambil warna:", error);
                                     alert("Terjadi kesalahan saat memproses gambar atau mengambil warna. Ini mungkin masalah CORS jika Anda memuat gambar dari URL eksternal, atau gambar rusak.");
-                                    resetDisplay(); // Reset tampilan jika ada error
+                                    resetDisplay();
                                 } finally {
                                     URL.revokeObjectURL(resizedDataUrl);
                                 }
-                            }, 50); // Delay kecil untuk memastikan rendering
+                            }, 50);
                         });
                     };
                     img.onerror = function() {
                         alert("Gagal memuat gambar asli. Pastikan ini adalah file gambar yang valid dan bukan dari domain lain (masalah CORS).");
-                        resetDisplay(); // Reset tampilan jika ada error
+                        resetDisplay();
                     };
                 };
                 reader.readAsDataURL(file);
             } else {
-                resetDisplay(); // Reset tampilan jika tidak ada file yang dipilih
+                resetDisplay();
             }
         });
 
