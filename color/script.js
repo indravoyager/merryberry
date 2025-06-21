@@ -122,7 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 paletteLoader.style.display = 'flex';
                 setTimeout(() => {
                     try {
-                        const palette = colorThief.getPalette(img, 6);
+                        // --- PERUBAHAN DI SINI: dari 6 menjadi 9 ---
+                        const palette = colorThief.getPalette(img, 9);
                         displayColorPalette(palette);
                     } catch (error) {
                         console.error("Gagal memproses gambar:", error);
@@ -196,7 +197,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     imagePreview.addEventListener('mousedown', (event) => {
         isPicking = true;
-        // --- PERUBAHAN BARU: Menambahkan kelas CSS saat mouse ditekan ---
         imagePreview.classList.add('is-picking-cursor');
         pickColorAt(event);
     });
@@ -209,13 +209,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('mouseup', () => {
         isPicking = false;
-        // --- PERUBAHAN BARU: Menghapus kelas CSS saat mouse dilepas ---
         imagePreview.classList.remove('is-picking-cursor');
     });
 
     imagePreview.addEventListener('mouseleave', () => {
         isPicking = false;
-        // --- PERUBAHAN BARU: Menghapus kelas CSS saat mouse keluar dari gambar ---
         imagePreview.classList.remove('is-picking-cursor');
     });
 
