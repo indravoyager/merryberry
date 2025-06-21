@@ -159,9 +159,8 @@ input[type="file"] {
     min-height: 0;
 }
 
-/* --- PERUBAHAN DI SINI: Panel kanan dibuat lebih kecil --- */
 #image-display-area {
-    flex: 4; /* Area gambar mendapat 4 bagian ruang */
+    flex: 3;
     background-color: var(--surface-color);
     border-radius: 10px;
     padding: 15px;
@@ -169,15 +168,6 @@ input[type="file"] {
     justify-content: center;
     align-items: center;
 }
-
-.side-content-wrapper {
-    flex: 1; /* Panel samping mendapat 1 bagian ruang */
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: stretch;
-}
-
 
 #image-preview {
     max-width: 100%;
@@ -192,6 +182,14 @@ input[type="file"] {
 
 #image-preview.is-picking-cursor {
     cursor: grabbing;
+}
+
+.side-content-wrapper {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
 }
 
 #picked-color-section, #color-palette-container {
@@ -268,12 +266,13 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* --- PERUBAHAN DI SINI: untuk 5 kolom --- */
     width: calc(20% - 12px); 
-    min-width: 50px;
+    min-width: 50px; 
 }
 
 .color-box {
-    width: 50px;
+    width: 50px; /* Sedikit dikecilkan agar pas */
     height: 50px;
     border-radius: 10px;
     margin-bottom: 8px;
@@ -386,6 +385,47 @@ h2 {
     height: 20px;
 }
 
+@media (max-width: 768px) {
+    
+    html, body {
+        height: auto;
+        overflow: auto;
+    }
+
+    .container {
+        padding: 20px 15px;
+        height: auto;
+    }
+
+    header h1 {
+        font-size: 1.8em;
+    }
+
+    .main-content-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #image-display-area, .side-content-wrapper {
+        flex: none;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .side-content-wrapper {
+        flex-direction: column;
+    }
+
+    #image-preview {
+        max-height: 50vh;
+    }
+
+    #picked-color-section, #color-palette-container {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
 #color-palette::-webkit-scrollbar {
   width: 8px;
 }
@@ -403,52 +443,4 @@ h2 {
 
 #color-palette::-webkit-scrollbar-thumb:hover {
   background-color: var(--accent-hover-color);
-}
-
-/* ======================================================= */
-/* --- PERUBAHAN BARU: DESAIN RESPONSIVE MULTI-BREAKPOINT --- */
-/* ======================================================= */
-
-/* Tampilan Tablet (Potret) dan di bawahnya */
-@media (max-width: 992px) {
-    /* Tata letak utama menjadi vertikal */
-    .main-content-wrapper {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    /* Semua komponen mengambil lebar penuh */
-    #image-display-area, .side-content-wrapper {
-        flex: none;
-        width: 100%;
-    }
-}
-
-
-/* Tampilan Ponsel dan di bawahnya */
-@media (max-width: 768px) {
-    
-    /* Izinkan scrolling dan sesuaikan padding */
-    html, body {
-        height: auto;
-        overflow: auto;
-    }
-
-    .container {
-        padding: 20px 15px;
-        height: auto;
-    }
-
-    header h1 {
-        font-size: 1.8em;
-    }
-
-    /* Tata letak panel samping menjadi vertikal */
-    .side-content-wrapper {
-        flex-direction: column;
-    }
-
-    #image-preview {
-        max-height: 50vh;
-    }
 }
