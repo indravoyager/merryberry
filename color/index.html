@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palet Warna Gambar (Desktop Layout)</title>
+    <title>Palet Warna Gambar Kompak</title>
     <style>
         /* Gaya Umum */
         body {
@@ -11,66 +11,83 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 30px;
-            background-color: #1a1a1a; /* Background hitam gelap */
-            color: #f0f0f0; /* Warna teks terang */
+            /* Mengurangi padding vertikal untuk kompak */
+            padding: 20px; 
+            background-color: #1a1a1a;
+            color: #f0f0f0;
             margin: 0;
+            min-height: 100vh; /* Pastikan body mengambil tinggi penuh viewport */
+            overflow-y: auto; /* Izinkan scroll jika konten tetap melebihi tinggi */
         }
 
         .container {
-            background-color: #2c2c2c; /* Warna container sedikit lebih terang dari background */
-            padding: 40px;
+            background-color: #2c2c2c;
+            /* Mengurangi padding vertikal untuk kompak */
+            padding: 30px; 
             border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4); /* Bayangan lebih gelap */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
             width: 90%;
-            max-width: 1200px; /* Lebar maksimum container diperbesar */
+            /* Maksimal lebar container disesuaikan, mungkin perlu lebih kecil agar pas */
+            max-width: 1000px; 
             text-align: center;
-            border: 1px solid #444; /* Border halus */
+            border: 1px solid #444;
+            display: flex; /* Gunakan flex untuk mengatur elemen di dalam container */
+            flex-direction: column; /* Default: kolom */
+            align-items: center;
         }
 
-        h1, h2 {
+        h1 {
             color: #e0e0e0;
-            margin-bottom: 25px;
+            margin-bottom: 20px; /* Sedikit dikurangi */
+            font-size: 2em; /* Ukuran font disesuaikan */
+        }
+
+        h2 {
+            color: #e0e0e0;
+            margin-bottom: 15px; /* Sedikit dikurangi */
+            font-size: 1.5em; /* Ukuran font disesuaikan */
         }
 
         p {
             color: #b0b0b0;
-            line-height: 1.6;
+            line-height: 1.5; /* Line height sedikit dikurangi */
+            margin-bottom: 15px; /* Sedikit dikurangi */
         }
 
         hr {
             border: none;
             border-top: 1px solid #444;
-            margin: 40px 0;
+            margin: 30px 0; /* Sedikit dikurangi */
         }
 
         /* Input File (Disembunyikan) */
         input[type="file"] {
-            display: none; /* Sembunyikan input file asli */
+            display: none;
         }
 
         /* Tombol Unggah Kustom */
         .custom-file-upload {
             display: inline-block;
-            margin: 0 auto 30px auto;
-            padding: 12px 25px; /* Padding lebih besar */
-            border: 2px solid #007bff; /* Warna border biru cerah */
+            margin: 0 auto 20px auto; /* Margin atas/bawah dikurangi */
+            padding: 10px 20px; /* Padding dikurangi */
+            border: 2px solid #007bff;
             border-radius: 8px;
-            background-color: #007bff; /* Warna background biru */
+            background-color: #007bff;
             color: #fff;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: bold;
-            text-transform: uppercase; /* Huruf kapital */
-            letter-spacing: 0.8px;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* Bayangan biru */
+            text-transform: uppercase;
+            letter-spacing: 0.5px; /* Letter spacing sedikit dikurangi */
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+            font-size: 0.9em; /* Ukuran font lebih kecil */
         }
 
         .custom-file-upload:hover {
-            background-color: #0056b3; /* Warna biru lebih gelap saat hover */
+            background-color: #0056b3;
             border-color: #0056b3;
             box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
-            transform: translateY(-2px); /* Efek angkat sedikit */
+            transform: translateY(-2px);
         }
 
         .custom-file-upload:active {
@@ -84,153 +101,117 @@
             background-color: #444;
             border-radius: 5px;
             overflow: hidden;
-            margin-bottom: 20px;
-            height: 25px; /* Tinggi progress bar */
-            display: none; /* Sembunyikan secara default */
+            margin-bottom: 15px; /* Margin bawah dikurangi */
+            height: 20px; /* Tinggi progress bar dikurangi */
         }
 
         #upload-progress-bar {
-            width: 0%;
-            height: 100%;
-            background-color: #28a745; /* Warna hijau untuk progress */
-            text-align: center;
-            line-height: 25px;
-            color: white;
-            transition: width 0.3s ease;
+            line-height: 20px; /* Menyesuaikan line-height dengan tinggi bar */
+            font-size: 0.8em; /* Ukuran font lebih kecil */
         }
 
         /* Kontainer Utama untuk Gambar dan Side Content */
         .main-content-wrapper {
-            display: flex; /* Aktifkan Flexbox */
-            flex-direction: column; /* Default untuk mobile: kolom */
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 30px; /* Jarak antara gambar dan side content */
-            margin-top: 20px;
+            gap: 20px; /* Gap dikurangi */
+            margin-top: 15px; /* Margin atas dikurangi */
+            width: 100%; /* Penting agar mengisi container */
+            flex-grow: 1; /* Biarkan mengisi ruang vertikal yang tersisa */
         }
 
         /* Kontainer untuk Palet Warna & Pemilih Warna (Side Content) */
         .side-content-wrapper {
             display: flex;
-            flex-direction: column; /* Selalu kolom untuk palet dan picker */
-            gap: 30px; /* Jarak antara palet dan picker */
-            width: 100%; /* Lebar default penuh untuk mobile */
+            flex-direction: column;
+            gap: 20px; /* Gap dikurangi */
+            width: 100%;
+            align-items: center; /* Pastikan konten di dalamnya rata tengah */
         }
 
         @media (min-width: 768px) { /* Tampilan Desktop */
             .main-content-wrapper {
-                flex-direction: row; /* Untuk desktop: baris */
+                flex-direction: row;
                 justify-content: center;
-                align-items: flex-start; /* Elemen akan rata atas */
-                text-align: left; /* Teks di dalam akan rata kiri */
+                align-items: flex-start;
+                /* text-align: left; dihapus, biarkan default center dari container */
+                flex-grow: 1; /* Tetap fleksibel */
             }
 
             #image-display-area {
                 flex: 2; /* Gambar mengambil lebih banyak ruang */
-                max-width: 60%; /* Batasi lebar gambar */
+                max-width: 60%; 
+                /* Tambahkan flex: 1 dan min-height agar gambar responsif vertikal */
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                min-height: 300px; /* Minimal tinggi agar tidak terlalu kecil */
+            }
+
+            #image-preview {
+                max-height: calc(100vh - 250px); /* Batasi tinggi gambar agar pas */
+                object-fit: contain; /* Agar gambar tidak terdistorsi */
+                margin-bottom: 0;
             }
 
             .side-content-wrapper {
-                flex: 1; /* Side content mengambil sisa ruang */
-                max-width: 35%; /* Batasi lebar side content */
+                flex: 1;
+                max-width: 35%;
+                min-width: 280px; /* Pastikan ada lebar minimal untuk side content */
+                height: 100%; /* Penting agar side content mengisi tinggi yang sama dengan gambar */
+                justify-content: space-between; /* Untuk mendorong palet dan picker terpisah */
                 text-align: center; /* Konten di dalamnya tetap rata tengah */
             }
-        }
 
+            #color-palette-container {
+                /* min-width: 250px; dihapus, sudah diatur oleh side-content-wrapper */
+                padding: 0; /* Hapus padding tambahan jika ada */
+                margin: 0; /* Hapus margin tambahan jika ada */
+                flex-grow: 1; /* Palet akan mengisi ruang */
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start; /* Palet di bagian atas */
+            }
 
-        /* Pratinjau Gambar */
-        #image-preview {
-            max-width: 100%;
-            height: auto;
-            border: 2px solid #555;
-            border-radius: 8px;
-            margin-bottom: 0; /* Hapus margin bawah karena sudah ada gap */
-            display: none; /* Awalnya tersembunyi */
-            cursor: crosshair;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
+            #color-palette {
+                gap: 10px; /* Jarak antar kotak warna dikurangi */
+                margin-top: 15px; /* Margin atas dikurangi */
+            }
 
-        /* Palet Warna */
-        #color-palette-container {
-            /* margin-top: 30px; dihapus, karena sudah diatur oleh gap flexbox */
-            min-width: 250px; /* Agar palet tidak terlalu kecil */
-        }
+            .color-box {
+                width: 50px; /* Ukuran kotak lebih kecil */
+                height: 50px;
+                border-radius: 6px; /* Radius sudut sedikit dikurangi */
+            }
 
-        #color-palette {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center; /* Tetap rata tengah untuk kotak warna di dalam palet */
-            gap: 15px; /* Jarak antar kotak warna */
-            margin-top: 25px;
-        }
+            .color-info {
+                font-size: 0.8em; /* Ukuran font info warna lebih kecil */
+                margin-top: 5px;
+            }
 
-        .color-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            padding-bottom: 10px;
-        }
+            .copy-button {
+                padding: 4px 6px; /* Padding tombol salin dikurangi */
+                font-size: 0.7em; /* Ukuran font tombol salin lebih kecil */
+            }
+            
+            #picked-color-section {
+                padding-top: 15px; /* Jarak dari palet warna di atasnya dikurangi */
+                border-top: 1px solid #444; /* Tambah border pemisah visual */
+                margin-top: auto; /* Dorong ke bawah di dalam flex container */
+                flex-shrink: 0; /* Jangan menyusut */
+            }
 
-        .color-box {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
-            border: 1px solid #666;
-            cursor: pointer;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            position: relative;
-        }
+            #picked-color-display {
+                width: 100px; /* Ukuran display warna lebih kecil */
+                height: 100px;
+                margin: 15px auto; /* Margin dikurangi */
+            }
 
-        .color-box:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-        }
-
-        .color-info {
-            font-size: 0.85em;
-            color: #c0c0c0;
-            margin-top: 8px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .copy-button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 5px 8px;
-            font-size: 0.75em;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            margin-top: 5px;
-        }
-
-        .copy-button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Pemilih Warna Langsung */
-        #picked-color-section { /* ID baru untuk bagian pemilih warna */
-            padding-top: 20px; /* Jarak dari palet warna di atasnya */
-        }
-
-        #picked-color-display {
-            width: 120px;
-            height: 120px;
-            border: 2px solid #666;
-            margin: 25px auto;
-            border-radius: 8px;
-            background-color: #444;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        #picked-color-value {
-            margin-top: 15px;
-            font-weight: bold;
-            color: #00ff99;
-            font-size: 1.1em;
+            #picked-color-value {
+                font-size: 1em; /* Ukuran font nilai warna sedikit dikurangi */
+            }
         }
     </style>
 </head>
@@ -271,8 +252,7 @@
                 </div>
             </div>
         </div>
-
-        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
     <script>
@@ -288,8 +268,9 @@
         const colorThief = new ColorThief();
 
         // Resolusi maksimum untuk gambar yang akan diproses
-        const MAX_WIDTH = 800; // Lebar maksimum gambar setelah diresize
-        const MAX_HEIGHT = 600; // Tinggi maksimum gambar setelah diresize
+        // Ini adalah resolusi internal, bukan resolusi tampilan langsung.
+        const MAX_WIDTH = 800; 
+        const MAX_HEIGHT = 600; 
 
         // Fungsi bantu untuk mengubah RGB ke HEX
         function rgbToHex(r, g, b) {
@@ -298,7 +279,7 @@
 
         // Fungsi untuk menampilkan palet warna ke DOM
         function displayColorPalette(colors) {
-            colorPaletteDiv.innerHTML = ''; // Bersihkan palet yang sudah ada
+            colorPaletteDiv.innerHTML = '';
             if (colors.length === 0) {
                 colorPaletteDiv.innerHTML = '<p style="color:#b0b0b0;">Tidak dapat mengekstrak palet warna.</p>';
                 return;
@@ -336,7 +317,7 @@
                 paletteItem.className = 'color-item';
                 paletteItem.appendChild(colorBox);
                 paletteItem.appendChild(colorInfo);
-                paletteItem.appendChild(copyButton); // Tambahkan tombol salin
+                paletteItem.appendChild(copyButton);
 
                 colorPaletteDiv.appendChild(paletteItem);
             });
@@ -350,7 +331,6 @@
             let width = img.width;
             let height = img.height;
 
-            // Hitung rasio untuk menjaga aspek rasio
             if (width > height) {
                 if (width > maxWidth) {
                     height *= maxWidth / width;
@@ -367,24 +347,22 @@
             canvas.height = height;
 
             ctx.drawImage(img, 0, 0, width, height);
-            // Gunakan promise untuk toDataURL agar lebih fleksibel
             canvas.toBlob((blob) => {
                 const resizedDataUrl = URL.createObjectURL(blob);
                 callback(resizedDataUrl);
-            }, 'image/jpeg', 0.8); // Kompresi JPEG kualitas 80%
+            }, 'image/jpeg', 0.8);
         }
 
         // Event listener saat gambar diunggah
         imageUpload.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
-                uploadProgressContainer.style.display = 'block'; // Tampilkan progress bar
+                uploadProgressContainer.style.display = 'block';
                 uploadProgressBar.style.width = '0%';
                 uploadProgressBar.textContent = '0%';
 
                 const reader = new FileReader();
 
-                // Update progress bar saat membaca file
                 reader.onprogress = function(e) {
                     if (e.lengthComputable) {
                         const percent = (e.loaded / e.total) * 100;
@@ -396,28 +374,23 @@
                 reader.onload = function(e) {
                     uploadProgressBar.style.width = '100%';
                     uploadProgressBar.textContent = '100%';
-                    // Sembunyikan progress bar setelah selesai (opsional, bisa juga dihide setelah gambar dirender)
                     setTimeout(() => { uploadProgressContainer.style.display = 'none'; }, 500);
-
 
                     const img = new Image();
                     img.src = e.target.result;
 
                     img.onload = function() {
-                        // Resize gambar sebelum ditampilkan dan diproses
                         resizeImage(img, MAX_WIDTH, MAX_HEIGHT, (resizedDataUrl) => {
                             imagePreview.src = resizedDataUrl;
                             imagePreview.style.display = 'block';
 
-                            // Pastikan gambar yang sudah diresize dimuat sepenuhnya ke imagePreview
                             imagePreview.onload = function() {
                                 try {
-                                    // Mengatur ukuran canvas sesuai gambar asli (setelah diresize)
                                     imageCanvas.width = imagePreview.naturalWidth;
                                     imageCanvas.height = imagePreview.naturalHeight;
-                                    ctx.drawImage(imagePreview, 0, 0); // Gambar ke canvas
+                                    ctx.drawImage(imagePreview, 0, 0);
 
-                                    const palette = colorThief.getPalette(imagePreview, 8); // Ambil 8 warna
+                                    const palette = colorThief.getPalette(imagePreview, 8);
                                     displayColorPalette(palette);
 
                                 } catch (error) {
@@ -428,7 +401,6 @@
                                     pickedColorDisplay.style.backgroundColor = '#444';
                                     pickedColorValue.textContent = 'Warna Dipilih: N/A';
                                 } finally {
-                                    // Revoke object URL setelah selesai digunakan untuk membebaskan memori
                                     URL.revokeObjectURL(resizedDataUrl);
                                 }
                             };
@@ -438,7 +410,7 @@
                                 colorPaletteDiv.innerHTML = '<p style="color:#b0b0b0;">Gagal memuat gambar.</p>';
                                 pickedColorDisplay.style.backgroundColor = '#444';
                                 pickedColorValue.textContent = 'Warna Dipilih: N/A';
-                                URL.revokeObjectURL(resizedDataUrl); // Pastikan URL dibersihkan
+                                URL.revokeObjectURL(resizedDataUrl);
                             };
                         });
                     };
@@ -451,9 +423,8 @@
                         pickedColorValue.textContent = 'Warna Dipilih: N/A';
                     };
                 };
-                reader.readAsDataURL(file); // Memulai pembacaan file sebagai URL data
+                reader.readAsDataURL(file);
             } else {
-                // Reset tampilan jika tidak ada file yang dipilih
                 uploadProgressContainer.style.display = 'none';
                 imagePreview.style.display = 'none';
                 imagePreview.src = '#';
@@ -471,8 +442,8 @@
             }
 
             const rect = imagePreview.getBoundingClientRect();
-            const naturalWidth = imageCanvas.width; // Gunakan lebar canvas (gambar yang sudah diresize)
-            const naturalHeight = imageCanvas.height; // Gunakan tinggi canvas (gambar yang sudah diresize)
+            const naturalWidth = imageCanvas.width;
+            const naturalHeight = imageCanvas.height;
 
             const displayWidth = rect.width;
             const displayHeight = rect.height;
