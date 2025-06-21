@@ -201,15 +201,14 @@ input[type="file"] {
     flex-direction: column;
 }
 
-/* --- PERUBAHAN DI SINI --- */
 #picked-color-section {
-    flex: none; /* Dibuat agar ukurannya pas dengan konten, tidak ikut membesar */
+    flex: none;
     align-items: center;
 }
 
 #color-palette-container {
-    flex-grow: 1; /* Dibuat agar mengisi semua sisa ruang yang ada */
-    min-height: 0; /* Mencegah bug overflow pada flexbox */
+    flex-grow: 1;
+    min-height: 0;
 }
 
 
@@ -267,8 +266,9 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: calc(33.33% - 10px); 
-    min-width: 70px;
+    /* --- PERUBAHAN DI SINI --- */
+    width: calc(25% - 12px); 
+    min-width: 60px; /* Sedikit dikecilkan agar lebih fleksibel */
 }
 
 .color-box {
