@@ -130,18 +130,26 @@ input[type="file"] {
 #upload-progress-container {
     width: 100%;
     background-color: #333;
-    border-radius: 5px;
+    border-radius: 8px; /* Dibuat lebih bulat */
     overflow: hidden;
     margin-bottom: 20px;
-    height: 10px;
+    height: 20px; /* Sedikit lebih tinggi */
     display: none;
 }
 
+/* --- PERUBAHAN DI SINI --- */
 #upload-progress-bar {
     width: 0%;
     height: 100%;
     background-color: var(--accent-color);
     transition: width 0.3s ease;
+    /* Properti baru untuk teks persentase */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.8em;
+    font-weight: 600;
 }
 
 .main-content-wrapper {
@@ -169,8 +177,8 @@ input[type="file"] {
     height: auto;
     border-radius: 8px;
     object-fit: contain;
-    cursor: crosshair;
-    /* --- PERUBAHAN DI SINI --- */
+    /* --- PERUBAHAN DI SINI: Ikon mouse menjadi pipet --- */
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 2-2.5 2.5 3 3L19 5l-3-3Z"/><path d="m14 4-8.5 8.5a2.12 2.12 0 1 0 3 3L17 7Z"/><path d="m12 15 5 5"/><path d="m8.5 8.5 3 3"/></svg>'), auto;
     user-select: none;
     -webkit-user-drag: none;
 }
