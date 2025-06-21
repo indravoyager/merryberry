@@ -129,7 +129,7 @@
         .side-content-wrapper {
             display: flex;
             flex-direction: column;
-            gap: 20px; /* Jarak antara Picked Color dan Color Palette */
+            gap: 20px;
             width: 100%;
             align-items: center;
         }
@@ -174,18 +174,17 @@
                 max-width: 35%;
                 min-width: 280px;
                 height: 100%;
-                /* Mengubah urutan elemen di desktop */
                 flex-direction: column;
-                justify-content: flex-start; /* Mulai dari atas */
+                justify-content: flex-start;
                 text-align: center;
             }
 
-            #picked-color-section { /* ID baru untuk bagian pemilih warna */
-                padding-bottom: 15px; /* Jarak dari palet warna di bawahnya */
-                border-bottom: 1px solid #444; /* Border pemisah visual */
-                margin-bottom: 0; /* Hapus margin bawah default */
+            #picked-color-section {
+                padding-bottom: 15px;
+                border-bottom: 1px solid #444;
+                margin-bottom: 0;
                 flex-shrink: 0;
-                width: 100%; /* Pastikan mengisi lebar */
+                width: 100%;
             }
 
             #picked-color-display {
@@ -199,9 +198,9 @@
             }
 
             #color-palette-container {
-                padding-top: 15px; /* Jarak dari picked color di atasnya */
+                padding-top: 15px;
                 margin: 0;
-                flex-grow: 1; /* Palet akan mengisi ruang sisa */
+                flex-grow: 1;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -384,14 +383,26 @@
             }, 'image/jpeg', 0.8);
         }
 
+        // Fungsi untuk mereset tampilan
+        function resetDisplay() {
+            uploadProgressContainer.style.display = 'none';
+            imagePreview.style.display = 'none';
+            imagePreview.src = '#'; // Hapus sumber gambar
+            colorPaletteDiv.innerHTML = ''; // Kosongkan palet
+            pickedColorDisplay.style.backgroundColor = '#444'; // Reset warna display
+            pickedColorValue.textContent = 'Warna Dipilih: N/A'; // Reset teks warna
+        }
+
+
         // Event listener saat gambar diunggah
         imageUpload.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
+                // Sembunyikan semua elemen tampilan sebelum memulai unggahan baru
+                resetDisplay(); 
                 uploadProgressContainer.style.display = 'block'; 
                 uploadProgressBar.style.width = '0%';
                 uploadProgressBar.textContent = '0%';
-                imagePreview.style.display = 'none';
 
                 const reader = new FileReader();
 
@@ -400,3 +411,108 @@
                         const percent = (e.loaded / e.total) * 100;
                         uploadProgressBar.style.width = percent + '%';
                         uploadProgressBar.textContent = Math.round(percent) + '%';
+                    }
+                };
+
+                reader.onload = function(e) {
+                    uploadProgressBar.style.width = '100%';
+                    uploadProgressBar.textContent = '100%';
+                    setTimeout(() => { uploadProgressContainer.style.display = 'none'; }, 500);
+
+                    const img = new Image();
+                    // Penting: Atur crossOrigin = "Anonymous" untuk mengatasi masalah CORS
+                    // Ini hanya berfungsi jika server tempat gambar dihosting mendukung CORS.
+                    // Jika Anda menjalankan lokal, Anda mungkin tetap perlu server lokal.
+                    img.crossOrigin = "Anonymous"; 
+                    img.src = e.target.result;
+
+                    img.onload = function() {
+                        resizeImage(img, MAX_WIDTH, MAX_HEIGHT, (resizedDataUrl) => {
+                            imagePreview.src = resizedDataUrl;
+                            imagePreview.style.display = 'block';
+
+                            // Gunakan setTimeout kecil untuk memastikan DOM sudah update
+                            // sebelum ColorThief dan Canvas berinteraksi
+                            setTimeout(() => { 
+                                try {
+                                    imageCanvas.width = imagePreview.naturalWidth;
+                                    imageCanvas.height = imagePreview.naturalHeight;
+                                    ctx.drawImage(imagePreview, 0, 0);
+
+                                    const palette = colorThief.getPalette(imagePreview, 8);
+                                    displayColorPalette(palette);
+
+                                } catch (error) {
+                                    console.error("Gagal memproses gambar atau mengambil warna:", error);
+                                    alert("Terjadi kesalahan saat memproses gambar atau mengambil warna. Ini mungkin masalah CORS jika Anda memuat gambar dari URL eksternal, atau gambar rusak.");
+                                    resetDisplay(); // Reset tampilan jika ada error
+                                } finally {
+                                    URL.revokeObjectURL(resizedDataUrl);
+                                }
+                            }, 50); // Delay kecil untuk memastikan rendering
+                        });
+                    };
+                    img.onerror = function() {
+                        alert("Gagal memuat gambar asli. Pastikan ini adalah file gambar yang valid dan bukan dari domain lain (masalah CORS).");
+                        resetDisplay(); // Reset tampilan jika ada error
+                    };
+                };
+                reader.readAsDataURL(file);
+            } else {
+                resetDisplay(); // Reset tampilan jika tidak ada file yang dipilih
+            }
+        });
+
+        // Event listener untuk memilih warna pada gambar
+        imagePreview.addEventListener('click', function(event) {
+            if (!imagePreview.src || imagePreview.src === window.location.href + '#') {
+                alert("Silakan unggah gambar terlebih dahulu.");
+                return;
+            }
+
+            const rect = imagePreview.getBoundingClientRect();
+            const naturalWidth = imageCanvas.width;
+            const naturalHeight = imageCanvas.height;
+
+            const displayWidth = rect.width;
+            const displayHeight = rect.height;
+
+            const scaleX = naturalWidth / displayWidth;
+            const scaleY = naturalHeight / displayHeight;
+
+            const clientX = event.clientX;
+            const clientY = event.clientY;
+
+            const x = (clientX - rect.left) * scaleX;
+            const y = (clientY - rect.top) * scaleY;
+
+            try {
+                const pixelData = ctx.getImageData(x, y, 1, 1).data;
+                const r = pixelData[0];
+                const g = pixelData[1];
+                const b = pixelData[2];
+                const hexColor = rgbToHex(r, g, b);
+
+                pickedColorDisplay.style.backgroundColor = hexColor;
+                pickedColorValue.textContent = `Warna Dipilih: ${hexColor} (RGB: ${r}, ${g}, ${b})`;
+
+                navigator.clipboard.writeText(hexColor)
+                    .then(() => {
+                        console.log(`Warna ${hexColor} disalin!`);
+                    })
+                    .catch(err => {
+                        console.error('Gagal menyalin warna yang dipilih:', err);
+                    });
+            } catch (error) {
+                console.error("Gagal mengambil piksel warna:", error);
+                alert("Tidak dapat mengambil warna piksel. Pastikan gambar sudah dimuat sepenuhnya.");
+            }
+        });
+
+        // Pastikan semua tampilan direset saat halaman pertama kali dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            resetDisplay();
+        });
+    </script>
+</body>
+</html>
