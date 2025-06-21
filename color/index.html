@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palet Warna Gambar Super Kompak & Horizontal</title>
+    <title>Palet Warna Gambar (Full Desktop)</title>
     <style>
         /* Gaya Umum */
         body {
@@ -11,96 +11,90 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 15px;
+            padding: 20px; /* Sedikit padding atas/bawah */
             background-color: #1a1a1a;
             color: #f0f0f0;
             margin: 0;
-            min-height: 100vh;
-            overflow-y: auto;
+            min-height: 100vh; /* Pastikan body mengambil tinggi penuh viewport */
+            overflow: hidden; /* Sembunyikan overflow secara default, untuk tampilan 1 layar */
         }
 
         .container {
             background-color: #2c2c2c;
-            padding: 25px;
+            padding: 30px; /* Padding container */
             border-radius: 10px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-            width: 90%;
-            max-width: 950px;
+            width: 90%; /* Ambil 90% lebar layar */
+            max-width: 1200px; /* Lebar maksimum container lebih luas */
             text-align: center;
             border: 1px solid #444;
             display: flex;
-            flex-direction: column;
+            flex-direction: column; /* Konten utama dalam container tetap kolom */
             align-items: center;
+            flex-grow: 1; /* Biarkan container mengisi ruang yang tersedia */
         }
 
         h1 {
             color: #e0e0e0;
-            margin-bottom: 15px;
-            font-size: 1.8em;
+            margin-bottom: 20px;
+            font-size: 2.2em; /* Ukuran font H1 sedikit lebih besar untuk desktop */
         }
 
         h2 {
             color: #e0e0e0;
-            margin-bottom: 10px;
-            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-size: 1.6em; /* Ukuran font H2 sedikit lebih besar untuk desktop */
         }
 
         p {
             color: #b0b0b0;
-            line-height: 1.4;
-            margin-bottom: 10px;
-            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            font-size: 1em; /* Ukuran font paragraf normal */
         }
 
-        hr {
-            border: none;
-            border-top: 1px solid #444;
-            margin: 25px 0;
-        }
-
-        /* Input File (Disembunyikan) */
+        /* Tombol Unggah Kustom */
         input[type="file"] {
             display: none;
         }
 
-        /* Tombol Unggah Kustom */
         .custom-file-upload {
             display: inline-block;
-            margin: 0 auto 15px auto;
-            padding: 8px 18px;
+            margin: 0 auto 20px auto;
+            padding: 10px 25px;
             border: 2px solid #007bff;
-            border-radius: 6px;
+            border-radius: 8px;
             background-color: #007bff;
             color: #fff;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3);
-            font-size: 0.8em;
+            letter-spacing: 0.8px;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+            font-size: 1em; /* Ukuran font tombol normal */
         }
 
         .custom-file-upload:hover {
             background-color: #0056b3;
             border-color: #0056b3;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
-            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+            transform: translateY(-2px);
         }
 
         .custom-file-upload:active {
             transform: translateY(0);
-            box-shadow: 0 1px 3px rgba(0, 123, 255, 0.2);
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
         }
 
         /* Progress Bar */
         #upload-progress-container {
             width: 100%;
             background-color: #444;
-            border-radius: 4px;
+            border-radius: 5px;
             overflow: hidden;
-            margin-bottom: 10px;
-            height: 18px;
+            margin-bottom: 20px;
+            height: 25px;
             display: none;
         }
 
@@ -109,174 +103,158 @@
             height: 100%;
             background-color: #28a745;
             text-align: center;
-            line-height: 18px;
+            line-height: 25px;
             color: white;
             transition: width 0.3s ease;
-            font-size: 0.7em;
+            font-size: 0.9em;
         }
 
-        /* Kontainer Utama untuk Gambar dan Side Content */
+        /* Kontainer Utama untuk Gambar dan Side Content (Selalu Horizontal) */
         .main-content-wrapper {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            margin-top: 15px;
+            flex-direction: row; /* Selalu horizontal */
+            justify-content: center;
+            align-items: flex-start; /* Rata atas */
+            gap: 30px; /* Jarak antara gambar dan side content */
+            margin-top: 20px;
             width: 100%;
-            flex-grow: 1;
+            flex-grow: 1; /* Biarkan mengisi ruang vertikal yang tersisa */
+            max-height: calc(100vh - 220px); /* Batasi tinggi total content wrapper */
         }
 
-        /* Kontainer untuk Palet Warna & Pemilih Warna (Side Content) */
-        .side-content-wrapper {
+        #image-display-area {
+            flex: 2; /* Gambar mengambil lebih banyak ruang */
+            max-width: 65%; /* Batasi lebar gambar */
             display: flex;
-            flex-direction: column; /* Default: tumpuk vertikal (mobile) */
-            gap: 15px;
-            width: 100%;
-            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 300px; /* Minimal tinggi gambar */
+            overflow: hidden; /* Pastikan gambar tidak keluar dari area */
         }
 
-        /* Pratinjau Gambar */
         #image-preview {
             max-width: 100%;
-            height: auto;
+            /* Penting: Mengatur tinggi maksimal berdasarkan viewport untuk 1 layar */
+            max-height: calc(100vh - 250px);
+            height: auto; /* Agar gambar tidak terdistorsi */
             border: 2px solid #555;
             border-radius: 8px;
             margin-bottom: 0;
             display: none;
             cursor: crosshair;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            object-fit: contain; /* Penting: Agar gambar menyesuaikan dan tidak terpotong */
         }
 
-        @media (min-width: 768px) { /* Tampilan Desktop */
-            .main-content-wrapper {
-                flex-direction: row;
-                justify-content: center;
-                align-items: flex-start;
-                flex-grow: 1;
-            }
+        /* Kontainer untuk Palet Warna & Pemilih Warna (Side Content - Selalu Horizontal) */
+        .side-content-wrapper {
+            flex: 1; /* Side content mengambil sisa ruang */
+            max-width: 35%; /* Batasi lebar side content */
+            min-width: 300px; /* Minimal lebar side content */
+            display: flex;
+            flex-direction: row; /* Ubah menjadi horizontal di dalam side content */
+            justify-content: space-between;
+            align-items: flex-start; /* Rata atas */
+            gap: 15px; /* Jarak antara picker dan palet */
+            height: 100%; /* Penting: agar side content mengisi tinggi yang sama dengan gambar */
+        }
 
-            #image-display-area {
-                flex: 2;
-                max-width: 60%;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                min-height: 250px;
-            }
+        /* Pemilih Warna Langsung (di kiri side-content-wrapper) */
+        #picked-color-section {
+            flex: 1; /* Ambil bagian dari ruang horizontal */
+            max-width: 45%; /* Batasi lebar */
+            min-width: 130px; /* Minimal lebar picker */
+            padding-right: 15px; /* Tambah padding kanan untuk jarak */
+            border-right: 1px solid #444; /* Border pemisah vertikal */
+            text-align: center;
+            display: flex; /* Untuk menengahkan konten */
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
 
-            #image-preview {
-                max-height: calc(100vh - 200px);
-                object-fit: contain;
-                margin-bottom: 0;
-            }
+        #picked-color-section h2 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
 
-            .side-content-wrapper {
-                flex: 1;
-                max-width: 40%; /* Beri sedikit lebih banyak ruang untuk side content */
-                min-width: 280px; /* Minimal lebar disesuaikan */
-                height: 100%;
-                
-                /* Ini adalah perubahan KUNCI untuk desktop layout */
-                flex-direction: row; /* Ubah menjadi horizontal */
-                justify-content: space-between; /* Jarak antara picker dan palet */
-                align-items: flex-start; /* Rata atas */
-                gap: 10px; /* Jarak antar picker dan palet */
-                padding-left: 15px; /* Tetap beri padding kiri */
-            }
+        #picked-color-section p {
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
 
-            /* Pemilih Warna Langsung (di kiri side-content-wrapper) */
-            #picked-color-section {
-                flex: 1; /* Ambil bagian dari ruang horizontal */
-                max-width: 45%; /* Batasi lebar agar tidak terlalu besar */
-                padding-bottom: 0; /* Hapus padding bawah */
-                border-bottom: none; /* Hapus border bawah */
-                padding-right: 10px; /* Tambah padding kanan untuk jarak */
-                border-right: 1px solid #444; /* Tambah border pemisah vertikal */
-                margin-bottom: 0;
-            }
+        #picked-color-display {
+            width: 90px; /* Ukuran display warna lebih besar */
+            height: 90px;
+            margin: 10px auto;
+            border-radius: 8px;
+        }
 
-            #picked-color-section h2 {
-                font-size: 1.2em;
-                margin-bottom: 8px;
-            }
+        #picked-color-value {
+            font-size: 1em;
+        }
 
-            #picked-color-section p {
-                font-size: 0.85em;
-                margin-bottom: 10px;
-            }
+        /* Palet Warna (di kanan side-content-wrapper) */
+        #color-palette-container {
+            flex: 1; /* Ambil bagian dari ruang horizontal */
+            max-width: 55%; /* Beri lebih banyak ruang untuk palet */
+            min-width: 150px; /* Minimal lebar palet */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: center;
+        }
 
-            #picked-color-display {
-                width: 80px;
-                height: 80px;
-                margin: 10px auto;
-                border-radius: 6px;
-            }
+        #color-palette-container h2 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
 
-            #picked-color-value {
-                font-size: 0.9em;
-            }
+        #color-palette-container p {
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
 
-            /* Palet Warna (di kanan side-content-wrapper) */
-            #color-palette-container {
-                flex: 1; /* Ambil bagian dari ruang horizontal */
-                max-width: 55%; /* Beri lebih banyak ruang untuk palet */
-                padding-top: 0; /* Hapus padding atas */
-                margin: 0;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: flex-start;
-                text-align: center; /* Pastikan teks di dalamnya rata tengah */
-            }
+        #color-palette {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px; /* Jarak antar kotak warna */
+            margin-top: 15px;
+            width: 100%;
+            flex-grow: 1; /* Biarkan palet mengisi ruang vertikal yang tersedia */
+            overflow-y: auto; /* Tambah scroll jika terlalu banyak warna */
+            padding-right: 5px; /* Untuk estetika scrollbar */
+        }
 
-            #color-palette-container h2 {
-                font-size: 1.2em;
-                margin-bottom: 8px;
-            }
+        .color-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            width: calc(50% - 10px); /* Target 2 kolom dengan gap */
+            max-width: 70px; /* Maksimal lebar per item */
+            min-width: 55px; /* Minimal lebar */
+        }
 
-            #color-palette-container p {
-                font-size: 0.85em;
-                margin-bottom: 10px;
-            }
+        .color-box {
+            width: 50px; /* Ukuran kotak warna lebih besar sedikit */
+            height: 50px;
+            border-radius: 6px;
+        }
 
-            #color-palette {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 8px;
-                margin-top: 10px;
-                width: 100%; /* Pastikan palet mengisi lebar kontainernya */
-            }
+        .color-info {
+            font-size: 0.8em;
+            margin-top: 5px;
+            word-break: break-all;
+        }
 
-            .color-item {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: space-between;
-                /* Sesuaikan width calc() agar pas dengan 2 kolom */
-                width: calc(50% - 8px); /* Target 2 kolom dengan gap */
-                max-width: 65px;
-                min-width: 50px;
-            }
-
-            .color-box {
-                width: 45px;
-                height: 45px;
-                border-radius: 5px;
-            }
-
-            .color-info {
-                font-size: 0.75em;
-                margin-top: 4px;
-                word-break: break-all;
-            }
-
-            .copy-button {
-                padding: 3px 5px;
-                font-size: 0.65em;
-                margin-top: 3px;
-                border-radius: 3px;
-            }
+        .copy-button {
+            padding: 4px 6px;
+            font-size: 0.7em;
+            margin-top: 3px;
+            border-radius: 4px;
         }
     </style>
 </head>
