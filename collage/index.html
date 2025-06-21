@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collage Maker dengan Kontrol Rasio</title>
+    <title>Collage Maker - Metode Fleksibel</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,20 +44,16 @@
             text-align: center;
         }
 
-        h1 {
-            color: #ffffff;
-            font-weight: 700;
-            margin-bottom: 25px;
-            text-shadow: 0 0 8px rgba(0, 255, 153, 0.2);
+        h1, .controls, .settings {
+            margin-bottom: 20px;
         }
-
+        
         .controls, .settings {
             display: flex;
             gap: 15px;
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
-            margin-bottom: 20px;
         }
         
         .btn, .ratio-btn {
@@ -87,53 +83,53 @@
         .ratio-btn.active {
             background-color: var(--accent-color);
             color: #121212;
-            box-shadow: 0 0 10px rgba(0, 255, 153, 0.3);
         }
         
         #image-input { display: none; }
 
-        /* PERUBAHAN CSS UTAMA */
+        /* === PERUBAHAN UTAMA DI CSS === */
         #collage-container {
             width: 100%;
             margin-top: 20px;
             background-color: #000;
-            /* Jika konten lebih besar dari kontainer, scroll akan muncul */
             overflow: auto;
-            /* Memungkinkan pengguna mengubah ukuran kontainer secara vertikal */
-            resize: vertical;
             border: 2px solid var(--border-color);
             border-radius: 8px;
-        }
-        
-        .collage-row {
+
+            /* Menggunakan Flexbox untuk layout otomatis */
             display: flex;
-            gap: 0;
-            margin-bottom: 0;
-            line-height: 0; 
+            flex-wrap: wrap; /* Izinkan item pindah ke baris baru */
+            gap: 5px; /* Memberi sedikit jarak antar gambar */
         }
         
-        .collage-row img {
-            height: auto; 
-            max-width: 100%;
+        /* Styling untuk setiap gambar di dalam kontainer */
+        #collage-container img {
+            /* flex-grow: 1; membuat gambar meregang untuk mengisi ruang kosong di barisnya.
+              Ini yang membuat ukuran bingkai fleksibel.
+            */
             flex-grow: 1;
+            
+            /* object-fit: cover; adalah kuncinya.
+              Ini mencegah gambar menjadi penyet. Gambar akan di-crop agar pas.
+            */
             object-fit: cover;
+            
+            /* Tinggi akan diatur oleh JS. Lebar akan diatur oleh flexbox.
+              Kita beri nilai basis agar flexbox tahu ukuran awal.
+            */
+            flex-basis: 200px; 
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Collage Maker dengan Kontrol Rasio</h1>
+        <h1>Collage Maker - Metode Fleksibel</h1>
         
         <div class="controls">
             <button class="btn" onclick="document.getElementById('image-input').click();">Pilih Gambar</button>
             <input type="file" id="image-input" accept="image/*" multiple>
             <button id="download-btn" class="btn">Unduh Kolase</button>
-        </div>
-        
-        <div class="settings">
-            <label for="rowHeight">Tinggi Baris:</label>
-            <input type="range" id="rowHeight" min="100" max="400" value="200">
-            <span id="rowHeightValue">200px</span>
         </div>
         
         <div class="settings" id="ratio-controls">
@@ -142,7 +138,12 @@
             <button class="ratio-btn" data-ratio="1/1">1:1</button>
             <button class="ratio-btn" data-ratio="16/9">16:9</button>
             <button class="ratio-btn" data-ratio="9/16">9:16</button>
-            <button class="ratio-btn" data-ratio="4/3">4:3</button>
+        </div>
+        
+        <div class="settings">
+            <label for="rowHeight">Tinggi Gambar:</label>
+            <input type="range" id="rowHeight" min="100" max="400" value="200">
+            <span id="rowHeightValue">200px</span>
         </div>
         
         <div id="collage-container">
@@ -150,126 +151,72 @@
     </div>
 
     <script>
-    // == Mengambil Elemen Baru ==
+    // === JAVASCRIPT YANG JAUH LEBIH SEDERHANA ===
+
     const imageInput = document.getElementById('image-input');
     const collageContainer = document.getElementById('collage-container');
     const downloadBtn = document.getElementById('download-btn');
     const rowHeightSlider = document.getElementById('rowHeight');
     const rowHeightValue = document.getElementById('rowHeightValue');
-    const ratioButtons = document.querySelectorAll('.ratio-btn'); // Mengambil semua tombol rasio
+    const ratioButtons = document.querySelectorAll('.ratio-btn');
 
-    let imageFiles = [];
+    // Fungsi untuk menampilkan gambar
+    const displayImages = () => {
+        collageContainer.innerHTML = ''; // Kosongkan kontainer
+        const files = imageInput.files;
+        const height = rowHeightSlider.value + 'px';
 
-    const renderJustifiedLayout = async () => {
-        if (imageFiles.length === 0) {
-            collageContainer.innerHTML = '<p style="color: #888; padding: 20px;">Pilih gambar untuk memulai...</p>';
-            return;
+        for (const file of files) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            img.style.height = height; // Atur tinggi gambar
+            collageContainer.appendChild(img);
         }
-
-        collageContainer.innerHTML = '<p style="color: #888; padding: 20px;">Menghitung layout...</p>';
-
-        const containerWidth = collageContainer.clientWidth;
-        if (containerWidth === 0) return; // Jangan render jika kontainer tidak terlihat
-
-        const idealHeight = parseInt(rowHeightSlider.value);
-        const gap = 0;
-
-        const imageDimensions = await Promise.all(
-            Array.from(imageFiles).map(file => {
-                return new Promise((resolve) => {
-                    const img = new Image();
-                    img.src = URL.createObjectURL(file);
-                    img.onload = () => resolve({ src: img.src, ratio: img.naturalWidth / img.naturalHeight });
-                });
-            })
-        );
-
-        collageContainer.innerHTML = '';
-
-        let currentRow = [];
-        let currentRowWidth = 0;
-
-        imageDimensions.forEach((img, index) => {
-            currentRow.push(img);
-            const resizedWidth = img.ratio * idealHeight;
-            currentRowWidth += resizedWidth;
-
-            if (currentRowWidth >= containerWidth || index === imageDimensions.length - 1) {
-                const totalRatio = currentRow.reduce((sum, item) => sum + item.ratio, 0);
-                const finalRowHeight = (containerWidth - (currentRow.length - 1) * gap) / totalRatio;
-                
-                const rowDiv = document.createElement('div');
-                rowDiv.className = 'collage-row';
-                
-                currentRow.forEach(item => {
-                    const imgElement = document.createElement('img');
-                    imgElement.src = item.src;
-                    imgElement.style.height = `${finalRowHeight}px`;
-                    rowDiv.appendChild(imgElement);
-                });
-
-                collageContainer.appendChild(rowDiv);
-                currentRow = [];
-                currentRowWidth = 0;
-            }
+    };
+    
+    // Fungsi untuk mengubah tinggi semua gambar yang ada
+    const updateImageHeights = () => {
+        const height = rowHeightSlider.value + 'px';
+        const images = collageContainer.querySelectorAll('img');
+        images.forEach(img => {
+            img.style.height = height;
         });
     };
 
-    // == Event Listener Baru untuk Tombol Rasio ==
-    ratioButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            // Hapus kelas 'active' dari semua tombol
-            ratioButtons.forEach(btn => btn.classList.remove('active'));
-            // Tambahkan kelas 'active' ke tombol yang diklik
-            const clickedButton = e.currentTarget;
-            clickedButton.classList.add('active');
+    // --- Event Listeners ---
 
-            // Ambil nilai rasio dari atribut data-*
-            const ratio = clickedButton.dataset.ratio;
-            
-            // Terapkan rasio ke kontainer
-            collageContainer.style.aspectRatio = ratio;
-            
-            // Render ulang layout agar sesuai dengan dimensi baru
-            renderJustifiedLayout();
-        });
-    });
-
-    imageInput.addEventListener('change', (event) => {
-        imageFiles = event.target.files;
-        renderJustifiedLayout();
-    });
+    imageInput.addEventListener('change', displayImages);
 
     rowHeightSlider.addEventListener('input', (event) => {
         rowHeightValue.textContent = `${event.target.value}px`;
-        // Gunakan setTimeout agar tidak me-render terus-menerus saat slider digeser
-        setTimeout(() => renderJustifiedLayout(), 100);
+        updateImageHeights();
     });
 
-    // Event listener untuk me-render ulang jika ukuran kontainer diubah manual
-    new ResizeObserver(renderJustifiedLayout).observe(collageContainer);
-
+    ratioButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            ratioButtons.forEach(btn => btn.classList.remove('active'));
+            const clickedButton = e.currentTarget;
+            clickedButton.classList.add('active');
+            collageContainer.style.aspectRatio = clickedButton.dataset.ratio;
+        });
+    });
 
     downloadBtn.addEventListener('click', () => {
-        if (imageFiles.length === 0) {
+        if (imageInput.files.length === 0) {
             alert("Silakan pilih gambar terlebih dahulu!");
             return;
         }
-        alert("Mempersiapkan file unduhan... Ini mungkin butuh beberapa detik.");
+        alert("Mempersiapkan file unduhan...");
         html2canvas(collageContainer, {
             backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'),
-            scale: 2,
-            useCORS: true,
-            logging: false
+            scale: 2
         }).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'kolase-rasio.png';
+            link.download = 'kolase-fleksibel.png';
             link.click();
         });
     });
-    
-    renderJustifiedLayout();
     </script>
 </body>
 </html>
