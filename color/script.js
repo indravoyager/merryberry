@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const colorThief = new ColorThief();
 
     let popupTimeout;
-    // --- PERUBAHAN BARU: State untuk melacak aksi mouse ---
     let isPicking = false;
 
     // === Functions ===
@@ -83,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mainContent.style.display = 'none';
         progressContainer.style.display = 'block';
         progressBar.style.width = '0%';
+        progressBar.textContent = '0%'; // Reset teks persentase
         fileInfo.textContent = `File dipilih: ${file.name}`;
         
         const reader = new FileReader();
@@ -91,10 +91,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.lengthComputable) {
                 const percent = Math.round((e.loaded / e.total) * 100);
                 progressBar.style.width = percent + '%';
+                // --- PERUBAHAN DI SINI ---
+                progressBar.textContent = percent + '%'; // Menampilkan teks persentase
             }
         };
 
         reader.onload = (e) => {
+            // Pastikan bar mencapai 100% saat selesai
+            progressBar.style.width = '100%';
+            progressBar.textContent = '100%';
             setTimeout(() => { progressContainer.style.display = 'none'; }, 500);
 
             const img = new Image();
@@ -147,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
         imageUpload.value = '';
     }
 
-    // --- PERUBAHAN BARU: Membuat fungsi khusus untuk memilih warna ---
     const pickColorAt = (event) => {
         const rect = imagePreview.getBoundingClientRect();
         const scaleX = imageCanvas.width / rect.width;
@@ -155,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const x = (event.clientX - rect.left) * scaleX;
         const y = (event.clientY - rect.top) * scaleY;
         
-        // Pastikan koordinat berada dalam batas canvas untuk menghindari error
         if (x < 0 || x >= imageCanvas.width || y < 0 || y >= imageCanvas.height) {
             return;
         }
@@ -169,8 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
             pickedColorValue.textContent = `${hexColor}`;
             copyPickedColorButton.style.display = 'inline-flex';
         } catch (error) {
-            // Error ini bisa terjadi karena cross-origin, tapi kita sudah coba atasi
-            // dengan crossOrigin="Anonymous". Kita biarkan catch ini untuk keamanan.
             console.error("Gagal mengambil warna piksel:", error);
         }
     };
@@ -196,26 +197,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- PERUBAHAN BARU: Mengganti 'click' dengan event-event mouse yang lebih lengkap ---
     imagePreview.addEventListener('mousedown', (event) => {
         isPicking = true;
-        pickColorAt(event); // Langsung pilih warna saat mouse ditekan
+        pickColorAt(event);
     });
 
     imagePreview.addEventListener('mousemove', (event) => {
         if (isPicking) {
-            pickColorAt(event); // Terus pilih warna saat mouse digeser (jika ditahan)
+            pickColorAt(event);
         }
     });
 
-    // Kita pasang listener mouseup dan mouseleave di window untuk memastikan
-    // proses picking berhenti bahkan jika mouse dilepas di luar gambar.
     window.addEventListener('mouseup', () => {
         isPicking = false;
     });
 
     imagePreview.addEventListener('mouseleave', () => {
-        isPicking = false; // Berhenti jika mouse keluar dari area gambar
+        isPicking = false;
     });
 
 
