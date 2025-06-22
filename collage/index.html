@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolase dengan Kolom Dinamis</title>
+    <title>Kolase dengan Kontrol Lengkap</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -58,11 +58,12 @@
             gap: 20px;
         }
         
-        .button-row, .direction-controls, .column-controls {
+        .button-row, .direction-controls, .slider-controls {
             display: flex;
             gap: 15px;
             align-items: center;
             justify-content: center;
+            width: 100%;
         }
 
         .btn {
@@ -85,19 +86,19 @@
             border-radius: 8px;
             display: grid;
             gap: 10px;
-            background-color: #ffffff; 
+            background-color: #ffffff;
+            /* --item-size dan --column-count akan diatur oleh JS */
         }
         
-        /* Layout untuk "Susun ke Samping" */
+        /* Layout untuk "Susun ke Samping" (Dinamis) */
         #collage-container.horizontal {
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            grid-auto-rows: 200px; /* Memberi tinggi baris yang konsisten */
+            grid-template-columns: repeat(auto-fit, minmax(var(--item-size, 150px), 1fr));
+            grid-auto-rows: var(--item-size, 150px);
         }
         
         /* Layout untuk "Susun ke Bawah" (Dinamis) */
         #collage-container.vertical {
-            /* Menggunakan CSS Variable --column-count yang diatur oleh JS */
-            grid-template-columns: repeat(var(--column-count, 1), 1fr);
+            grid-template-columns: repeat(var(--column-count, 3), 1fr);
             grid-auto-rows: auto;
         }
         
@@ -112,7 +113,7 @@
 <body>
 
     <div class="container">
-        <h1>Kolase dengan Kolom Dinamis</h1>
+        <h1>Kolase dengan Kontrol Lengkap</h1>
         
         <div class="controls">
             <div class="button-row">
@@ -130,10 +131,16 @@
                 <label for="vertical">Ke Bawah</label>
             </div>
 
-            <div id="column-controls" class="column-controls" style="display: none;">
+            <div id="size-controls" class="slider-controls">
+                <label for="size-slider">Ukuran Dasar:</label>
+                <input type="range" id="size-slider" min="80" max="300" value="150">
+                <span id="size-label">150px</span>
+            </div>
+
+            <div id="column-controls" class="slider-controls" style="display: none;">
                 <label for="column-slider">Jumlah Kolom:</label>
                 <input type="range" id="column-slider" min="1" max="6" value="3">
-                <span id="column-count-label">3</span>
+                <span id="column-label">3</span>
             </div>
         </div>
         
@@ -147,15 +154,24 @@
     const downloadBtn = document.getElementById('download-btn');
     const directionRadios = document.querySelectorAll('input[name="direction"]');
 
-    // Mengambil elemen kontrol kolom yang baru
+    // Mengambil semua elemen kontrol slider
+    const sizeControls = document.getElementById('size-controls');
+    const sizeSlider = document.getElementById('size-slider');
+    const sizeLabel = document.getElementById('size-label');
+    
     const columnControls = document.getElementById('column-controls');
     const columnSlider = document.getElementById('column-slider');
-    const columnCountLabel = document.getElementById('column-count-label');
+    const columnLabel = document.getElementById('column-label');
 
-    // Fungsi untuk mengatur jumlah kolom di CSS
+    // Fungsi untuk mengatur variabel CSS
+    const setItemSize = (size) => {
+        const sizePx = size + 'px';
+        collageContainer.style.setProperty('--item-size', sizePx);
+        sizeLabel.textContent = sizePx;
+    };
     const setColumnCount = (count) => {
         collageContainer.style.setProperty('--column-count', count);
-        columnCountLabel.textContent = count;
+        columnLabel.textContent = count;
     };
 
     imageInput.addEventListener('change', () => {
@@ -180,40 +196,44 @@
         }).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'kolase-dinamis.png';
+            link.download = 'kolase-kontrol-lengkap.png';
             link.click();
         });
     });
     
-    // Event listener untuk pilihan arah
+    // Event listener utama untuk pilihan arah
     directionRadios.forEach(radio => {
         radio.addEventListener('change', (event) => {
             if (event.target.value === 'horizontal') {
                 collageContainer.classList.remove('vertical');
                 collageContainer.classList.add('horizontal');
-                columnControls.style.display = 'none'; // Sembunyikan slider
-            } else if (event.target.value === 'vertical') {
+                // Tampilkan slider ukuran, sembunyikan slider kolom
+                sizeControls.style.display = 'flex';
+                columnControls.style.display = 'none';
+            } else { // 'vertical'
                 collageContainer.classList.remove('horizontal');
                 collageContainer.classList.add('vertical');
-                columnControls.style.display = 'flex'; // Tampilkan slider
-                setColumnCount(columnSlider.value); // Langsung terapkan nilai slider saat ini
+                // Sembunyikan slider ukuran, tampilkan slider kolom
+                sizeControls.style.display = 'none';
+                columnControls.style.display = 'flex';
             }
         });
     });
 
-    // Event listener untuk slider jumlah kolom
+    // Event listener untuk setiap slider
+    sizeSlider.addEventListener('input', (event) => {
+        setItemSize(event.target.value);
+    });
     columnSlider.addEventListener('input', (event) => {
         setColumnCount(event.target.value);
     });
     
     // Inisialisasi awal saat halaman dimuat
-    if (document.getElementById('horizontal').checked) {
-        collageContainer.classList.add('horizontal');
-    } else {
-        collageContainer.classList.add('vertical');
-        columnControls.style.display = 'flex';
-    }
-    setColumnCount(columnSlider.value); // Set nilai awal untuk variabel CSS
+    setItemSize(sizeSlider.value);
+    setColumnCount(columnSlider.value);
+    // Jalankan event change sekali untuk memastikan UI sesuai dengan pilihan default
+    document.querySelector('input[name="direction"]:checked').dispatchEvent(new Event('change'));
+
     </script>
 
 </body>
