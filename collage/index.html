@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolase dengan Kontrol Lengkap</title>
+    <title>Kolase dengan Notifikasi Modern</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -58,7 +58,7 @@
             gap: 20px;
         }
         
-        .button-row, .direction-controls, .slider-controls {
+        .button-row, .slider-controls {
             display: flex;
             gap: 15px;
             align-items: center;
@@ -87,19 +87,8 @@
             display: grid;
             gap: 10px;
             background-color: #ffffff;
-            /* --item-size dan --column-count akan diatur oleh JS */
-        }
-        
-        /* Layout untuk "Susun ke Samping" (Dinamis) */
-        #collage-container.horizontal {
-            grid-template-columns: repeat(auto-fit, minmax(var(--item-size, 150px), 1fr));
-            grid-auto-rows: var(--item-size, 150px);
-        }
-        
-        /* Layout untuk "Susun ke Bawah" (Dinamis) */
-        #collage-container.vertical {
             grid-template-columns: repeat(var(--column-count, 3), 1fr);
-            grid-auto-rows: auto;
+            grid-auto-rows: 180px; 
         }
         
         #collage-container img {
@@ -108,12 +97,39 @@
             object-fit: cover;
             border-radius: 4px;
         }
+
+        /* --- CSS BARU UNTUK NOTIFIKASI TOAST --- */
+        .toast {
+            position: fixed; /* Tetap di layar meskipun di-scroll */
+            bottom: 20px;
+            right: 20px;
+            background-color: #333;
+            color: #fff;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000; /* Pastikan selalu di atas elemen lain */
+            
+            /* Sembunyikan di luar layar kanan secara default */
+            transform: translateX(calc(100% + 20px));
+            visibility: hidden;
+            
+            /* Animasi transisi saat muncul dan menghilang */
+            transition: transform 0.5s ease-in-out, visibility 0.5s ease-in-out;
+        }
+
+        /* Class `.show` ditambahkan oleh JS untuk menampilkan toast */
+        .toast.show {
+            transform: translateX(0); /* Pindahkan ke posisi semula */
+            visibility: visible;
+        }
+
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Kolase dengan Kontrol Lengkap</h1>
+        <h1>Kolase Fokus Kolom</h1>
         
         <div class="controls">
             <div class="button-row">
@@ -122,53 +138,48 @@
                 <button id="download-btn" class="btn">Unduh Kolase</button>
             </div>
             
-            <div class="direction-controls">
-                <label>Arah Susunan:</label>
-                <input type="radio" id="horizontal" name="direction" value="horizontal" checked>
-                <label for="horizontal">Ke Samping</label>
-                
-                <input type="radio" id="vertical" name="direction" value="vertical">
-                <label for="vertical">Ke Bawah</label>
-            </div>
-
-            <div id="size-controls" class="slider-controls">
-                <label for="size-slider">Ukuran Dasar:</label>
-                <input type="range" id="size-slider" min="80" max="300" value="150">
-                <span id="size-label">150px</span>
-            </div>
-
-            <div id="column-controls" class="slider-controls" style="display: none;">
+            <div id="column-controls" class="slider-controls">
                 <label for="column-slider">Jumlah Kolom:</label>
-                <input type="range" id="column-slider" min="1" max="6" value="3">
+                <input type="range" id="column-slider" min="1" max="8" value="3">
                 <span id="column-label">3</span>
             </div>
         </div>
         
-        <div id="collage-container" class="horizontal">
+        <div id="collage-container">
         </div>
     </div>
+
+    <div id="download-toast" class="toast">
+        Mempersiapkan file unduhan...
+    </div>
+
 
     <script>
     const imageInput = document.getElementById('image-input');
     const collageContainer = document.getElementById('collage-container');
     const downloadBtn = document.getElementById('download-btn');
-    const directionRadios = document.querySelectorAll('input[name="direction"]');
-
-    // Mengambil semua elemen kontrol slider
-    const sizeControls = document.getElementById('size-controls');
-    const sizeSlider = document.getElementById('size-slider');
-    const sizeLabel = document.getElementById('size-label');
-    
-    const columnControls = document.getElementById('column-controls');
     const columnSlider = document.getElementById('column-slider');
     const columnLabel = document.getElementById('column-label');
 
-    // Fungsi untuk mengatur variabel CSS
-    const setItemSize = (size) => {
-        const sizePx = size + 'px';
-        collageContainer.style.setProperty('--item-size', sizePx);
-        sizeLabel.textContent = sizePx;
-    };
+    // --- JAVASCRIPT BARU UNTUK NOTIFIKASI TOAST ---
+    const toastElement = document.getElementById('download-toast');
+    let toastTimeout; // Variabel untuk menyimpan timer
+
+    // Fungsi untuk menampilkan notifikasi
+    function showToast(message) {
+        // Hapus timer sebelumnya jika ada
+        clearTimeout(toastTimeout);
+
+        toastElement.textContent = message;
+        toastElement.classList.add('show');
+
+        // Atur timer untuk menyembunyikan notifikasi setelah 3 detik
+        toastTimeout = setTimeout(() => {
+            toastElement.classList.remove('show');
+        }, 3000); // 3000 milidetik = 3 detik
+    }
+
+
     const setColumnCount = (count) => {
         collageContainer.style.setProperty('--column-count', count);
         columnLabel.textContent = count;
@@ -184,56 +195,36 @@
         }
     });
 
+    // --- LOGIKA TOMBOL UNDUH DIPERBARUI ---
     downloadBtn.addEventListener('click', () => {
         if (collageContainer.children.length === 0) {
-            alert("Silakan pilih gambar terlebih dahulu!");
+            // Tampilkan notifikasi error
+            showToast("Silakan pilih gambar terlebih dahulu!");
             return;
         }
-        alert("Mempersiapkan file unduhan...");
+        
+        // Tampilkan notifikasi proses
+        showToast("Mempersiapkan file unduhan...");
+        
         html2canvas(collageContainer, { 
             scale: 2,
             backgroundColor: '#ffffff'
         }).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'kolase-kontrol-lengkap.png';
+            link.download = 'kolase-fokus-kolom.png';
             link.click();
+
+            // Tampilkan notifikasi sukses setelah proses selesai
+            showToast("Unduhan telah dimulai!");
         });
     });
     
-    // Event listener utama untuk pilihan arah
-    directionRadios.forEach(radio => {
-        radio.addEventListener('change', (event) => {
-            if (event.target.value === 'horizontal') {
-                collageContainer.classList.remove('vertical');
-                collageContainer.classList.add('horizontal');
-                // Tampilkan slider ukuran, sembunyikan slider kolom
-                sizeControls.style.display = 'flex';
-                columnControls.style.display = 'none';
-            } else { // 'vertical'
-                collageContainer.classList.remove('horizontal');
-                collageContainer.classList.add('vertical');
-                // Sembunyikan slider ukuran, tampilkan slider kolom
-                sizeControls.style.display = 'none';
-                columnControls.style.display = 'flex';
-            }
-        });
-    });
-
-    // Event listener untuk setiap slider
-    sizeSlider.addEventListener('input', (event) => {
-        setItemSize(event.target.value);
-    });
     columnSlider.addEventListener('input', (event) => {
         setColumnCount(event.target.value);
     });
     
-    // Inisialisasi awal saat halaman dimuat
-    setItemSize(sizeSlider.value);
     setColumnCount(columnSlider.value);
-    // Jalankan event change sekali untuk memastikan UI sesuai dengan pilihan default
-    document.querySelector('input[name="direction"]:checked').dispatchEvent(new Event('change'));
-
     </script>
 
 </body>
