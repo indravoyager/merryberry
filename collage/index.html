@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolase Final (Versi Perbaikan)</title>
+    <title>Kolase Final - Layout Review Kanan</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -18,7 +18,6 @@
             --container-bg: #1e1e1e;
             --text-color: #e0e0e0;
             --accent-color: #00ff99;
-            --accent-hover: #00e68a;
             --border-color: #333333;
             --input-bg: #2a2a2a;
         }
@@ -29,26 +28,41 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             min-height: 100vh;
             margin: 0;
             padding: 20px;
         }
-        .container {
+
+        /* --- STRUKTUR LAYOUT BARU --- */
+        .page-wrapper {
+            display: flex;
             width: 90%;
-            max-width: 900px;
+            max-width: 1400px; /* Lebar maksimum diperbesar */
             background-color: var(--container-bg);
-            padding: 40px;
             border-radius: 16px;
             border: 1px solid var(--border-color);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            text-align: center;
+            overflow: hidden;
         }
+        .main-content {
+            flex: 3; /* Area utama lebih besar */
+            padding: 40px;
+            border-right: 1px solid var(--border-color);
+        }
+        .review-panel {
+            flex: 1; /* Area review lebih kecil */
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- STYLING KONTEN --- */
         h1 {
             color: #ffffff;
             font-weight: 900;
-            font-size: 2.5em;
-            margin-bottom: 20px;
+            font-size: 2.2em;
+            margin: 0 0 20px 0;
+            text-align: center;
         }
         .controls {
             margin: 20px 0;
@@ -57,12 +71,14 @@
             align-items: center;
             gap: 20px;
         }
+        .button-row, .slider-controls, .output-settings-group {
+            width: 100%;
+        }
         .button-row, .slider-controls {
             display: flex;
             gap: 15px;
             align-items: center;
             justify-content: center;
-            width: 100%;
             flex-wrap: wrap;
         }
         .btn {
@@ -74,10 +90,10 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 500;
-            transition: transform 0.2s;
         }
-        .btn:hover { transform: scale(1.05); }
         #image-input { display: none; }
+
+        /* Area Kolase Utama (Kiri) */
         #collage-container {
             margin-top: 20px;
             column-width: var(--column-width, 250px);
@@ -97,199 +113,245 @@
             border-radius: 4px;
         }
         .sortable-ghost { opacity: 0.4; }
+
+        /* Pengaturan Output */
         .output-settings-group {
-            width: 100%;
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 10px;
-            background-color: rgba(0,0,0,0.1);
+            border-radius: 12px; padding: 20px;
+            margin-top: 20px; background-color: rgba(0,0,0,0.1);
         }
         .output-settings-group h3 { margin: 0 0 20px 0; color: #fff; font-weight: 500; }
-        .output-controls { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
-        .output-controls input[type="number"] { width: 120px; background-color: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; text-align: center; font-size: 18px; font-weight: 500; }
-        .preset-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-        .preset-btn { border: 1px solid var(--border-color); background-color: transparent; color: var(--text-color); padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: all 0.2s ease; }
-        .preset-btn:hover { background-color: var(--border-color); border-color: #555; }
+        .output-controls, .preset-buttons { display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .output-controls { margin-bottom: 20px; }
+        .output-controls input[type="number"] { width: 120px; background-color: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; text-align: center; font-size: 18px; }
+        .preset-btn { border: 1px solid var(--border-color); background-color: transparent; color: var(--text-color); padding: 8px 16px; border-radius: 20px; cursor: pointer; }
         .preset-btn.active { background-color: var(--accent-color); color: #121212; border-color: var(--accent-color); font-weight: 500; }
-        .toast { position: fixed; bottom: 20px; left: 20px; background-color: #333; color: #fff; padding: 16px 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000; transform: translateX(calc(-100% - 20px)); opacity: 0; transition: transform 0.5s ease-in-out, opacity 0.5s; }
-        .toast.show { transform: translateX(0); opacity: 1; }
+        
+        /* Area Review Gambar (Kanan) */
+        .review-panel h2 {
+            margin: 0 0 15px 0;
+            font-size: 1.5em;
+            color: #eee;
+            text-align: left;
+        }
+        #review-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            width: 100%;
+            flex-grow: 1; /* Mengisi sisa ruang vertikal */
+            overflow-y: auto; /* Scroll jika gambar banyak */
+            padding: 10px;
+            background-color: rgba(0,0,0,0.2);
+            border-radius: 8px;
+        }
+        #review-container img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        .toast { /* ... styling toast ... */ }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Kolase Final</h1>
-        <div class="controls">
-            <div class="button-row">
-                <button class="btn" onclick="document.getElementById('image-input').click();">Pilih Gambar</button>
-                <input type="file" id="image-input" accept="image/*" multiple>
-                <button id="download-btn" class="btn">Unduh Kolase</button>
-            </div>
-            <div class="slider-controls">
-                <label for="column-width-slider">Ukuran Gambar (Preview):</label>
-                <input type="range" id="column-width-slider" min="150" max="400" value="250">
-                <span id="column-width-label">250px</span>
-            </div>
-            <div class="output-settings-group">
-                <h3>Resolusi & Kualitas Output</h3>
-                <div class="output-controls">
-                    <label for="output-width">Lebar Final:</label>
-                    <input type="number" id="output-width" value="1920" min="100">
-                    <span>px</span>
+    <div class="page-wrapper">
+        <div class="main-content">
+            <h1>Kolase Maker</h1>
+            <div class="controls">
+                <div class="button-row">
+                    <button class="btn" onclick="document.getElementById('image-input').click();">Pilih Gambar</button>
+                    <button id="download-btn" class="btn">Unduh Kolase</button>
                 </div>
-                <div class="preset-buttons">
-                    <span>Preset Cepat:</span>
-                    <button class="preset-btn" data-width="1920">HD</button>
-                    <button class="preset-btn" data-width="2560">2K</button>
-                    <button class="preset-btn" data-width="3840">4K</button>
+                <div class="slider-controls">
+                    <label for="column-width-slider">Ukuran Preview:</label>
+                    <input type="range" id="column-width-slider" min="150" max="400" value="250">
+                    <span id="column-width-label">250px</span>
+                </div>
+                <div class="output-settings-group">
+                    <h3>Resolusi Output Final</h3>
+                    <div class="output-controls">
+                        <label for="output-width">Lebar:</label>
+                        <input type="number" id="output-width" value="1920" min="100">
+                        <span>px</span>
+                    </div>
+                    <div class="preset-buttons">
+                        <button class="preset-btn" data-width="1920">HD</button>
+                        <button class="preset-btn" data-width="2560">2K</button>
+                        <button class="preset-btn" data-width="3840">4K</button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="collage-container"></div>
+        <div class="review-panel">
+            <h2>Gambar Terpilih</h2>
+            <div id="review-container">
+                <p style="font-size: 14px; color: #888;">Area ini akan menampilkan gambar yang Anda pilih...</p>
+            </div>
+        </div>
     </div>
-    <div id="download-toast" class="toast"></div>
+    
+    <input type="file" id="image-input" accept="image/*" multiple style="display: none;">
+    <div id="download-toast" class="toast" style="/* ... styling toast ... */"></div>
 
     <script>
-        // --- 1. DEKLARASI ELEMEN DAN VARIABEL ---
-        const imageInput = document.getElementById('image-input');
-        const collageContainer = document.getElementById('collage-container');
-        const downloadBtn = document.getElementById('download-btn');
-        const columnWidthSlider = document.getElementById('column-width-slider');
-        const columnWidthLabel = document.getElementById('column-width-label');
-        const outputWidthInput = document.getElementById('output-width');
-        const toastElement = document.getElementById('download-toast');
-        const presetButtons = document.querySelectorAll('.preset-btn');
-        
-        let originalFiles = []; // Sumber data utama
-        let toastTimeout;
-        let sortableInstance = null;
+    // --- DEKLARASI ELEMEN DAN VARIABEL ---
+    const imageInput = document.getElementById('image-input');
+    const collageContainer = document.getElementById('collage-container');
+    const reviewContainer = document.getElementById('review-container');
+    const downloadBtn = document.getElementById('download-btn');
+    const columnWidthSlider = document.getElementById('column-width-slider');
+    const columnWidthLabel = document.getElementById('column-width-label');
+    const outputWidthInput = document.getElementById('output-width');
+    const toastElement = document.getElementById('download-toast');
+    const presetButtons = document.querySelectorAll('.preset-btn');
+    
+    let originalFiles = [];
+    let sortableInstance = null;
+    let toastTimeout;
 
-        // --- 2. KUMPULAN FUNGSI-FUNGSI ---
+    // --- KUMPULAN FUNGSI-FUNGSI ---
+    function showToast(message) {
+        clearTimeout(toastTimeout);
+        toastElement.textContent = message;
+        toastElement.style.display = 'block'; // Tampilkan elemen
+        setTimeout(() => toastElement.classList.add('show'), 10); // Tambah class setelah display
+        toastTimeout = setTimeout(() => {
+            toastElement.classList.remove('show');
+        }, 3000);
+    }
+    
+    function setColumnWidth(width) {
+        collageContainer.style.setProperty('--column-width', width + 'px');
+        columnWidthLabel.textContent = width + 'px';
+    }
 
-        function showToast(message) {
-            clearTimeout(toastTimeout);
-            toastElement.textContent = message;
-            toastElement.classList.add('show');
-            toastTimeout = setTimeout(() => {
-                toastElement.classList.remove('show');
-            }, 3000);
-        }
+    function syncUiState() {
+        const currentValue = outputWidthInput.value;
+        presetButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.width === currentValue));
+    }
+    
+    function reorderFilesAndUpdateReview() {
+        const figures = Array.from(collageContainer.querySelectorAll('figure'));
+        const newFileOrder = figures.map(figure => originalFiles[parseInt(figure.dataset.originalIndex)]);
+        originalFiles = newFileOrder;
 
-        function setColumnWidth(width) {
-            collageContainer.style.setProperty('--column-width', width + 'px');
-            columnWidthLabel.textContent = width + 'px';
-        }
-
-        function syncUiState() {
-            const currentValue = outputWidthInput.value;
-            presetButtons.forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.width === currentValue);
-            });
-        }
-        
-        function reorderFiles() {
-            const figures = Array.from(collageContainer.querySelectorAll('figure'));
-            const newFileOrder = figures.map(figure => {
-                const originalIndex = parseInt(figure.dataset.originalIndex);
-                return originalFiles[originalIndex];
-            });
-            originalFiles = newFileOrder; // Update array utama
-            
-            // Beri ulang index agar drag selanjutnya tetap benar
-            originalFiles.forEach((file, newIndex) => {
-                figures[newIndex].dataset.originalIndex = newIndex;
-            });
-        }
-
-        function initDragAndDrop() {
-            if (sortableInstance) {
-                sortableInstance.destroy(); // Hancurkan instance lama jika ada
-            }
-            sortableInstance = new Sortable(collageContainer, {
-                animation: 150,
-                ghostClass: 'sortable-ghost',
-                draggable: 'figure',
-                onEnd: reorderFiles // Panggil fungsi reorder setelah drop
-            });
-        }
-        
-        async function handleDownload() {
-            if (originalFiles.length === 0) {
-                showToast("Silakan pilih gambar terlebih dahulu!");
-                return;
-            }
-            const targetWidth = parseInt(outputWidthInput.value);
-            if (!(targetWidth > 0)) {
-                showToast("Lebar output tidak valid!");
-                return;
-            }
-            showToast("Mempersiapkan layout final...");
-
-            const clone = collageContainer.cloneNode(true);
-            clone.style.position = 'absolute';
-            clone.style.left = '-9999px';
-            clone.style.top = '0px';
-            clone.style.width = targetWidth + 'px';
-            document.body.appendChild(clone);
-
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            try {
-                const canvas = await html2canvas(clone, {
-                    scale: 1,
-                    useCORS: true,
-                    allowTaint: true,
-                    backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color')
-                });
-                const link = document.createElement('a');
-                link.href = canvas.toDataURL('image/png', 1.0);
-                link.download = `kolase-final-${targetWidth}px.png`;
-                link.click();
-                showToast("Unduhan telah dimulai!");
-            } catch (error) {
-                console.error("Gagal membuat kanvas:", error);
-                showToast("Gagal memproses unduhan.");
-            } finally {
-                document.body.removeChild(clone);
-            }
-        }
-
-        function handleFileSelect(event) {
-            originalFiles = Array.from(event.target.files);
-            collageContainer.innerHTML = '';
-            
-            if (originalFiles.length === 0) return;
-
-            originalFiles.forEach((file, index) => {
-                const figure = document.createElement('figure');
-                figure.dataset.originalIndex = index; // Simpan index asli
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(file);
-                figure.appendChild(img);
-                collageContainer.appendChild(figure);
-            });
-            
-            initDragAndDrop();
-        }
-
-        // --- 3. EVENT LISTENERS (PENYAMBUNG FUNGSI) ---
-
-        imageInput.addEventListener('change', handleFileSelect);
-        downloadBtn.addEventListener('click', handleDownload);
-        columnWidthSlider.addEventListener('input', (e) => setColumnWidth(e.target.value));
-        outputWidthInput.addEventListener('input', syncUiState);
-        presetButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                outputWidthInput.value = button.dataset.width;
-                syncUiState();
-            });
+        // Beri ulang index pada figure
+        figures.forEach((figure, newIndex) => {
+            figure.dataset.originalIndex = newIndex;
         });
 
-        // --- 4. INISIALISASI AWAL ---
-        setColumnWidth(columnWidthSlider.value);
-        syncUiState();
+        // Susun ulang review panel sesuai urutan baru
+        const reviewImages = Array.from(reviewContainer.querySelectorAll('img'));
+        newFileOrder.forEach((file, index) => {
+            const correspondingReviewImg = reviewImages.find(r_img => r_img.src === URL.createObjectURL(file));
+            if (correspondingReviewImg) {
+                reviewContainer.appendChild(correspondingReviewImg);
+            }
+        });
+    }
 
+    function initDragAndDrop() {
+        if (sortableInstance) sortableInstance.destroy();
+        sortableInstance = new Sortable(collageContainer, {
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            draggable: 'figure',
+            onEnd: reorderFilesAndUpdateReview
+        });
+    }
+
+    function handleFileSelect(event) {
+        originalFiles = Array.from(event.target.files);
+        collageContainer.innerHTML = '';
+        reviewContainer.innerHTML = '';
+
+        if (originalFiles.length === 0) return;
+
+        originalFiles.forEach((file, index) => {
+            const objectURL = URL.createObjectURL(file);
+            
+            // Buat elemen untuk kolase utama
+            const figure = document.createElement('figure');
+            figure.dataset.originalIndex = index;
+            const img = document.createElement('img');
+            img.src = objectURL;
+            figure.appendChild(img);
+            collageContainer.appendChild(figure);
+
+            // Buat elemen untuk panel review
+            const reviewImg = document.createElement('img');
+            reviewImg.src = objectURL;
+            reviewImg.title = file.name;
+            reviewContainer.appendChild(reviewImg);
+        });
+        
+        initDragAndDrop();
+    }
+    
+    async function handleDownload() {
+        if (originalFiles.length === 0) {
+            showToast("Silakan pilih gambar terlebih dahulu!");
+            return;
+        }
+        const targetWidth = parseInt(outputWidthInput.value);
+        if (!(targetWidth > 0)) {
+            showToast("Lebar output tidak valid!");
+            return;
+        }
+        showToast("Mempersiapkan layout final...");
+
+        const tempContainer = document.createElement('div');
+        collageContainer.childNodes.forEach(node => tempContainer.appendChild(node.cloneNode(true)));
+        tempContainer.id = 'collage-container';
+        tempContainer.style.setProperty('--column-width', getComputedStyle(collageContainer).getPropertyValue('--column-width'));
+        
+        const clone = document.createElement('div');
+        clone.style.position = 'absolute';
+        clone.style.left = '-9999px';
+        clone.style.top = '0px';
+        clone.style.width = targetWidth + 'px';
+        clone.appendChild(tempContainer);
+        document.body.appendChild(clone);
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        try {
+            const canvas = await html2canvas(clone, {
+                scale: 1,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color')
+            });
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png', 1.0);
+            link.download = `kolase-final-${targetWidth}px.png`;
+            link.click();
+            showToast("Unduhan telah dimulai!");
+        } catch (error) {
+            console.error("Gagal membuat kanvas:", error);
+            showToast("Gagal memproses unduhan.");
+        } finally {
+            document.body.removeChild(clone);
+        }
+    }
+
+    // --- EVENT LISTENERS ---
+    imageInput.addEventListener('change', handleFileSelect);
+    downloadBtn.addEventListener('click', handleDownload);
+    columnWidthSlider.addEventListener('input', (e) => setColumnWidth(e.target.value));
+    outputWidthInput.addEventListener('input', syncUiState);
+    presetButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            outputWidthInput.value = button.dataset.width;
+            syncUiState();
+        });
+    });
+
+    // --- INISIALISASI AWAL ---
+    setColumnWidth(columnWidthSlider.value);
+    syncUiState();
     </script>
 </body>
 </html>
