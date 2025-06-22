@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolase Resolusi Tinggi</title>
+    <title>Kolase Final (Responsive & Drag-and-Drop)</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -91,10 +94,12 @@
         
         #image-input { display: none; }
 
+        /* --- PERUBAHAN UTAMA: LAYOUT RESPONSIVE MASONRY --- */
         #collage-container {
             margin-top: 20px;
-            column-count: var(--column-count, 3);
-            column-gap: 5px;
+            /* Menggunakan column-width untuk layout responsif */
+            column-width: var(--column-width, 250px);
+            column-gap: 5px; /* Memberi sedikit jarak antar kolom */
         }
         
         #collage-container figure {
@@ -102,6 +107,7 @@
             display: inline-block;
             width: 100%;
             break-inside: avoid;
+            cursor: move; /* Kursor untuk drag */
         }
 
         #collage-container img {
@@ -109,6 +115,8 @@
             height: auto;
             border-radius: 4px;
         }
+        
+        .sortable-ghost { opacity: 0.4; border: 2px dashed var(--accent-color); border-radius: 4px; }
 
         .toast {
             position: fixed;
@@ -121,7 +129,7 @@
 <body>
 
     <div class="container">
-        <h1>Kolase Resolusi Tinggi</h1>
+        <h1>Kolase Final (Responsive & Drag-and-Drop)</h1>
         
         <div class="controls">
             <div class="button-row">
@@ -131,9 +139,9 @@
             </div>
             
             <div class="slider-controls">
-                <label for="column-slider">Jumlah Kolom (Preview):</label>
-                <input type="range" id="column-slider" min="1" max="8" value="3">
-                <span id="column-label">3</span>
+                <label for="column-width-slider">Ukuran Gambar (Responsif):</label>
+                <input type="range" id="column-width-slider" min="150" max="400" value="250">
+                <span id="column-width-label">250px</span>
             </div>
             
             <hr style="width:100%; border-color: var(--border-color);">
@@ -155,111 +163,115 @@
     const imageInput = document.getElementById('image-input');
     const collageContainer = document.getElementById('collage-container');
     const downloadBtn = document.getElementById('download-btn');
-    const columnSlider = document.getElementById('column-slider');
-    const columnLabel = document.getElementById('column-label');
+    const columnWidthSlider = document.getElementById('column-width-slider');
+    const columnWidthLabel = document.getElementById('column-width-label');
     const outputWidthInput = document.getElementById('output-width');
     const toastElement = document.getElementById('download-toast');
     let toastTimeout;
-    let originalFiles = [];
+    let originalFiles = []; // Sumber data utama
 
-    function showToast(message) {
-        // ... fungsi toast ...
-    }
+    function showToast(message) { /* ... fungsi toast ... */ }
 
-    const setColumnCount = (count) => {
-        collageContainer.style.setProperty('--column-count', count);
-        columnLabel.textContent = count;
+    const setColumnWidth = (width) => {
+        collageContainer.style.setProperty('--column-width', width + 'px');
+        columnWidthLabel.textContent = width + 'px';
+    };
+
+    // Fungsi untuk menginisialisasi atau memperbarui SortableJS
+    const initDragAndDrop = () => {
+        new Sortable(collageContainer, {
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            draggable: 'figure',
+            onEnd: () => {
+                // Saat drop, update urutan data file kita
+                const newOrderedFigures = Array.from(collageContainer.querySelectorAll('figure'));
+                const newOriginalFiles = newOrderedFigures.map(figure => {
+                    const originalIndex = parseInt(figure.dataset.index);
+                    return originalFiles[originalIndex];
+                });
+                originalFiles = newOriginalFiles; // Update array utama dengan urutan baru
+                
+                // Tata ulang data-index untuk drag selanjutnya
+                reindexFigures();
+            }
+        });
+    };
+    
+    // Fungsi untuk memberi ulang data-index
+    const reindexFigures = () => {
+        const figures = Array.from(collageContainer.querySelectorAll('figure'));
+        figures.forEach((figure, newIndex) => {
+            figure.dataset.index = newIndex;
+        });
     };
 
     imageInput.addEventListener('change', (event) => {
         originalFiles = Array.from(event.target.files);
-        const imagePreviews = originalFiles.map(file => URL.createObjectURL(file));
         
         collageContainer.innerHTML = '';
-        imagePreviews.forEach(src => {
+        originalFiles.forEach((file, index) => {
             const figure = document.createElement('figure');
+            figure.dataset.index = index; // Simpan index asli untuk re-ordering
             const img = document.createElement('img');
-            img.src = src;
+            img.src = URL.createObjectURL(file);
             figure.appendChild(img);
             collageContainer.appendChild(figure);
         });
+        
+        initDragAndDrop(); // Aktifkan drag-and-drop setelah gambar ditampilkan
     });
     
-    columnSlider.addEventListener('input', (event) => {
-        setColumnCount(event.target.value);
+    columnWidthSlider.addEventListener('input', (event) => {
+        setColumnWidth(event.target.value);
     });
     
-    // --- FUNGSI DOWNLOAD BARU YANG TOTAL BERBEDA ---
     downloadBtn.addEventListener('click', async () => {
-        if (originalFiles.length === 0) {
-            showToast("Silakan pilih gambar terlebih dahulu!");
-            return;
-        }
-
-        const targetWidth = parseInt(outputWidthInput.value);
-        if (!(targetWidth > 0)) {
-            showToast("Lebar output tidak valid!");
-            return;
-        }
-
+        if (originalFiles.length === 0) { /* ... handle error ... */ }
         showToast("Mulai proses render resolusi tinggi...");
 
-        // Membuat kanvas tersembunyi
+        const targetWidth = parseInt(outputWidthInput.value);
+        // ... (Fungsi render resolusi tinggi sama seperti sebelumnya, menggunakan `originalFiles` yang sudah terurut)
         const finalCanvas = document.createElement('canvas');
         const ctx = finalCanvas.getContext('2d');
-
-        // Mengambil posisi dan ukuran dari elemen-elemen preview
         const previewItems = Array.from(collageContainer.querySelectorAll('figure'));
         const previewContainerRect = collageContainer.getBoundingClientRect();
-
-        // Hitung rasio skala
         const scaleRatio = targetWidth / previewContainerRect.width;
-        
-        // Hitung tinggi total kanvas
         const totalHeight = previewContainerRect.height * scaleRatio;
         finalCanvas.width = targetWidth;
         finalCanvas.height = totalHeight;
 
-        // Latar belakang kanvas (opsional)
         ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--bg-color');
         ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
 
-        // Muat semua gambar asli dan gambar ke kanvas
-        const drawPromises = previewItems.map((figure, index) => {
+        const drawPromises = previewItems.map((figure) => {
+            const originalIndex = parseInt(figure.dataset.index);
             return new Promise(resolve => {
                 const img = new Image();
-                img.src = URL.createObjectURL(originalFiles[index]);
+                img.src = URL.createObjectURL(originalFiles[originalIndex]);
                 img.onload = () => {
                     const rect = figure.getBoundingClientRect();
-                    
-                    // Kalkulasi posisi dan ukuran di kanvas resolusi tinggi
                     const drawX = (rect.left - previewContainerRect.left) * scaleRatio;
                     const drawY = (rect.top - previewContainerRect.top) * scaleRatio;
                     const drawWidth = rect.width * scaleRatio;
                     const drawHeight = rect.height * scaleRatio;
-
                     ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
                     resolve();
                 };
             });
         });
 
-        // Tunggu semua gambar selesai digambar
         await Promise.all(drawPromises);
-
         showToast("Render selesai, memulai unduhan...");
-
-        // Unduh kanvas sebagai file PNG
         const link = document.createElement('a');
         link.href = finalCanvas.toDataURL('image/png');
-        link.download = `kolase-high-res-${targetWidth}px.png`;
+        link.download = `kolase-final-${targetWidth}px.png`;
         link.click();
-        
         showToast("Unduhan telah dimulai!");
     });
     
-    // Inisialisasi awal
-    setColumnCount(columnSlider.value);
+    // Inisialisasi
+    setColumnWidth(columnWidthSlider.value);
     function showToast(message) { clearTimeout(toastTimeout); toastElement.textContent = message; toastElement.style.cssText = 'display: block; opacity: 0; transform: translateX(calc(-100% - 20px));'; setTimeout(() => { toastElement.style.opacity = 1; toastElement.style.transform = 'translateX(0)';}, 10); toastTimeout = setTimeout(() => { toastElement.style.transform = 'translateX(calc(-100% - 20px))'; toastElement.style.opacity = 0; }, 3000); }
     </script>
 
