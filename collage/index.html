@@ -84,30 +84,25 @@
         /* --- LAYOUT MASONRY MENGGUNAKAN CSS COLUMNS --- */
         #collage-container {
             margin-top: 20px;
-            /* Menggunakan variabel dari slider untuk jumlah kolom */
             column-count: var(--column-count, 3);
-            /* Jarak antar kolom dihilangkan */
-            column-gap: 0;
+            column-gap: 5px; /* Memberi sedikit jarak agar tidak terlalu rapat */
         }
         
-        /* Setiap gambar dibungkus <figure> */
         #collage-container figure {
-            margin: 0;
-            display: inline-block; /* Agar gambar tidak memiliki margin aneh */
+            margin: 0 0 5px 0; /* Memberi jarak bawah antar gambar di kolom yang sama */
+            display: inline-block;
             width: 100%;
-            /* Properti kunci agar gambar tidak terpotong antar kolom */
             break-inside: avoid;
             cursor: move;
         }
 
         #collage-container img {
-            width: 100%; /* Lebar gambar selalu mengisi kolomnya */
-            height: auto; /* Tinggi otomatis menjaga proporsi asli */
+            width: 100%;
+            height: auto;
+            border-radius: 4px; /* Sedikit radius agar lebih manis */
         }
         
-        .sortable-ghost {
-            opacity: 0.4;
-        }
+        .sortable-ghost { opacity: 0.4; }
 
         .toast {
             position: fixed;
@@ -197,12 +192,12 @@
         }
         showToast("Mempersiapkan file unduhan...");
         html2canvas(collageContainer, { 
-            scale: 1, // Resolusi 1:1 sesuai preview
+            scale: 1,
             backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color')
         }).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'kolase-masonry.png';
+            link.download = 'kolase-masonry-final.png';
             link.click();
             showToast("Unduhan telah dimulai!");
         });
@@ -217,7 +212,6 @@
     new Sortable(collageContainer, {
         animation: 150,
         ghostClass: 'sortable-ghost',
-        // Item yang di-drag adalah <figure>
         draggable: 'figure'
     });
     </script>
