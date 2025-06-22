@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolase dengan Notifikasi Modern</title>
+    <title>Kolase Gambar Utuh (Tanpa Crop)</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -91,45 +91,25 @@
             grid-auto-rows: 180px; 
         }
         
+        /* --- PERUBAHAN UTAMA ADA DI SINI --- */
         #collage-container img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            
+            /* Mengubah 'cover' menjadi 'contain' agar seluruh gambar terlihat */
+            object-fit: contain; 
+            
             border-radius: 4px;
-        }
-
-        /* --- CSS BARU UNTUK NOTIFIKASI TOAST --- */
-        .toast {
-            position: fixed; /* Tetap di layar meskipun di-scroll */
-            bottom: 20px;
-            right: 20px;
-            background-color: #333;
-            color: #fff;
-            padding: 16px 24px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 1000; /* Pastikan selalu di atas elemen lain */
             
-            /* Sembunyikan di luar layar kanan secara default */
-            transform: translateX(calc(100% + 20px));
-            visibility: hidden;
-            
-            /* Animasi transisi saat muncul dan menghilang */
-            transition: transform 0.5s ease-in-out, visibility 0.5s ease-in-out;
+            /* (Opsional) Memberi latar belakang terang agar area gambar jelas */
+            background-color: #f0f0f0;
         }
-
-        /* Class `.show` ditambahkan oleh JS untuk menampilkan toast */
-        .toast.show {
-            transform: translateX(0); /* Pindahkan ke posisi semula */
-            visibility: visible;
-        }
-
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Kolase Fokus Kolom</h1>
+        <h1>Kolase Gambar Utuh (Tanpa Crop)</h1>
         
         <div class="controls">
             <div class="button-row">
@@ -149,9 +129,8 @@
         </div>
     </div>
 
-    <div id="download-toast" class="toast">
-        Mempersiapkan file unduhan...
-    </div>
+    <div id="download-toast" class="toast" style="display:none; position: fixed; bottom: 20px; right: 20px; background-color: #333; color: #fff; padding: 16px 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000; transition: transform 0.5s ease-in-out; transform: translateX(calc(100% + 20px));">
+        </div>
 
 
     <script>
@@ -160,25 +139,22 @@
     const downloadBtn = document.getElementById('download-btn');
     const columnSlider = document.getElementById('column-slider');
     const columnLabel = document.getElementById('column-label');
-
-    // --- JAVASCRIPT BARU UNTUK NOTIFIKASI TOAST ---
     const toastElement = document.getElementById('download-toast');
-    let toastTimeout; // Variabel untuk menyimpan timer
+    let toastTimeout;
 
-    // Fungsi untuk menampilkan notifikasi
     function showToast(message) {
-        // Hapus timer sebelumnya jika ada
         clearTimeout(toastTimeout);
-
         toastElement.textContent = message;
-        toastElement.classList.add('show');
+        toastElement.style.display = 'block';
+        // Memicu reflow agar transisi berjalan
+        setTimeout(() => {
+            toastElement.style.transform = 'translateX(0)';
+        }, 10);
 
-        // Atur timer untuk menyembunyikan notifikasi setelah 3 detik
         toastTimeout = setTimeout(() => {
-            toastElement.classList.remove('show');
-        }, 3000); // 3000 milidetik = 3 detik
+            toastElement.style.transform = 'translateX(calc(100% + 20px))';
+        }, 3000);
     }
-
 
     const setColumnCount = (count) => {
         collageContainer.style.setProperty('--column-count', count);
@@ -195,27 +171,20 @@
         }
     });
 
-    // --- LOGIKA TOMBOL UNDUH DIPERBARUI ---
     downloadBtn.addEventListener('click', () => {
         if (collageContainer.children.length === 0) {
-            // Tampilkan notifikasi error
             showToast("Silakan pilih gambar terlebih dahulu!");
             return;
         }
-        
-        // Tampilkan notifikasi proses
         showToast("Mempersiapkan file unduhan...");
-        
         html2canvas(collageContainer, { 
             scale: 2,
             backgroundColor: '#ffffff'
         }).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'kolase-fokus-kolom.png';
+            link.download = 'kolase-gambar-utuh.png';
             link.click();
-
-            // Tampilkan notifikasi sukses setelah proses selesai
             showToast("Unduhan telah dimulai!");
         });
     });
@@ -225,6 +194,31 @@
     });
     
     setColumnCount(columnSlider.value);
+    </script>
+    
+    <style>
+        #download-toast {
+            display: block; /* Dikelola oleh JS, jadi block saja */
+            visibility: hidden; /* Sembunyikan dengan visibility */
+            opacity: 0; /* dan opacity */
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out, visibility 0.5s;
+        }
+        #download-toast.show {
+            transform: translateX(0);
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+    <script>
+        // Perbaikan script toast agar lebih andal
+        function showToast(message) {
+            clearTimeout(toastTimeout);
+            toastElement.textContent = message;
+            toastElement.classList.add('show');
+            toastTimeout = setTimeout(() => {
+                toastElement.classList.remove('show');
+            }, 3000);
+        }
     </script>
 
 </body>
