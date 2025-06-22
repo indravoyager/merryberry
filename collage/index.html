@@ -3,302 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolase Maker - Versi Stabil</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <title>Tes Tombol - Debug</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            --bg-color: #121212;
-            --container-bg: #1e1e1e;
-            --text-color: #e0e0e0;
-            --accent-color: #00ff99;
-            --border-color: #333333;
-            --input-bg: #2a2a2a;
-        }
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: #121212;
+            color: #e0e0e0;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-            overflow: hidden;
+            padding: 40px;
         }
-
-        .page-wrapper {
-            display: flex;
-            width: 100%;
-            max-width: 1400px;
-            height: 90vh;
-            background-color: var(--container-bg);
+        .container {
+            width: 90%;
+            max-width: 900px;
+            background-color: #1e1e1e;
+            padding: 40px;
             border-radius: 16px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-
-        /* --- Panel Kiri (Kontrol) --- */
-        .control-panel {
-            flex: 2;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid var(--border-color);
-            overflow-y: auto;
-        }
-        .control-panel h1 {
-            font-size: 2em;
-            margin: 0 0 20px 0;
             text-align: center;
         }
         .button-row {
+            margin: 20px 0;
             display: flex;
             gap: 15px;
             justify-content: center;
-            margin-bottom: 20px;
         }
         .btn {
-            background-color: var(--accent-color);
+            background-color: #00ff99;
             color: #121212;
-            padding: 10px 24px;
+            padding: 12px 28px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 500;
-            transition: transform 0.2s ease;
-        }
-        .btn:hover {
-            transform: scale(1.05);
-        }
-        .controls-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .slider-controls {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            justify-content: space-between;
-        }
-        #review-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 10px;
-            background-color: rgba(0,0,0,0.2);
-            border-radius: 8px;
-            margin-top: 15px;
-            min-height: 100px;
-        }
-        #review-container img {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 6px;
-        }
-
-        /* --- Panel Kanan (Preview) --- */
-        .preview-panel {
-            flex: 3;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        .preview-panel h2 {
-            margin: 0 0 15px 0;
-            font-size: 1.5em;
-            color: #eee;
-            text-align: left;
-        }
-        .collage-wrapper {
-            flex-grow: 1;
-            overflow-y: auto;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 5px;
         }
         #collage-container {
+            margin-top: 20px;
+            padding: 10px;
+            border: 2px dashed #333;
+            min-height: 200px;
             display: grid;
-            gap: 5px;
-            grid-template-columns: repeat(var(--column-count, 3), 1fr);
-            grid-auto-rows: 200px; /* Tinggi baris tetap untuk grid yang rapi */
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
         }
         #collage-container img {
             width: 100%;
-            height: 100%;
-            object-fit: cover; /* Gambar di-crop agar grid penuh */
-            cursor: move;
-        }
-        .sortable-ghost {
-            opacity: 0.4;
-            background-color: var(--accent-color);
-        }
-
-        /* --- Notifikasi Toast (Diperbaiki) --- */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background-color: #333;
-            color: #fff;
-            padding: 16px 24px;
-            border-radius: 8px;
-            z-index: 1000;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.4s ease-in-out;
-            pointer-events: none; /* KUNCI: Tidak bisa diklik saat tersembunyi */
-        }
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto; /* Bisa diklik saat muncul */
+            height: auto;
         }
     </style>
 </head>
 <body>
 
-    <div class="page-wrapper">
-        <div class="control-panel">
-            <h1>Kolase Maker</h1>
-            <div class="button-row">
-                <button class="btn" onclick="document.getElementById('image-input').click();">Pilih Gambar</button>
-                <button id="download-btn" class="btn">Unduh Kolase</button>
-            </div>
-            <div class="controls-wrapper">
-                <div class="slider-controls">
-                    <label for="column-slider">Jumlah Kolom:</label>
-                    <input type="range" id="column-slider" min="1" max="8" value="3">
-                    <span id="column-label">3</span>
-                </div>
-            </div>
-            <h2>Bank Gambar</h2>
-            <div id="review-container">
-                <p style="font-size: 14px; color: #888;">Gambar pilihan Anda akan muncul di sini.</p>
-            </div>
+    <div class="container">
+        <h1>Tes Tombol Sederhana</h1>
+        <p>Tujuan: Memastikan tombol di bawah ini bisa diklik dan berfungsi.</p>
+        
+        <div class="button-row">
+            <button class="btn" id="select-btn">Pilih Gambar</button>
+            <button class="btn" id="download-btn">Tombol Unduh (Non-aktif)</button>
         </div>
-
-        <div class="preview-panel">
-            <h2>Preview Kolase (Drag & Drop)</h2>
-            <div class="collage-wrapper">
-                <div id="collage-container"></div>
-            </div>
-        </div>
+        
+        <div id="collage-container">
+             </div>
     </div>
     
     <input type="file" id="image-input" accept="image/*" multiple style="display: none;">
-    <div id="download-toast" class="toast"></div>
 
     <script>
-        // === DEKLARASI ELEMEN ===
+        // --- JAVASCRIPT SUPER SEDERHANA UNTUK DEBUG ---
+
+        // 1. Ambil elemen yang diperlukan
+        const selectBtn = document.getElementById('select-btn');
         const imageInput = document.getElementById('image-input');
         const collageContainer = document.getElementById('collage-container');
-        const reviewContainer = document.getElementById('review-container');
-        const downloadBtn = document.getElementById('download-btn');
-        const columnSlider = document.getElementById('column-slider');
-        const columnLabel = document.getElementById('column-label');
-        const toastElement = document.getElementById('download-toast');
-        
-        // === VARIABEL GLOBAL ===
-        let sortableInstance = null;
-        let toastTimeout;
 
-        // === FUNGSI-FUNGSI ===
-        function showToast(message) {
-            clearTimeout(toastTimeout);
-            toastElement.textContent = message;
-            toastElement.classList.add('show');
-            toastTimeout = setTimeout(() => {
-                toastElement.classList.remove('show');
-            }, 3000);
-        }
-        
-        function setColumnCount(count) {
-            collageContainer.style.setProperty('--column-count', count);
-            columnLabel.textContent = count;
-        }
+        // 2. Saat tombol "Pilih Gambar" diklik, picu input file yang tersembunyi
+        selectBtn.addEventListener('click', () => {
+            imageInput.click();
+        });
 
-        function initDragAndDrop() {
-            if (sortableInstance) sortableInstance.destroy();
-            sortableInstance = new Sortable(collageContainer, {
-                animation: 150,
-                ghostClass: 'sortable-ghost',
-                draggable: 'img',
-                onEnd: updateReviewPanelOrder
-            });
-        }
-        
-        function updateReviewPanelOrder() {
-            const collageImages = Array.from(collageContainer.querySelectorAll('img'));
-            collageImages.forEach(collageImg => {
-                const reviewImg = reviewContainer.querySelector(`img[src="${collageImg.src}"]`);
-                if(reviewImg) reviewContainer.appendChild(reviewImg);
-            });
-        }
+        // 3. Saat pengguna selesai memilih file
+        imageInput.addEventListener('change', (event) => {
+            // Beri tahu pengguna bahwa fungsi berjalan
+            alert('File dipilih! Menampilkan gambar...');
 
-        function handleFileSelect(event) {
-            collageContainer.innerHTML = '';
-            reviewContainer.innerHTML = '';
+            collageContainer.innerHTML = ''; // Kosongkan area
             const files = event.target.files;
-            if (files.length === 0) return;
 
-            Array.from(files).forEach(file => {
-                const objectURL = URL.createObjectURL(file);
-                const img = document.createElement('img');
-                img.src = objectURL;
-                const reviewImg = img.cloneNode(true);
-                
-                collageContainer.appendChild(img);
-                reviewContainer.appendChild(reviewImg);
-            });
-            initDragAndDrop();
-        }
-        
-        async function handleDownload() {
-            if (collageContainer.children.length === 0) {
-                showToast("Pilih gambar terlebih dahulu!");
-                return;
+            if (files.length > 0) {
+                // Loop dan tampilkan setiap gambar
+                for (const file of files) {
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    collageContainer.appendChild(img);
+                }
             }
-            showToast("Mempersiapkan unduhan...");
-            downloadBtn.disabled = true;
+        });
 
-            try {
-                const canvas = await html2canvas(collageContainer, {
-                    scale: 2, // Hasil 2x lebih tajam
-                    useCORS: true,
-                    backgroundColor: getComputedStyle(document.body).getPropertyValue('--container-bg')
-                });
-                const link = document.createElement('a');
-                link.href = canvas.toDataURL('image/png');
-                link.download = `kolase-final.png`;
-                link.click();
-                showToast("Unduhan telah dimulai!");
-            } catch (error) {
-                console.error("Gagal saat proses unduh:", error);
-                showToast("Gagal mengunduh. Coba kurangi jumlah gambar.");
-            } finally {
-                downloadBtn.disabled = false;
-            }
-        }
-
-        // === EVENT LISTENERS & INISIALISASI ===
-        imageInput.addEventListener('change', handleFileSelect);
-        downloadBtn.addEventListener('click', handleDownload);
-        columnSlider.addEventListener('input', (e) => setColumnCount(e.target.value));
-        setColumnCount(columnSlider.value);
     </script>
+
 </body>
 </html>
