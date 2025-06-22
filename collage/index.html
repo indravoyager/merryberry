@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collage Maker - Ukuran Output Tepat</title>
+    <title>Kolase Grid Sederhana</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +18,6 @@
             --accent-color: #00ff99;
             --accent-hover: #00e68a;
             --border-color: #333333;
-            --input-bg: #2a2a2a;
         }
 
         body {
@@ -29,30 +28,32 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            padding: 40px 20px;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
         }
 
-        .main-controls {
+        .container {
             width: 90%;
             max-width: 900px;
             background-color: var(--container-bg);
-            padding: 30px;
+            padding: 40px;
             border-radius: 16px;
             border: 1px solid var(--border-color);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             text-align: center;
-            margin-bottom: 30px;
         }
 
-        h1 { color: #ffffff; font-weight: 700; margin-top: 0; }
+        h1 {
+            color: #ffffff;
+            font-weight: 700;
+        }
         
-        .controls, .settings {
+        .controls {
+            margin: 20px 0;
             display: flex;
             gap: 15px;
             justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
         }
         
         .btn {
@@ -66,187 +67,96 @@
             font-weight: 500;
         }
         
-        .settings input[type="number"], .settings input[type="range"] {
-            vertical-align: middle;
-        }
-
-        .settings input[type="number"] {
-            width: 90px;
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 8px;
-            text-align: center;
-            font-size: 16px;
-            -moz-appearance: textfield;
-        }
-        .settings input[type="number"]::-webkit-outer-spin-button,
-        .settings input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        
         #image-input { display: none; }
 
-        /* Kontainer untuk Kolase (area preview) */
-        #preview-wrapper {
-            width: 100%;
-            overflow: auto; /* Jika kontainer lebih besar dari layar, bisa di-scroll */
-            padding: 20px;
-            border: 2px dashed var(--border-color);
-            border-radius: 8px;
-        }
-        
+        /* === KUNCI UTAMA KESEDERHANAAN ADA DI SINI === */
         #collage-container {
-            background-color: #000;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0;
-            /* Ukuran width dan height diatur oleh JS */
-            /* Ini membuat editor menjadi WYSIWYG */
-            margin: 0 auto; /* Menengahkan kontainer di dalam wrapper */
+            margin-top: 20px;
+            border: 2px dashed var(--border-color);
+            padding: 10px;
+            border-radius: 8px;
+            
+            /* 1. Menggunakan CSS Grid */
+            display: grid;
+
+            /* 2. Membuat kolom responsif secara otomatis.
+                  - `auto-fit`: Buat kolom sebanyak mungkin yang muat.
+                  - `minmax(150px, 1fr)`: Setiap kolom minimal 150px, dan bisa meregang (1fr) untuk mengisi ruang.
+            */
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            
+            /* 3. Memberi jarak antar sel grid */
+            gap: 10px;
         }
         
         #collage-container img {
-            flex-grow: 1;
+            /* Membuat gambar mengisi 100% sel gridnya */
+            width: 100%;
+            height: 100%;
+            
+            /* Mencegah gambar menjadi penyet (distorsi) */
             object-fit: cover;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
 
-    <div class="main-controls">
-        <h1>Collage Maker - Ukuran Output Tepat</h1>
+    <div class="container">
+        <h1>Kolase Grid Sederhana</h1>
         
         <div class="controls">
-            <button class="btn" onclick="document.getElementById('image-input').click();">1. Pilih Gambar</button>
+            <button class="btn" onclick="document.getElementById('image-input').click();">Pilih Gambar</button>
             <input type="file" id="image-input" accept="image/*" multiple>
-            <button id="download-btn" class="btn">3. Unduh Hasil</button>
-        </div>
-        <hr style="border-color: var(--border-color);">
-        
-        <div class="settings">
-            <label><b>2. Tentukan Ukuran Output Final:</b></label>
-            <input type="number" id="outputWidth" value="1920" min="100">
-            <label>&times;</label>
-            <input type="number" id="outputHeight" value="1080" min="100">
-            <span>px</span>
+            <button id="download-btn" class="btn">Unduh Kolase</button>
         </div>
         
-        <div class="settings">
-            <label>Kepadatan/Skala Gambar:</label>
-            <input type="range" id="imageIdealHeight" min="50" max="500" value="150">
-            <span id="idealHeightValue">150px</span>
-        </div>
-    </div>
-    
-    <div id="preview-wrapper">
         <div id="collage-container">
-            <p style="color: #888; padding: 20px;">Silakan pilih gambar...</p>
-        </div>
+            </div>
     </div>
 
     <script>
+    // === JAVASCRIPT YANG SANGAT SEDERHANA ===
+
     const imageInput = document.getElementById('image-input');
     const collageContainer = document.getElementById('collage-container');
     const downloadBtn = document.getElementById('download-btn');
-    
-    // Mengambil elemen kontrol baru
-    const outputWidthInput = document.getElementById('outputWidth');
-    const outputHeightInput = document.getElementById('outputHeight');
-    const imageIdealHeightSlider = document.getElementById('imageIdealHeight');
-    const idealHeightValue = document.getElementById('idealHeightValue');
 
-    // Fungsi untuk mengubah ukuran kontainer preview
-    const updateContainerSize = () => {
-        const width = outputWidthInput.value;
-        const height = outputHeightInput.value;
+    // Event listener saat pengguna memilih file
+    imageInput.addEventListener('change', () => {
+        // 1. Kosongkan kontainer dari gambar sebelumnya
+        collageContainer.innerHTML = '';
         
-        // Mencegah ukuran 0 atau negatif
-        if (width > 0 && height > 0) {
-            collageContainer.style.width = width + 'px';
-            collageContainer.style.height = height + 'px';
-        }
-        // Setelah ukuran kontainer diubah, render ulang layout gambar
-        displayImages(); 
-    };
-
-    // Fungsi utama untuk me-render gambar di dalam kontainer
-    const displayImages = () => {
+        // 2. Ambil semua file yang dipilih
         const files = imageInput.files;
-        if (files.length === 0) {
-            collageContainer.innerHTML = '<p style="color: #888; padding: 20px;">Silakan pilih gambar...</p>';
-            return;
-        }
 
-        collageContainer.innerHTML = ''; // Selalu bersihkan sebelum render
-        const idealHeight = imageIdealHeightSlider.value;
-
+        // 3. Loop untuk setiap file dan tampilkan
         for (const file of files) {
             const img = document.createElement('img');
             img.src = URL.createObjectURL(file);
-            // Tinggi gambar menjadi "anjuran" untuk kepadatan
-            img.style.height = idealHeight + 'px';
-            // Lebar dasar bisa kita set sama dengan tinggi untuk proporsi awal 1:1
-            img.style.flexBasis = idealHeight + 'px'; 
             collageContainer.appendChild(img);
         }
-    };
-
-    // --- Event Listeners ---
-
-    imageInput.addEventListener('change', () => {
-        // Saat gambar baru dipilih, pertama atur ukuran kontainer, lalu tampilkan gambar
-        updateContainerSize();
-    });
-    
-    // Jika ukuran output diubah, update ukuran kontainer
-    outputWidthInput.addEventListener('input', updateContainerSize);
-    outputHeightInput.addEventListener('input', updateContainerSize);
-
-    // Jika slider kepadatan diubah, cukup render ulang gambar
-    imageIdealHeightSlider.addEventListener('input', (event) => {
-        idealHeightValue.textContent = `${event.target.value}px`;
-        displayImages();
     });
 
+    // Event listener untuk tombol unduh
     downloadBtn.addEventListener('click', () => {
-        if (imageInput.files.length === 0) {
+        if (collageContainer.children.length === 0) {
             alert("Silakan pilih gambar terlebih dahulu!");
             return;
         }
 
-        const finalWidth = parseInt(outputWidthInput.value);
-        const finalHeight = parseInt(outputHeightInput.value);
-
-        if (!(finalWidth > 0 && finalHeight > 0)) {
-            alert("Ukuran output final tidak valid!");
-            return;
-        }
-
-        alert(`Mempersiapkan file ${finalWidth}x${finalHeight}px...`);
-
-        // Logika download dengan `html2canvas` yang disesuaikan
+        alert("Mempersiapkan file unduhan...");
+        
+        // Menggunakan html2canvas untuk 'memfoto' area kolase
         html2canvas(collageContainer, {
-            // Memberi tahu html2canvas ukuran render yang tepat
-            width: finalWidth,
-            height: finalHeight,
-            // Opsi lain untuk kualitas
-            scale: 1, // Skala 1 karena kita sudah menentukan width/height secara manual
-            useCORS: true,
-            logging: false
+            scale: 2 // Meningkatkan resolusi hasil unduhan menjadi 2x lebih besar
         }).then(canvas => {
-            // Hasil 'canvas' akan memiliki dimensi TEPAT sesuai input
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = `kolase-${finalWidth}x${finalHeight}.png`;
+            link.download = 'kolase-simple.png';
             link.click();
         });
     });
-    
-    // Inisialisasi ukuran kontainer saat halaman pertama kali dimuat
-    updateContainerSize();
     </script>
 </body>
 </html>
