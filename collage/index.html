@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolase Grid Rapat & Notifikasi Kiri</title>
+    <title>Kolase Masonry</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -79,43 +79,44 @@
         
         #image-input { display: none; }
 
+        /* --- PERUBAHAN UTAMA PADA LAYOUT --- */
         #collage-container {
             margin-top: 20px;
-            border-radius: 8px;
-            display: grid;
-            background-color: #000; /* Latar belakang jika ada celah rendering */
-            overflow: hidden; /* Memastikan border-radius diterapkan pada gambar di sudut */
             
-            /* PERBAIKAN: Jarak antar gambar dihilangkan */
-            gap: 0;
-            
-            grid-template-columns: repeat(var(--column-count, 3), 1fr);
-            grid-auto-rows: 180px; 
+            /* Menggunakan CSS Columns untuk layout Masonry */
+            column-count: var(--column-count, 3);
+            column-gap: 0; /* Jarak antar kolom dihilangkan */
         }
         
-        #collage-container img {
-            width: 100%;
-            height: 100%;
-            /* PERBAIKAN: Gambar dibuat penuh (cover) */
-            object-fit: cover;
+        /* Setiap gambar dibungkus <figure> untuk mencegah terbelah */
+        #collage-container figure {
+            margin: 0;
+            display: grid; /* Menggunakan grid untuk menumpuk gambar */
+            grid-template-rows: 1fr auto;
+            margin-bottom: 0;
+            break-inside: avoid; /* Properti kunci agar gambar tidak terpotong antar kolom */
         }
 
-        /* PERBAIKAN: Notifikasi Toast di Kiri Bawah */
+        #collage-container img {
+            width: 100%; /* Lebar gambar selalu mengisi kolomnya */
+            height: auto; /* Tinggi otomatis menjaga rasio aspek */
+            grid-row: 1 / -1;
+            grid-column: 1 / -1;
+        }
+
+        /* --- CSS Notifikasi Toast di Kiri Bawah --- */
         .toast {
             position: fixed;
             bottom: 20px;
-            left: 20px; /* Diubah dari 'right' ke 'left' */
+            left: 20px;
             background-color: #333;
             color: #fff;
             padding: 16px 24px;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             z-index: 1000;
-            
-            /* Diubah agar bersembunyi ke kiri */
             transform: translateX(calc(-100% - 20px));
             visibility: hidden;
-            
             transition: transform 0.5s ease-in-out, visibility 0.5s;
         }
 
@@ -128,7 +129,7 @@
 <body>
 
     <div class="container">
-        <h1>Kolase Grid Rapat</h1>
+        <h1>Kolase Masonry (Gambar Utuh)</h1>
         
         <div class="controls">
             <div class="button-row">
@@ -148,8 +149,7 @@
         </div>
     </div>
 
-    <div id="download-toast" class="toast">
-        </div>
+    <div id="download-toast" class="toast"></div>
 
     <script>
     const imageInput = document.getElementById('image-input');
@@ -178,9 +178,14 @@
         collageContainer.innerHTML = '';
         const files = imageInput.files;
         for (const file of files) {
+            // --- PERUBAHAN: Membungkus <img> dengan <figure> ---
+            const figure = document.createElement('figure');
             const img = document.createElement('img');
+            
             img.src = URL.createObjectURL(file);
-            collageContainer.appendChild(img);
+            
+            figure.appendChild(img);
+            collageContainer.appendChild(figure);
         }
     });
 
@@ -191,11 +196,13 @@
         }
         showToast("Mempersiapkan file unduhan...");
         html2canvas(collageContainer, { 
-            scale: 2
+            // --- PERUBAHAN: Skala 1:1 untuk hasil sesuai preview ---
+            scale: 1,
+            backgroundColor: '#1e1e1e' // Latar belakang disamakan dengan kontainer
         }).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'kolase-rapat.png';
+            link.download = 'kolase-masonry.png';
             link.click();
             showToast("Unduhan telah dimulai!");
         });
