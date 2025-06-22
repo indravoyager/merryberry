@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolase Pro (Hybrid Render)</title>
+    <title>Kolase Maker Final</title>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,257 +13,216 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;900&display=swap" rel="stylesheet">
 
     <style>
-        /* CSS dari versi sebelumnya tidak perlu diubah signifikan, hanya memastikan Masonry berjalan baik */
         :root {
             --bg-color: #121212;
             --container-bg: #1e1e1e;
             --text-color: #e0e0e0;
             --accent-color: #00ff99;
             --border-color: #333333;
-            --input-bg: #2a2a2a;
         }
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
-            box-sizing: border-box;
         }
-        .page-wrapper {
-            display: flex;
-            width: 100%;
-            max-width: 1400px;
-            height: 90vh;
+
+        .container {
+            width: 90%;
+            max-width: 1000px; /* Sedikit lebih lebar */
+            margin: 0 auto; /* Menengahkan kontainer */
             background-color: var(--container-bg);
+            padding: 40px;
             border-radius: 16px;
             border: 1px solid var(--border-color);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
+            text-align: center;
         }
-        .control-panel {
-            flex: 2;
-            padding: 30px;
+
+        h1 {
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 2.5em;
+            margin: 0 0 20px 0;
+        }
+        
+        .controls {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
-            background-color: rgba(0,0,0,0.1);
-            border-right: 1px solid var(--border-color);
-            overflow-y: auto;
+            align-items: center;
+            gap: 20px;
         }
-        .preview-panel {
-            flex: 3;
-            padding: 30px;
+        
+        .button-row, .slider-controls {
             display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
         }
-        .control-panel h1 { font-size: 2em; margin: 0 0 20px 0; text-align: center; }
-        .button-row { display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; }
-        .btn { background-color: var(--accent-color); color: #121212; padding: 10px 24px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; }
-        .controls-wrapper { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
-        .slider-controls { display: flex; gap: 10px; align-items: center; justify-content: space-between; }
-        .output-settings-group { border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; }
-        .output-settings-group h3 { margin: 0 0 15px 0; font-weight: 500; text-align: center;}
-        .output-controls, .preset-buttons { display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .output-controls { margin-bottom: 15px; }
-        .output-controls input[type="number"] { width: 100px; background-color: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; text-align: center; }
-        .preset-btn { border: 1px solid var(--border-color); background-color: transparent; color: var(--text-color); padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 12px; }
-        .preset-btn.active { background-color: var(--accent-color); color: #121212; border-color: var(--accent-color); font-weight: 500; }
-        #review-container { display: flex; flex-wrap: wrap; gap: 8px; flex-grow: 1; overflow-y: auto; padding: 10px; background-color: rgba(0,0,0,0.2); border-radius: 8px; }
-        #review-container img { width: 70px; height: 70px; object-fit: cover; border-radius: 6px; }
-        .preview-panel h2 { margin: 0 0 15px 0; font-size: 1.5em; color: #eee; text-align: left; }
-        .collage-wrapper { flex-grow: 1; overflow-y: auto; padding-right: 10px; }
-        #collage-container { column-width: var(--column-width, 250px); column-gap: 5px; }
-        #collage-container figure { margin: 0 0 5px 0; display: inline-block; width: 100%; break-inside: avoid; cursor: move; }
-        #collage-container img { width: 100%; height: auto; display: block; border-radius: 4px; }
+        .btn {
+            background-color: var(--accent-color);
+            color: #121212;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        #image-input { display: none; }
+
+        /* --- LAYOUT GRID YANG DISEDERHANAKAN --- */
+        #collage-container {
+            margin-top: 20px;
+            display: grid;
+            gap: 5px; /* Jarak kecil agar ada pemisah visual */
+            
+            /* Kolom diatur oleh slider (JavaScript) */
+            grid-template-columns: repeat(var(--column-count, 3), 1fr);
+            
+            /* Tinggi setiap baris dibuat tetap agar rapi */
+            grid-auto-rows: 200px;
+        }
+        
+        #collage-container img {
+            width: 100%;
+            height: 100%;
+            /* Gambar mengisi penuh selnya (cropping), tidak penyet */
+            object-fit: cover; 
+            border-radius: 4px;
+            cursor: move;
+        }
+        
         .sortable-ghost { opacity: 0.4; }
-        .toast { position: fixed; bottom: 20px; left: 20px; background-color: #333; color: #fff; padding: 16px 24px; border-radius: 8px; z-index: 1000; opacity: 0; transform: translateX(calc(-100% - 20px)); transition: all 0.5s; }
-        .toast.show { opacity: 1; transform: translateX(0); }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #333;
+            color: #fff;
+            padding: 16px 24px;
+            border-radius: 8px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: all 0.5s ease-in-out;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
     </style>
 </head>
 <body>
 
-    <div class="page-wrapper">
-        <div class="control-panel">
-            <h1>Kolase Maker</h1>
+    <div class="container">
+        <h1>Kolase Maker Final</h1>
+        <div class="controls">
             <div class="button-row">
                 <button class="btn" onclick="document.getElementById('image-input').click();">Pilih Gambar</button>
                 <button id="download-btn" class="btn">Unduh Kolase</button>
             </div>
-            <div class="controls-wrapper">
-                <div class="slider-controls">
-                    <label for="column-width-slider">Ukuran Preview:</label>
-                    <input type="range" id="column-width-slider" min="150" max="400" value="250">
-                    <span id="column-width-label">250px</span>
-                </div>
-                <div class="output-settings-group">
-                    <h3>Resolusi Output Final (Grid)</h3>
-                    <div class="output-controls">
-                        <label for="output-width">Lebar:</label>
-                        <input type="number" id="output-width" value="4000" min="1000">
-                        <span>px</span>
-                    </div>
-                    <div class="preset-buttons">
-                         <button class="preset-btn" data-width="1920">HD</button>
-                         <button class="preset-btn active" data-width="4000">4K</button>
-                         <button class="preset-btn" data-width="8000">8K</button>
-                    </div>
-                </div>
-            </div>
-            <h2>Bank Gambar</h2>
-            <div id="review-container">
-                <p style="font-size: 14px; color: #888;">Gambar Anda akan muncul di sini.</p>
+            
+            <div id="column-controls" class="slider-controls">
+                <label for="column-slider">Jumlah Gambar per Baris:</label>
+                <input type="range" id="column-slider" min="1" max="8" value="4">
+                <span id="column-label">4</span>
             </div>
         </div>
-
-        <div class="preview-panel">
-            <h2>Preview (Layout Masonry)</h2>
-            <div class="collage-wrapper">
-                <div id="collage-container"></div>
-            </div>
-        </div>
+        
+        <div id="collage-container"></div>
     </div>
     
-    <input type="file" id="image-input" accept="image/*" multiple style="display: none;">
     <div id="download-toast" class="toast"></div>
 
     <script>
+        // --- JAVASCRIPT FINAL YANG DISEDERHANAKAN ---
+
         const imageInput = document.getElementById('image-input');
         const collageContainer = document.getElementById('collage-container');
-        const reviewContainer = document.getElementById('review-container');
         const downloadBtn = document.getElementById('download-btn');
-        const columnWidthSlider = document.getElementById('column-width-slider');
-        const columnWidthLabel = document.getElementById('column-width-label');
-        const outputWidthInput = document.getElementById('output-width');
-        const presetButtons = document.querySelectorAll('.preset-btn');
+        const columnSlider = document.getElementById('column-slider');
+        const columnLabel = document.getElementById('column-label');
         const toastElement = document.getElementById('download-toast');
-        
-        let originalFiles = [];
         let sortableInstance = null;
         let toastTimeout;
 
-        // --- FUNGSI-FUNGSI UTAMA ---
-
-        function showToast(message) { /* ... fungsi toast ... */ }
-        function setColumnWidth(width) { /* ... fungsi atur lebar kolom ... */ }
-        function syncUiState() { /* ... fungsi sinkronisasi UI ... */ }
-
-        function reorderFiles() {
-            const figures = Array.from(collageContainer.querySelectorAll('figure'));
-            const newFileOrder = figures.map(figure => {
-                const img = figure.querySelector('img');
-                return originalFiles.find(file => URL.createObjectURL(file) === img.src);
-            });
-            originalFiles = newFileOrder.filter(f => f);
+        function showToast(message) {
+            clearTimeout(toastTimeout);
+            toastElement.textContent = message;
+            toastElement.classList.add('show');
+            toastTimeout = setTimeout(() => {
+                toastElement.classList.remove('show');
+            }, 3000);
         }
 
-        function initDragAndDrop() {
-            if (sortableInstance) sortableInstance.destroy();
-            sortableInstance = new Sortable(collageContainer, {
-                animation: 150, ghostClass: 'sortable-ghost', draggable: 'figure', onEnd: reorderFiles
-            });
+        function setColumnCount(count) {
+            collageContainer.style.setProperty('--column-count', count);
+            columnLabel.textContent = count;
         }
 
         function handleFileSelect(event) {
-            originalFiles = Array.from(event.target.files);
             collageContainer.innerHTML = '';
-            reviewContainer.innerHTML = '';
+            const files = event.target.files;
+            if (files.length === 0) return;
 
-            if (originalFiles.length === 0) return;
-
-            originalFiles.forEach((file) => {
-                const objectURL = URL.createObjectURL(file);
-                // Buat preview di area kerja
-                const figure = document.createElement('figure');
+            Array.from(files).forEach(file => {
                 const img = document.createElement('img');
-                img.src = objectURL;
-                figure.appendChild(img);
-                collageContainer.appendChild(figure);
-                // Buat thumbnail di bank gambar
-                const reviewImg = document.createElement('img');
-                reviewImg.src = objectURL;
-                reviewContainer.appendChild(reviewImg);
+                img.src = URL.createObjectURL(file);
+                collageContainer.appendChild(img);
             });
+            
             initDragAndDrop();
         }
-        
-        // --- FUNGSI DOWNLOAD BARU YANG CANGGIH ---
-        async function handleDownload() {
-            if (originalFiles.length === 0) { showToast("Silakan pilih gambar terlebih dahulu!"); return; }
-            const targetWidth = parseInt(outputWidthInput.value);
-            const columnCount = Math.round(collageContainer.clientWidth / parseInt(columnWidthSlider.value)) || parseInt(columnWidthSlider.max - columnWidthSlider.value) / 50 + 1;
 
-
-            if (!(targetWidth > 0)) { showToast("Lebar output tidak valid!"); return; }
-            showToast("Mulai render resolusi tinggi...");
-
-            const finalCanvas = document.createElement('canvas');
-            const ctx = finalCanvas.getContext('2d');
-            
-            const rowCount = Math.ceil(originalFiles.length / columnCount);
-            const cellWidth = Math.floor(targetWidth / columnCount);
-            // Asumsikan sel grid punya rasio 4:3 untuk menghitung tinggi
-            const cellHeight = Math.floor(cellWidth * 0.75);
-            const targetHeight = cellHeight * rowCount;
-
-            finalCanvas.width = targetWidth;
-            finalCanvas.height = targetHeight;
-            ctx.fillStyle = '#121212'; // Latar belakang gelap
-            ctx.fillRect(0, 0, targetWidth, targetHeight);
-
-            const drawPromises = originalFiles.map((file, index) => {
-                return new Promise(resolve => {
-                    const img = new Image();
-                    img.src = URL.createObjectURL(file);
-                    img.onload = () => {
-                        const row = Math.floor(index / columnCount);
-                        const col = index % columnCount;
-                        const dX = col * cellWidth;
-                        const dY = row * cellHeight;
-                        
-                        // Logika `object-fit: cover` manual
-                        const cellAspectRatio = cellWidth / cellHeight;
-                        const imgAspectRatio = img.naturalWidth / img.naturalHeight;
-                        let sX = 0, sY = 0, sWidth = img.naturalWidth, sHeight = img.naturalHeight;
-
-                        if (imgAspectRatio > cellAspectRatio) { // Gambar lebih lebar dari sel
-                            sWidth = img.naturalHeight * cellAspectRatio;
-                            sX = (img.naturalWidth - sWidth) / 2;
-                        } else { // Gambar lebih tinggi dari sel
-                            sHeight = img.naturalWidth / cellAspectRatio;
-                            sY = (img.naturalHeight - sHeight) / 2;
-                        }
-                        
-                        ctx.drawImage(img, sX, sY, sWidth, sHeight, dX, dY, cellWidth, cellHeight);
-                        resolve();
-                    };
-                });
+        function initDragAndDrop() {
+            if (sortableInstance) {
+                sortableInstance.destroy();
+            }
+            sortableInstance = new Sortable(collageContainer, {
+                animation: 150,
+                ghostClass: 'sortable-ghost',
             });
-
-            await Promise.all(drawPromises);
-            showToast("Render selesai, memulai unduhan...");
-
-            const link = document.createElement('a');
-            link.href = finalCanvas.toDataURL('image/png', 0.95);
-            link.download = `kolase-grid-hires-${targetWidth}px.png`;
-            link.click();
-            showToast("Unduhan telah dimulai!");
         }
 
-        // --- EVENT LISTENERS & INISIALISASI ---
+        function handleDownload() {
+            if (collageContainer.children.length === 0) {
+                showToast("Silakan pilih gambar terlebih dahulu!");
+                return;
+            }
+            showToast("Mempersiapkan unduhan...");
+            
+            // Menggunakan html2canvas dengan skala 2x untuk kualitas lebih baik
+            html2canvas(collageContainer, { 
+                scale: 2,
+                backgroundColor: getComputedStyle(document.body).getPropertyValue('--container-bg')
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = 'kolase-final.png';
+                link.click();
+                showToast("Unduhan telah dimulai!");
+            }).catch(error => {
+                console.error("Gagal mengunduh:", error);
+                showToast("Terjadi kesalahan saat mengunduh.");
+            });
+        }
+
+        // --- EVENT LISTENERS ---
         imageInput.addEventListener('change', handleFileSelect);
         downloadBtn.addEventListener('click', handleDownload);
-        columnWidthSlider.addEventListener('input', (e) => setColumnWidth(e.target.value));
-        outputWidthInput.addEventListener('input', syncUiState);
-        presetButtons.forEach(button => {
-            button.addEventListener('click', () => { outputWidthInput.value = button.dataset.width; syncUiState(); });
-        });
+        columnSlider.addEventListener('input', (e) => setColumnCount(e.target.value));
 
-        setColumnWidth(columnWidthSlider.value);
-        syncUiState();
-        function showToast(message) { clearTimeout(toastTimeout); toastElement.textContent = message; toastElement.style.opacity = 1; toastElement.style.transform = 'translateX(0)'; toastTimeout = setTimeout(() => { toastElement.style.opacity = 0; toastElement.style.transform = 'translateX(calc(-100% - 20px))'; }, 3000); }
+        // --- INISIALISASI AWAL ---
+        setColumnCount(columnSlider.value);
     </script>
+
 </body>
 </html>
