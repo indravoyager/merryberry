@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolase Grid Sederhana</title>
+    <title>Kolase dengan Jarak Putih</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,15 +47,22 @@
         h1 {
             color: #ffffff;
             font-weight: 700;
+            margin-bottom: 20px;
         }
         
         .controls {
             margin: 20px 0;
             display: flex;
+            flex-direction: column;
+            align-items: center;
             gap: 15px;
-            justify-content: center;
         }
         
+        .button-row {
+            display: flex;
+            gap: 15px;
+        }
+
         .btn {
             background-color: var(--accent-color);
             color: #121212;
@@ -67,34 +74,42 @@
             font-weight: 500;
         }
         
+        .direction-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .direction-controls label {
+            color: var(--text-color);
+            font-size: 16px;
+        }
+        
         #image-input { display: none; }
 
-        /* === KUNCI UTAMA KESEDERHANAAN ADA DI SINI === */
         #collage-container {
             margin-top: 20px;
             border: 2px dashed var(--border-color);
             padding: 10px;
             border-radius: 8px;
-            
-            /* 1. Menggunakan CSS Grid */
             display: grid;
-
-            /* 2. Membuat kolom responsif secara otomatis.
-                  - `auto-fit`: Buat kolom sebanyak mungkin yang muat.
-                  - `minmax(150px, 1fr)`: Setiap kolom minimal 150px, dan bisa meregang (1fr) untuk mengisi ruang.
-            */
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            
-            /* 3. Memberi jarak antar sel grid */
             gap: 10px;
+            background-color: #ffffff; 
+        }
+        
+        #collage-container.horizontal {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-auto-rows: auto;
+        }
+        
+        #collage-container.vertical {
+            grid-template-columns: 1fr;
+            grid-auto-rows: minmax(150px, auto);
         }
         
         #collage-container img {
-            /* Membuat gambar mengisi 100% sel gridnya */
             width: 100%;
             height: 100%;
-            
-            /* Mencegah gambar menjadi penyet (distorsi) */
             object-fit: cover;
             border-radius: 4px;
         }
@@ -103,34 +118,38 @@
 <body>
 
     <div class="container">
-        <h1>Kolase Grid Sederhana</h1>
+        <h1>Kolase dengan Jarak Putih</h1>
         
         <div class="controls">
-            <button class="btn" onclick="document.getElementById('image-input').click();">Pilih Gambar</button>
-            <input type="file" id="image-input" accept="image/*" multiple>
-            <button id="download-btn" class="btn">Unduh Kolase</button>
+            <div class="button-row">
+                <button class="btn" onclick="document.getElementById('image-input').click();">Pilih Gambar</button>
+                <input type="file" id="image-input" accept="image/*" multiple>
+                <button id="download-btn" class="btn">Unduh Kolase</button>
+            </div>
+            
+            <div class="direction-controls">
+                <label>Arah Susunan:</label>
+                <input type="radio" id="horizontal" name="direction" value="horizontal" checked>
+                <label for="horizontal">Ke Samping</label>
+                
+                <input type="radio" id="vertical" name="direction" value="vertical">
+                <label for="vertical">Ke Bawah</label>
+            </div>
         </div>
         
-        <div id="collage-container">
+        <div id="collage-container" class="horizontal">
             </div>
     </div>
 
     <script>
-    // === JAVASCRIPT YANG SANGAT SEDERHANA ===
-
     const imageInput = document.getElementById('image-input');
     const collageContainer = document.getElementById('collage-container');
     const downloadBtn = document.getElementById('download-btn');
+    const directionRadios = document.querySelectorAll('input[name="direction"]');
 
-    // Event listener saat pengguna memilih file
     imageInput.addEventListener('change', () => {
-        // 1. Kosongkan kontainer dari gambar sebelumnya
         collageContainer.innerHTML = '';
-        
-        // 2. Ambil semua file yang dipilih
         const files = imageInput.files;
-
-        // 3. Loop untuk setiap file dan tampilkan
         for (const file of files) {
             const img = document.createElement('img');
             img.src = URL.createObjectURL(file);
@@ -138,25 +157,41 @@
         }
     });
 
-    // Event listener untuk tombol unduh
     downloadBtn.addEventListener('click', () => {
         if (collageContainer.children.length === 0) {
             alert("Silakan pilih gambar terlebih dahulu!");
             return;
         }
-
         alert("Mempersiapkan file unduhan...");
-        
-        // Menggunakan html2canvas untuk 'memfoto' area kolase
-        html2canvas(collageContainer, {
-            scale: 2 // Meningkatkan resolusi hasil unduhan menjadi 2x lebih besar
+        html2canvas(collageContainer, { 
+            scale: 2,
+            backgroundColor: '#ffffff'
         }).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'kolase-simple.png';
+            link.download = 'kolase-jarak-putih.png';
             link.click();
         });
     });
+    
+    directionRadios.forEach(radio => {
+        radio.addEventListener('change', (event) => {
+            if (event.target.value === 'horizontal') {
+                collageContainer.classList.remove('vertical');
+                collageContainer.classList.add('horizontal');
+            } else if (event.target.value === 'vertical') {
+                collageContainer.classList.remove('horizontal');
+                collageContainer.classList.add('vertical');
+            }
+        });
+    });
+    
+    if (document.getElementById('horizontal').checked) {
+        collageContainer.classList.add('horizontal');
+    } else {
+        collageContainer.classList.add('vertical');
+    }
     </script>
+
 </body>
 </html>
