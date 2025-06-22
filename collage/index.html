@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolase dengan UI Modern</title>
+    <title>Kolase Final (Versi Perbaikan)</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -22,7 +22,6 @@
             --border-color: #333333;
             --input-bg: #2a2a2a;
         }
-
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--bg-color);
@@ -35,7 +34,6 @@
             margin: 0;
             padding: 20px;
         }
-
         .container {
             width: 90%;
             max-width: 900px;
@@ -46,14 +44,12 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             text-align: center;
         }
-
         h1 {
             color: #ffffff;
             font-weight: 900;
             font-size: 2.5em;
             margin-bottom: 20px;
         }
-        
         .controls {
             margin: 20px 0;
             display: flex;
@@ -61,7 +57,6 @@
             align-items: center;
             gap: 20px;
         }
-        
         .button-row, .slider-controls {
             display: flex;
             gap: 15px;
@@ -70,7 +65,6 @@
             width: 100%;
             flex-wrap: wrap;
         }
-
         .btn {
             background-color: var(--accent-color);
             color: #121212;
@@ -82,35 +76,27 @@
             font-weight: 500;
             transition: transform 0.2s;
         }
-        .btn:hover {
-            transform: scale(1.05);
-        }
-        
+        .btn:hover { transform: scale(1.05); }
         #image-input { display: none; }
-
         #collage-container {
             margin-top: 20px;
             column-width: var(--column-width, 250px);
-            column-gap: 0;
+            column-gap: 5px;
         }
-        
         #collage-container figure {
-            margin: 0;
+            margin: 0 0 5px 0;
             display: inline-block;
             width: 100%;
             break-inside: avoid;
             cursor: move;
         }
-
         #collage-container img {
             width: 100%;
             height: auto;
             display: block;
+            border-radius: 4px;
         }
-        
         .sortable-ghost { opacity: 0.4; }
-        
-        /* --- UI MODERN BARU UNTUK PENGATURAN OUTPUT --- */
         .output-settings-group {
             width: 100%;
             border: 1px solid var(--border-color);
@@ -119,76 +105,32 @@
             margin-top: 10px;
             background-color: rgba(0,0,0,0.1);
         }
-        .output-settings-group h3 {
-            margin: 0 0 20px 0;
-            color: #fff;
-            font-weight: 500;
-        }
-        .output-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .output-controls input[type="number"] {
-            width: 120px;
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 10px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 500;
-        }
-        .preset-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .preset-btn {
-            border: 1px solid var(--border-color);
-            background-color: transparent;
-            color: var(--text-color);
-            padding: 8px 16px;
-            border-radius: 20px; /* Bentuk pil */
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .preset-btn:hover {
-            background-color: var(--border-color);
-            border-color: #555;
-        }
-        .preset-btn.active {
-            background-color: var(--accent-color);
-            color: #121212;
-            border-color: var(--accent-color);
-            font-weight: 500;
-        }
-
-        .toast { /* ... styling toast ... */ }
+        .output-settings-group h3 { margin: 0 0 20px 0; color: #fff; font-weight: 500; }
+        .output-controls { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .output-controls input[type="number"] { width: 120px; background-color: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; text-align: center; font-size: 18px; font-weight: 500; }
+        .preset-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .preset-btn { border: 1px solid var(--border-color); background-color: transparent; color: var(--text-color); padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: all 0.2s ease; }
+        .preset-btn:hover { background-color: var(--border-color); border-color: #555; }
+        .preset-btn.active { background-color: var(--accent-color); color: #121212; border-color: var(--accent-color); font-weight: 500; }
+        .toast { position: fixed; bottom: 20px; left: 20px; background-color: #333; color: #fff; padding: 16px 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000; transform: translateX(calc(-100% - 20px)); opacity: 0; transition: transform 0.5s ease-in-out, opacity 0.5s; }
+        .toast.show { transform: translateX(0); opacity: 1; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Collage Maker</h1>
-        
+        <h1>Kolase Final</h1>
         <div class="controls">
             <div class="button-row">
                 <button class="btn" onclick="document.getElementById('image-input').click();">Pilih Gambar</button>
                 <input type="file" id="image-input" accept="image/*" multiple>
                 <button id="download-btn" class="btn">Unduh Kolase</button>
             </div>
-            
             <div class="slider-controls">
                 <label for="column-width-slider">Ukuran Gambar (Preview):</label>
                 <input type="range" id="column-width-slider" min="150" max="400" value="250">
                 <span id="column-width-label">250px</span>
             </div>
-            
             <div class="output-settings-group">
                 <h3>Resolusi & Kualitas Output</h3>
                 <div class="output-controls">
@@ -204,86 +146,150 @@
                 </div>
             </div>
         </div>
-        
         <div id="collage-container"></div>
     </div>
-
-    <div id="download-toast" class="toast" style="display:none; /* ... styling toast ... */"></div>
+    <div id="download-toast" class="toast"></div>
 
     <script>
-    const imageInput = document.getElementById('image-input');
-    const collageContainer = document.getElementById('collage-container');
-    const downloadBtn = document.getElementById('download-btn');
-    const columnWidthSlider = document.getElementById('column-width-slider');
-    const columnWidthLabel = document.getElementById('column-width-label');
-    const outputWidthInput = document.getElementById('output-width');
-    const toastElement = document.getElementById('download-toast');
-    
-    // Elemen UI baru
-    const presetButtons = document.querySelectorAll('.preset-btn');
-    
-    let originalFiles = [];
+        // --- 1. DEKLARASI ELEMEN DAN VARIABEL ---
+        const imageInput = document.getElementById('image-input');
+        const collageContainer = document.getElementById('collage-container');
+        const downloadBtn = document.getElementById('download-btn');
+        const columnWidthSlider = document.getElementById('column-width-slider');
+        const columnWidthLabel = document.getElementById('column-width-label');
+        const outputWidthInput = document.getElementById('output-width');
+        const toastElement = document.getElementById('download-toast');
+        const presetButtons = document.querySelectorAll('.preset-btn');
+        
+        let originalFiles = []; // Sumber data utama
+        let toastTimeout;
+        let sortableInstance = null;
 
-    // --- FUNGSI BARU UNTUK SINKRONISASI UI ---
-    function syncUiState() {
-        const currentValue = outputWidthInput.value;
-        presetButtons.forEach(btn => {
-            if (btn.dataset.width === currentValue) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
+        // --- 2. KUMPULAN FUNGSI-FUNGSI ---
+
+        function showToast(message) {
+            clearTimeout(toastTimeout);
+            toastElement.textContent = message;
+            toastElement.classList.add('show');
+            toastTimeout = setTimeout(() => {
+                toastElement.classList.remove('show');
+            }, 3000);
+        }
+
+        function setColumnWidth(width) {
+            collageContainer.style.setProperty('--column-width', width + 'px');
+            columnWidthLabel.textContent = width + 'px';
+        }
+
+        function syncUiState() {
+            const currentValue = outputWidthInput.value;
+            presetButtons.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.width === currentValue);
+            });
+        }
+        
+        function reorderFiles() {
+            const figures = Array.from(collageContainer.querySelectorAll('figure'));
+            const newFileOrder = figures.map(figure => {
+                const originalIndex = parseInt(figure.dataset.originalIndex);
+                return originalFiles[originalIndex];
+            });
+            originalFiles = newFileOrder; // Update array utama
+            
+            // Beri ulang index agar drag selanjutnya tetap benar
+            originalFiles.forEach((file, newIndex) => {
+                figures[newIndex].dataset.originalIndex = newIndex;
+            });
+        }
+
+        function initDragAndDrop() {
+            if (sortableInstance) {
+                sortableInstance.destroy(); // Hancurkan instance lama jika ada
             }
+            sortableInstance = new Sortable(collageContainer, {
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                draggable: 'figure',
+                onEnd: reorderFiles // Panggil fungsi reorder setelah drop
+            });
+        }
+        
+        async function handleDownload() {
+            if (originalFiles.length === 0) {
+                showToast("Silakan pilih gambar terlebih dahulu!");
+                return;
+            }
+            const targetWidth = parseInt(outputWidthInput.value);
+            if (!(targetWidth > 0)) {
+                showToast("Lebar output tidak valid!");
+                return;
+            }
+            showToast("Mempersiapkan layout final...");
+
+            const clone = collageContainer.cloneNode(true);
+            clone.style.position = 'absolute';
+            clone.style.left = '-9999px';
+            clone.style.top = '0px';
+            clone.style.width = targetWidth + 'px';
+            document.body.appendChild(clone);
+
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            try {
+                const canvas = await html2canvas(clone, {
+                    scale: 1,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color')
+                });
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.download = `kolase-final-${targetWidth}px.png`;
+                link.click();
+                showToast("Unduhan telah dimulai!");
+            } catch (error) {
+                console.error("Gagal membuat kanvas:", error);
+                showToast("Gagal memproses unduhan.");
+            } finally {
+                document.body.removeChild(clone);
+            }
+        }
+
+        function handleFileSelect(event) {
+            originalFiles = Array.from(event.target.files);
+            collageContainer.innerHTML = '';
+            
+            if (originalFiles.length === 0) return;
+
+            originalFiles.forEach((file, index) => {
+                const figure = document.createElement('figure');
+                figure.dataset.originalIndex = index; // Simpan index asli
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                figure.appendChild(img);
+                collageContainer.appendChild(figure);
+            });
+            
+            initDragAndDrop();
+        }
+
+        // --- 3. EVENT LISTENERS (PENYAMBUNG FUNGSI) ---
+
+        imageInput.addEventListener('change', handleFileSelect);
+        downloadBtn.addEventListener('click', handleDownload);
+        columnWidthSlider.addEventListener('input', (e) => setColumnWidth(e.target.value));
+        outputWidthInput.addEventListener('input', syncUiState);
+        presetButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                outputWidthInput.value = button.dataset.width;
+                syncUiState();
+            });
         });
-    }
 
-    // Event listener untuk tombol preset
-    presetButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const width = button.dataset.width;
-            outputWidthInput.value = width;
-            syncUiState();
-        });
-    });
+        // --- 4. INISIALISASI AWAL ---
+        setColumnWidth(columnWidthSlider.value);
+        syncUiState();
 
-    // Event listener untuk input manual
-    outputWidthInput.addEventListener('input', syncUiState);
-
-
-    // ... (fungsi-fungsi lain tetap sama: showToast, setColumnWidth, initDragAndDrop, dll.)
-    
-    const setColumnWidth = (width) => {
-        collageContainer.style.setProperty('--column-width', width + 'px');
-        columnWidthLabel.textContent = width + 'px';
-    };
-
-    const initDragAndDrop = () => {
-        // ...
-    };
-
-    imageInput.addEventListener('change', (event) => {
-        // ...
-    });
-    
-    columnWidthSlider.addEventListener('input', (event) => {
-        setColumnWidth(event.target.value);
-    });
-    
-    downloadBtn.addEventListener('click', async () => {
-        // ... (fungsi download tetap sama)
-    });
-    
-    // Inisialisasi awal
-    setColumnWidth(columnWidthSlider.value);
-    syncUiState(); // Panggil saat pertama kali load
-    
-    // Definisi fungsi-fungsi yang tidak berubah
-    function showToast(message) { /* ... */ }
-    const reindexFigures = () => { /* ... */ };
-    imageInput.addEventListener('change', (event) => { originalFiles = Array.from(event.target.files); collageContainer.innerHTML = ''; originalFiles.forEach((file, index) => { const figure = document.createElement('figure'); figure.dataset.index = index; const img = document.createElement('img'); img.src = URL.createObjectURL(file); figure.appendChild(img); collageContainer.appendChild(figure); }); initDragAndDrop(); });
-    const initDragAndDrop = () => { new Sortable(collageContainer, { animation: 150, ghostClass: 'sortable-ghost', draggable: 'figure', onEnd: () => { const newOrderedFigures = Array.from(collageContainer.querySelectorAll('figure')); const newOriginalFiles = newOrderedFigures.map(figure => originalFiles[parseInt(figure.dataset.index)]); originalFiles = newOriginalFiles; newOrderedFigures.forEach((figure, newIndex) => { figure.dataset.index = newIndex; }); } }); };
-    downloadBtn.addEventListener('click', async () => { if (originalFiles.length === 0) { showToast("Silakan pilih gambar terlebih dahulu!"); return; } const targetWidth = parseInt(outputWidthInput.value); if (!(targetWidth > 0)) { showToast("Lebar output tidak valid!"); return; } showToast("Mempersiapkan layout final..."); const clone = collageContainer.cloneNode(true); clone.style.position = 'absolute'; clone.style.left = '-9999px'; clone.style.top = '0px'; clone.style.width = targetWidth + 'px'; document.body.appendChild(clone); setTimeout(() => { html2canvas(clone, { scale: 1, useCORS: true, allowTaint: true, backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color') }).then(canvas => { const link = document.createElement('a'); link.href = canvas.toDataURL('image/png', 1.0); link.download = `kolase-final-${targetWidth}px.png`; link.click(); showToast("Unduhan telah dimulai!"); }).finally(() => { document.body.removeChild(clone); }); }, 500); });
-    function showToast(message) { clearTimeout(toastTimeout); toastElement.textContent = message; toastElement.style.cssText = 'display: block; opacity: 0; transform: translateX(calc(-100% - 20px));'; setTimeout(() => { toastElement.style.opacity = 1; toastElement.style.transform = 'translateX(0)';}, 10); toastTimeout = setTimeout(() => { toastElement.style.transform = 'translateX(calc(-100% - 20px))'; toastElement.style.opacity = 0; }, 3000); }
     </script>
-
 </body>
 </html>
