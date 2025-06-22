@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolase Rapat (Drag & Drop)</title>
+    <title>Kolase Masonry Final</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -81,38 +81,32 @@
         
         #image-input { display: none; }
 
-        /* --- PERUBAHAN CSS UNTUK TAMPILAN RAPAT --- */
+        /* --- LAYOUT MASONRY MENGGUNAKAN CSS COLUMNS --- */
         #collage-container {
             margin-top: 20px;
-            border: 2px solid var(--border-color); /* Ubah ke solid agar lebih rapi */
-            border-radius: 8px;
-            display: grid;
-            
-            /* 1. Jarak dan padding dihilangkan */
-            gap: 0;
-            padding: 0;
-
-            background-color: #000;
-            grid-template-columns: repeat(var(--column-count, 3), 1fr);
-            grid-auto-rows: 200px;
-            overflow: hidden; /* Penting untuk merapikan sudut gambar */
+            /* Menggunakan variabel dari slider untuk jumlah kolom */
+            column-count: var(--column-count, 3);
+            /* Jarak antar kolom dihilangkan */
+            column-gap: 0;
         }
         
-        #collage-container img {
+        /* Setiap gambar dibungkus <figure> */
+        #collage-container figure {
+            margin: 0;
+            display: inline-block; /* Agar gambar tidak memiliki margin aneh */
             width: 100%;
-            height: 100%;
-            
-            /* 2. Gambar dibuat mengisi penuh selnya (cropping) */
-            object-fit: cover; 
+            /* Properti kunci agar gambar tidak terpotong antar kolom */
+            break-inside: avoid;
             cursor: move;
         }
 
+        #collage-container img {
+            width: 100%; /* Lebar gambar selalu mengisi kolomnya */
+            height: auto; /* Tinggi otomatis menjaga proporsi asli */
+        }
+        
         .sortable-ghost {
             opacity: 0.4;
-            background-color: #888;
-        }
-        .sortable-drag {
-            opacity: 0.9;
         }
 
         .toast {
@@ -139,7 +133,7 @@
 <body>
 
     <div class="container">
-        <h1>Kolase Rapat (Drag & Drop)</h1>
+        <h1>Kolase Masonry (Gambar Utuh)</h1>
         
         <div class="controls">
             <div class="button-row">
@@ -188,9 +182,11 @@
         collageContainer.innerHTML = '';
         const files = imageInput.files;
         for (const file of files) {
+            const figure = document.createElement('figure');
             const img = document.createElement('img');
             img.src = URL.createObjectURL(file);
-            collageContainer.appendChild(img);
+            figure.appendChild(img);
+            collageContainer.appendChild(figure);
         }
     });
 
@@ -201,11 +197,12 @@
         }
         showToast("Mempersiapkan file unduhan...");
         html2canvas(collageContainer, { 
-            scale: 2 // Resolusi 2x agar hasil unduhan lebih tajam
+            scale: 1, // Resolusi 1:1 sesuai preview
+            backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color')
         }).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'kolase-rapat.png';
+            link.download = 'kolase-masonry.png';
             link.click();
             showToast("Unduhan telah dimulai!");
         });
@@ -219,7 +216,9 @@
 
     new Sortable(collageContainer, {
         animation: 150,
-        ghostClass: 'sortable-ghost'
+        ghostClass: 'sortable-ghost',
+        // Item yang di-drag adalah <figure>
+        draggable: 'figure'
     });
     </script>
 
