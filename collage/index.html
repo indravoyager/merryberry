@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolase dengan Jarak Putih</title>
+    <title>Kolase dengan Kolom Dinamis</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,12 +55,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
         }
         
-        .button-row {
+        .button-row, .direction-controls, .column-controls {
             display: flex;
             gap: 15px;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn {
@@ -72,17 +74,6 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 500;
-        }
-        
-        .direction-controls {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-        
-        .direction-controls label {
-            color: var(--text-color);
-            font-size: 16px;
         }
         
         #image-input { display: none; }
@@ -97,14 +88,17 @@
             background-color: #ffffff; 
         }
         
+        /* Layout untuk "Susun ke Samping" */
         #collage-container.horizontal {
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            grid-auto-rows: auto;
+            grid-auto-rows: 200px; /* Memberi tinggi baris yang konsisten */
         }
         
+        /* Layout untuk "Susun ke Bawah" (Dinamis) */
         #collage-container.vertical {
-            grid-template-columns: 1fr;
-            grid-auto-rows: minmax(150px, auto);
+            /* Menggunakan CSS Variable --column-count yang diatur oleh JS */
+            grid-template-columns: repeat(var(--column-count, 1), 1fr);
+            grid-auto-rows: auto;
         }
         
         #collage-container img {
@@ -118,7 +112,7 @@
 <body>
 
     <div class="container">
-        <h1>Kolase dengan Jarak Putih</h1>
+        <h1>Kolase dengan Kolom Dinamis</h1>
         
         <div class="controls">
             <div class="button-row">
@@ -135,10 +129,16 @@
                 <input type="radio" id="vertical" name="direction" value="vertical">
                 <label for="vertical">Ke Bawah</label>
             </div>
+
+            <div id="column-controls" class="column-controls" style="display: none;">
+                <label for="column-slider">Jumlah Kolom:</label>
+                <input type="range" id="column-slider" min="1" max="6" value="3">
+                <span id="column-count-label">3</span>
+            </div>
         </div>
         
         <div id="collage-container" class="horizontal">
-            </div>
+        </div>
     </div>
 
     <script>
@@ -146,6 +146,17 @@
     const collageContainer = document.getElementById('collage-container');
     const downloadBtn = document.getElementById('download-btn');
     const directionRadios = document.querySelectorAll('input[name="direction"]');
+
+    // Mengambil elemen kontrol kolom yang baru
+    const columnControls = document.getElementById('column-controls');
+    const columnSlider = document.getElementById('column-slider');
+    const columnCountLabel = document.getElementById('column-count-label');
+
+    // Fungsi untuk mengatur jumlah kolom di CSS
+    const setColumnCount = (count) => {
+        collageContainer.style.setProperty('--column-count', count);
+        columnCountLabel.textContent = count;
+    };
 
     imageInput.addEventListener('change', () => {
         collageContainer.innerHTML = '';
@@ -169,28 +180,40 @@
         }).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'kolase-jarak-putih.png';
+            link.download = 'kolase-dinamis.png';
             link.click();
         });
     });
     
+    // Event listener untuk pilihan arah
     directionRadios.forEach(radio => {
         radio.addEventListener('change', (event) => {
             if (event.target.value === 'horizontal') {
                 collageContainer.classList.remove('vertical');
                 collageContainer.classList.add('horizontal');
+                columnControls.style.display = 'none'; // Sembunyikan slider
             } else if (event.target.value === 'vertical') {
                 collageContainer.classList.remove('horizontal');
                 collageContainer.classList.add('vertical');
+                columnControls.style.display = 'flex'; // Tampilkan slider
+                setColumnCount(columnSlider.value); // Langsung terapkan nilai slider saat ini
             }
         });
     });
+
+    // Event listener untuk slider jumlah kolom
+    columnSlider.addEventListener('input', (event) => {
+        setColumnCount(event.target.value);
+    });
     
+    // Inisialisasi awal saat halaman dimuat
     if (document.getElementById('horizontal').checked) {
         collageContainer.classList.add('horizontal');
     } else {
         collageContainer.classList.add('vertical');
+        columnControls.style.display = 'flex';
     }
+    setColumnCount(columnSlider.value); // Set nilai awal untuk variabel CSS
     </script>
 
 </body>
