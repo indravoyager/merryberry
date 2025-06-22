@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolase Masonry Final</title>
+    <title>Kolase Justified (Gambar Disesuaikan)</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
@@ -81,28 +79,23 @@
         
         #image-input { display: none; }
 
-        /* --- LAYOUT MASONRY MENGGUNAKAN CSS COLUMNS --- */
+        /* --- CSS Sederhana untuk Layout Justified --- */
         #collage-container {
             margin-top: 20px;
-            column-count: var(--column-count, 3);
-            column-gap: 5px; /* Memberi sedikit jarak agar tidak terlalu rapat */
-        }
-        
-        #collage-container figure {
-            margin: 0 0 5px 0; /* Memberi jarak bawah antar gambar di kolom yang sama */
-            display: inline-block;
             width: 100%;
-            break-inside: avoid;
-            cursor: move;
         }
 
-        #collage-container img {
-            width: 100%;
-            height: auto;
-            border-radius: 4px; /* Sedikit radius agar lebih manis */
+        .justified-row {
+            display: flex;
+            margin-bottom: 5px; /* Jarak antar baris */
+            gap: 5px; /* Jarak antar gambar */
         }
         
-        .sortable-ghost { opacity: 0.4; }
+        .justified-row img {
+            /* Tinggi diatur oleh JS, lebar otomatis */
+            height: auto;
+            flex-grow: 1; /* Sedikit fleksibilitas untuk pembulatan piksel */
+        }
 
         .toast {
             position: fixed;
@@ -128,7 +121,7 @@
 <body>
 
     <div class="container">
-        <h1>Kolase Masonry (Gambar Utuh)</h1>
+        <h1>Kolase Justified (Gambar Disesuaikan)</h1>
         
         <div class="controls">
             <div class="button-row">
@@ -137,10 +130,10 @@
                 <button id="download-btn" class="btn">Unduh Kolase</button>
             </div>
             
-            <div id="column-controls" class="slider-controls">
-                <label for="column-slider">Jumlah Kolom:</label>
-                <input type="range" id="column-slider" min="1" max="8" value="3">
-                <span id="column-label">3</span>
+            <div class="slider-controls">
+                <label for="ideal-height-slider">Tinggi Ideal Baris:</label>
+                <input type="range" id="ideal-height-slider" min="100" max="400" value="200">
+                <span id="ideal-height-label">200px</span>
             </div>
         </div>
         
@@ -154,10 +147,11 @@
     const imageInput = document.getElementById('image-input');
     const collageContainer = document.getElementById('collage-container');
     const downloadBtn = document.getElementById('download-btn');
-    const columnSlider = document.getElementById('column-slider');
-    const columnLabel = document.getElementById('column-label');
+    const idealHeightSlider = document.getElementById('ideal-height-slider');
+    const idealHeightLabel = document.getElementById('ideal-height-label');
     const toastElement = document.getElementById('download-toast');
     let toastTimeout;
+    let currentFiles = []; // Menyimpan file yang dipilih
 
     function showToast(message) {
         clearTimeout(toastTimeout);
@@ -167,26 +161,91 @@
             toastElement.classList.remove('show');
         }, 3000);
     }
+    
+    // --- ALGORITMA UTAMA UNTUK JUSTIFIED LAYOUT ---
+    const renderJustifiedLayout = async () => {
+        if (currentFiles.length === 0) {
+            collageContainer.innerHTML = '';
+            return;
+        }
 
-    const setColumnCount = (count) => {
-        collageContainer.style.setProperty('--column-count', count);
-        columnLabel.textContent = count;
+        const containerWidth = collageContainer.clientWidth;
+        const idealHeight = parseInt(idealHeightSlider.value);
+        const gap = 5; // Sesuaikan dengan .justified-row di CSS
+
+        // 1. Dapatkan dimensi asli setiap gambar
+        const imageDimensions = await Promise.all(
+            Array.from(currentFiles).map(file => new Promise(resolve => {
+                const img = new Image();
+                img.src = URL.createObjectURL(file);
+                img.onload = () => resolve({
+                    src: img.src,
+                    ratio: img.naturalWidth / img.naturalHeight
+                });
+            }))
+        );
+
+        collageContainer.innerHTML = ''; // Bersihkan kontainer
+        let currentRow = [];
+        let currentRowRatioSum = 0;
+
+        // 2. Proses gambar untuk membuat baris
+        for (const img of imageDimensions) {
+            currentRow.push(img);
+            currentRowRatioSum += img.ratio;
+            const currentRowWidth = (currentRowRatioSum * idealHeight) + (currentRow.length - 1) * gap;
+
+            if (currentRowWidth >= containerWidth) {
+                // Kalkulasi tinggi baris yang presisi
+                const finalRowHeight = (containerWidth - (currentRow.length - 1) * gap) / currentRowRatioSum;
+
+                // Buat baris
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'justified-row';
+                currentRow.forEach(item => {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = item.src;
+                    imgElement.style.height = `${finalRowHeight}px`;
+                    rowDiv.appendChild(imgElement);
+                });
+                collageContainer.appendChild(rowDiv);
+
+                // Reset untuk baris berikutnya
+                currentRow = [];
+                currentRowRatioSum = 0;
+            }
+        }
+        
+        // 3. Handle baris terakhir (sesuai permintaan, dibesarkan)
+        if (currentRow.length > 0) {
+            const finalRowHeight = (containerWidth - (currentRow.length - 1) * gap) / currentRowRatioSum;
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'justified-row';
+            currentRow.forEach(item => {
+                const imgElement = document.createElement('img');
+                imgElement.src = item.src;
+                // Atur tinggi gambar agar membesar/mengecil sesuai ruang
+                imgElement.style.height = `${finalRowHeight}px`;
+                rowDiv.appendChild(imgElement);
+            });
+            collageContainer.appendChild(rowDiv);
+        }
     };
 
-    imageInput.addEventListener('change', () => {
-        collageContainer.innerHTML = '';
-        const files = imageInput.files;
-        for (const file of files) {
-            const figure = document.createElement('figure');
-            const img = document.createElement('img');
-            img.src = URL.createObjectURL(file);
-            figure.appendChild(img);
-            collageContainer.appendChild(figure);
-        }
+
+    imageInput.addEventListener('change', (event) => {
+        currentFiles = event.target.files;
+        renderJustifiedLayout();
+    });
+
+    idealHeightSlider.addEventListener('input', (event) => {
+        idealHeightLabel.textContent = `${event.target.value}px`;
+        // Gunakan timeout kecil agar tidak me-render terus menerus saat digeser
+        setTimeout(renderJustifiedLayout, 100); 
     });
 
     downloadBtn.addEventListener('click', () => {
-        if (collageContainer.children.length === 0) {
+        if (currentFiles.length === 0) {
             showToast("Silakan pilih gambar terlebih dahulu!");
             return;
         }
@@ -197,23 +256,14 @@
         }).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'kolase-masonry-final.png';
+            link.download = 'kolase-justified.png';
             link.click();
             showToast("Unduhan telah dimulai!");
         });
     });
     
-    columnSlider.addEventListener('input', (event) => {
-        setColumnCount(event.target.value);
-    });
-    
-    setColumnCount(columnSlider.value);
-
-    new Sortable(collageContainer, {
-        animation: 150,
-        ghostClass: 'sortable-ghost',
-        draggable: 'figure'
-    });
+    // Inisialisasi jika ada perubahan ukuran window
+    window.addEventListener('resize', renderJustifiedLayout);
     </script>
 
 </body>
