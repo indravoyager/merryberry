@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolase Gambar Utuh (Tanpa Crop)</title>
+    <title>Kolase Grid Rapat & Notifikasi Kiri</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -81,35 +81,54 @@
 
         #collage-container {
             margin-top: 20px;
-            border: 2px dashed var(--border-color);
-            padding: 10px;
             border-radius: 8px;
             display: grid;
-            gap: 10px;
-            background-color: #ffffff;
+            background-color: #000; /* Latar belakang jika ada celah rendering */
+            overflow: hidden; /* Memastikan border-radius diterapkan pada gambar di sudut */
+            
+            /* PERBAIKAN: Jarak antar gambar dihilangkan */
+            gap: 0;
+            
             grid-template-columns: repeat(var(--column-count, 3), 1fr);
             grid-auto-rows: 180px; 
         }
         
-        /* --- PERUBAHAN UTAMA ADA DI SINI --- */
         #collage-container img {
             width: 100%;
             height: 100%;
+            /* PERBAIKAN: Gambar dibuat penuh (cover) */
+            object-fit: cover;
+        }
+
+        /* PERBAIKAN: Notifikasi Toast di Kiri Bawah */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 20px; /* Diubah dari 'right' ke 'left' */
+            background-color: #333;
+            color: #fff;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
             
-            /* Mengubah 'cover' menjadi 'contain' agar seluruh gambar terlihat */
-            object-fit: contain; 
+            /* Diubah agar bersembunyi ke kiri */
+            transform: translateX(calc(-100% - 20px));
+            visibility: hidden;
             
-            border-radius: 4px;
-            
-            /* (Opsional) Memberi latar belakang terang agar area gambar jelas */
-            background-color: #f0f0f0;
+            transition: transform 0.5s ease-in-out, visibility 0.5s;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+            visibility: visible;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Kolase Gambar Utuh (Tanpa Crop)</h1>
+        <h1>Kolase Grid Rapat</h1>
         
         <div class="controls">
             <div class="button-row">
@@ -129,9 +148,8 @@
         </div>
     </div>
 
-    <div id="download-toast" class="toast" style="display:none; position: fixed; bottom: 20px; right: 20px; background-color: #333; color: #fff; padding: 16px 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000; transition: transform 0.5s ease-in-out; transform: translateX(calc(100% + 20px));">
+    <div id="download-toast" class="toast">
         </div>
-
 
     <script>
     const imageInput = document.getElementById('image-input');
@@ -145,14 +163,9 @@
     function showToast(message) {
         clearTimeout(toastTimeout);
         toastElement.textContent = message;
-        toastElement.style.display = 'block';
-        // Memicu reflow agar transisi berjalan
-        setTimeout(() => {
-            toastElement.style.transform = 'translateX(0)';
-        }, 10);
-
+        toastElement.classList.add('show');
         toastTimeout = setTimeout(() => {
-            toastElement.style.transform = 'translateX(calc(100% + 20px))';
+            toastElement.classList.remove('show');
         }, 3000);
     }
 
@@ -178,12 +191,11 @@
         }
         showToast("Mempersiapkan file unduhan...");
         html2canvas(collageContainer, { 
-            scale: 2,
-            backgroundColor: '#ffffff'
+            scale: 2
         }).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'kolase-gambar-utuh.png';
+            link.download = 'kolase-rapat.png';
             link.click();
             showToast("Unduhan telah dimulai!");
         });
@@ -194,31 +206,6 @@
     });
     
     setColumnCount(columnSlider.value);
-    </script>
-    
-    <style>
-        #download-toast {
-            display: block; /* Dikelola oleh JS, jadi block saja */
-            visibility: hidden; /* Sembunyikan dengan visibility */
-            opacity: 0; /* dan opacity */
-            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out, visibility 0.5s;
-        }
-        #download-toast.show {
-            transform: translateX(0);
-            visibility: visible;
-            opacity: 1;
-        }
-    </style>
-    <script>
-        // Perbaikan script toast agar lebih andal
-        function showToast(message) {
-            clearTimeout(toastTimeout);
-            toastElement.textContent = message;
-            toastElement.classList.add('show');
-            toastTimeout = setTimeout(() => {
-                toastElement.classList.remove('show');
-            }, 3000);
-        }
     </script>
 
 </body>
