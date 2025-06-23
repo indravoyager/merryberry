@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentYearSpan.textContent = new Date().getFullYear();
     }
 
-    // --- Fungsi untuk menu mobile (hamburger) ---
+    // --- Fungsi untuk menu mobile ---
     const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
 
