@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyrene's WEBP to PNG Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Animasi spinner yang lucu */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #fb7185; /* Warna aksen rose-400 */
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 flex flex-col items-center min-h-screen p-4">
+
+    <div class="w-full max-w-4xl bg-white rounded-xl shadow-lg p-6 md:p-8">
+        <div class="text-center mb-6">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-700">WEBP to PNG Converter</h1>
+            <p class="text-slate-500 mt-2">Dibuat dengan ♡ olehmu (dan sedikit bantuan Cyrene)</p>
+        </div>
+
+        <div id="upload-area" class="border-4 border-dashed border-slate-300 rounded-lg text-center p-10 cursor-pointer hover:border-rose-400 hover:bg-rose-50 transition-all">
+            <input type="file" id="file-input" multiple accept="image/webp" class="hidden">
+            <p class="text-lg font-semibold text-slate-600">Seret & Lepas file WEBP ke sini</p>
+            <p class="text-slate-500">atau</p>
+            <button id="browse-btn" class="mt-2 bg-rose-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-rose-600 transition-colors">Pilih File</button>
+        </div>
+
+        <div id="result-list" class="mt-8 space-y-4">
+            </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
