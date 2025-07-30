@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Music Player</title>
+    <title>Music Player</title>
+    <link id="favicon" rel="icon" href="data:;base64,iVBORw0KGgo=">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
+
     <style>
-        /* 🎨 CSS untuk Tampilan Modern & Simple 🎨 */
+        /* CSS-nya masih sama seperti sebelumnya, modern dan simpel! (´• ω •`) ♡ */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
         :root {
@@ -14,7 +19,7 @@
             --player-background: #1e1e1e;
             --primary-text-color: #ffffff;
             --secondary-text-color: #b3b3b3;
-            --accent-color: #1DB954; /* Warna ala Spotify */
+            --accent-color: #1DB954;
             --border-radius: 12px;
             --box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
         }
@@ -51,6 +56,8 @@
             margin: 0 auto 25px auto;
             object-fit: cover;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            /* Gambar placeholder default */
+            background-color: #333;
         }
         
         #song-title {
@@ -60,6 +67,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            min-height: 1.5em; /* Menjaga layout tetap stabil saat loading */
         }
 
         #song-artist {
@@ -67,6 +75,7 @@
             font-weight: 400;
             color: var(--secondary-text-color);
             margin-bottom: 30px;
+            min-height: 1em; /* Menjaga layout tetap stabil */
         }
         
         .controls {
@@ -136,18 +145,17 @@
             color: var(--secondary-text-color);
             padding: 0 5px;
         }
-
     </style>
 </head>
 <body>
 
     <div class="music-container">
-        <img src="https://i.scdn.co/image/ab67616d0000b2737441994643920353b3a3959c" alt="Album Art" class="album-art">
+        <img src="https://i.scdn.co/image/ab67616d0000b2737441994643920353b3a3959c" alt="Album Art" id="album-art" class="album-art">
         
-        <h2 id="song-title">Judul Lagu</h2>
-        <p id="song-artist">Nama Artis</p>
+        <h2 id="song-title">Memuat lagu...</h2>
+        <p id="song-artist">Tunggu sebentar ya...</p>
 
-        <audio id="audio-player" src="https://drive.google.com/uc?export=download&id=1CgSIJWX3Kbei46Zg-qAFZYaGflMNsnon"></audio>
+        <audio id="audio-player"></audio>
 
         <div class="progress-container">
             <input type="range" id="progress-bar" value="0">
@@ -165,6 +173,7 @@
     </div>
 
     <script>
+        // Ambil semua elemen yang kita butuhkan
         const audioPlayer = document.getElementById('audio-player');
         const playPauseBtn = document.getElementById('play-pause-btn');
         const playPauseIcon = document.getElementById('play-pause-icon');
@@ -173,11 +182,54 @@
         const durationEl = document.getElementById('duration');
         const songTitleEl = document.getElementById('song-title');
         const songArtistEl = document.getElementById('song-artist');
+        const albumArtEl = document.getElementById('album-art');
+        const faviconEl = document.getElementById('favicon');
+
+        // Link Google Drive kamu
+        // Formatnya diubah agar bisa dibaca langsung
+        const googleDriveId = "1CgSIJWX3Kbei46Zg-qAFZYaGflMNsnon";
+        const audioUrl = `https://drive.google.com/uc?export=download&id=${googleDriveId}`;
         
-        // --- Ganti informasi lagu di sini ---
-        songTitleEl.textContent = "Komang";
-        songArtistEl.textContent = "Raim Laode";
-        // ------------------------------------
+        // Atur sumber audio player
+        audioPlayer.src = audioUrl;
+
+        // Gunakan jsmediatags untuk membaca metadata
+        window.jsmediatags.read(audioUrl, {
+            onSuccess: function(tag) {
+                console.log(tag);
+                const tags = tag.tags;
+
+                // Update Judul dan Artis
+                const title = tags.title || "Judul Tidak Ditemukan";
+                const artist = tags.artist || "Artis Tidak Ditemukan";
+                
+                songTitleEl.textContent = title;
+                songArtistEl.textContent = artist;
+                document.title = `${title} - ${artist}`; // Update judul tab browser
+
+                // Update Gambar Album dan Favicon
+                if (tags.picture) {
+                    const { data, format } = tags.picture;
+                    let base64String = "";
+                    for (let i = 0; i < data.length; i++) {
+                        base64String += String.fromCharCode(data[i]);
+                    }
+                    const imageUrl = `data:${format};base64,${window.btoa(base64String)}`;
+                    albumArtEl.src = imageUrl;
+                    faviconEl.href = imageUrl; // Update ikon tab browser
+                } else {
+                    // Jika tidak ada gambar, pakai gambar default
+                    albumArtEl.src = "https://i.scdn.co/image/ab67616d0000b2737441994643920353b3a3959c";
+                }
+            },
+            onError: function(error) {
+                console.log('Gagal membaca metadata:', error.type, error.info);
+                // Jika gagal, tampilkan nama file sebagai judul
+                songTitleEl.textContent = "Komang";
+                songArtistEl.textContent = "Raim Laode";
+                document.title = "Music Player";
+            }
+        });
 
         let isPlaying = false;
 
@@ -203,7 +255,7 @@
         function updateProgress() {
             const { duration, currentTime } = audioPlayer;
             const progressPercent = (currentTime / duration) * 100;
-            progressBar.value = progressPercent;
+            progressBar.value = isNaN(progressPercent) ? 0 : progressPercent;
 
             currentTimeEl.textContent = formatTime(currentTime);
             if (!isNaN(duration)) {
@@ -212,22 +264,17 @@
         }
         
         function setProgress(e) {
-            const width = this.clientWidth;
-            const clickX = e.offsetX;
             const duration = audioPlayer.duration;
-            audioPlayer.currentTime = (clickX / width) * duration;
+            if(!isNaN(duration)) {
+               audioPlayer.currentTime = (progressBar.value * duration) / 100;
+            }
         }
 
         // Event Listeners
         playPauseBtn.addEventListener('click', togglePlayPause);
         audioPlayer.addEventListener('timeupdate', updateProgress);
-        audioPlayer.addEventListener('loadedmetadata', updateProgress); // Untuk menampilkan durasi awal
-        progressBar.addEventListener('input', () => {
-             const duration = audioPlayer.duration;
-             if(!isNaN(duration)) {
-                audioPlayer.currentTime = (progressBar.value * duration) / 100;
-             }
-        });
+        audioPlayer.addEventListener('loadedmetadata', updateProgress);
+        progressBar.addEventListener('input', setProgress);
 
     </script>
 </body>
