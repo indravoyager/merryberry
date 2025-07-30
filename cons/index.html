@@ -33,38 +33,27 @@
             box-sizing: border-box;
         }
 
-        /* -- ✨ KODE BARU: WRAPPER UNTUK LAYOUT RESPONSIVE ✨ -- */
         .main-wrapper {
             display: flex;
-            flex-direction: row; /* Default untuk desktop: berdampingan */
+            flex-direction: row;
             gap: 20px;
             width: 100%;
             max-width: 800px;
             align-items: flex-start;
         }
 
-        .music-container {
+        .music-container, .playlist-container {
             background-color: var(--player-background);
             border-radius: var(--border-radius);
             padding: 25px 30px;
+            width: 100%;
             box-sizing: border-box;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            flex-shrink: 0; /* Agar player tidak menyusut */
-            width: 380px;
         }
 
-        .playlist-container {
-            background-color: var(--player-background);
-            border-radius: var(--border-radius);
-            padding: 25px 30px;
-            box-sizing: border-box;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            flex-grow: 1; /* Agar mengisi sisa ruang */
-            max-height: 480px; /* Batasi tinggi playlist */
-        }
+        .music-container { text-align: center; flex-shrink: 0; width: 380px; }
+        .playlist-container { flex-grow: 1; max-height: 480px; }
         
         #youtube-player-container { position: absolute; top: -9999px; left: -9999px; }
 
@@ -107,34 +96,28 @@
         #playlist .song-title { font-size: 1em; }
         #playlist .song-artist { font-size: 0.8em; opacity: 0.7; }
 
-        /* -- ✨ KODE BARU: MEDIA QUERY UNTUK MOBILE ✨ -- */
         @media (max-width: 768px) {
-            .main-wrapper {
-                flex-direction: column; /* Ubah jadi tumpukan ke bawah */
-                max-width: 380px;
-            }
-            .music-container {
-                width: 100%;
-            }
-            .playlist-container {
-                width: 100%;
-                max-height: 250px; /* Sesuaikan tinggi untuk mobile */
-            }
+            .main-wrapper { flex-direction: column; max-width: 380px; }
+            .music-container { width: 100%; }
+            .playlist-container { width: 100%; max-height: 250px; }
         }
     </style>
 </head>
 <body>
-
     <div class="main-wrapper">
-        <div class="music-container">
+        <div class="music-container"></div>
+        <div class="playlist-container"></div>
+    </div>
+
+    <script>
+        // ISI LENGKAP HTML UNTUK PLAYER & PLAYLIST
+        document.querySelector('.music-container').innerHTML = `
             <div id="youtube-player-container"></div>
             <img src="" alt="Album Art" id="album-art" class="album-art">
             <h2 id="song-title">Memuat...</h2>
             <p id="song-artist">Tunggu sebentar...</p>
-
             <div class="progress-container"><input type="range" id="progress-bar" value="0" step="0.1"></div>
             <div class="time-display"><span id="current-time">0:00</span><span id="duration">0:00</span></div>
-
             <div class="all-controls">
                 <div class="main-controls">
                     <button id="prev-btn" class="control-btn"><i class="fa-solid fa-backward-step"></i></button>
@@ -146,23 +129,16 @@
                     <button id="volume-icon" class="control-btn"><i class="fa-solid fa-volume-high"></i></button>
                     <input type="range" id="volume-slider" min="0" max="100" value="100" class="control-btn">
                 </div>
-            </div>
-        </div>
-        
-        <div class="playlist-container">
+            </div>`;
+        document.querySelector('.playlist-container').innerHTML = `
             <h3><i class="fa-solid fa-list-music"></i> Daftar Putar</h3>
-            <ul id="playlist"></ul>
-        </div>
-    </div>
+            <ul id="playlist"></ul>`;
 
-    <script>
-        // -- ✨ DAFTAR MUSIK BARU SESUAI PERMINTAANMU ✨ --
         const songPlaylist = [
             { title: "The day you and the stars disappeared", artist: "Honkai Impact 3rd", videoId: 'L2kse_J0L0I' },
             { title: "Consequently", artist: "Nhật Linh Đặng Hoàng", videoId: 'sL2bIm_aBAs' }
         ];
 
-        // --- Sisanya adalah kode JavaScript yang sama, tidak perlu diubah ---
         const playPauseBtn = document.getElementById('play-pause-btn'), playPauseIcon = document.getElementById('play-pause-icon');
         const prevBtn = document.getElementById('prev-btn'), nextBtn = document.getElementById('next-btn'), loopBtn = document.getElementById('loop-btn');
         const volumeIcon = document.getElementById('volume-icon'), volumeSlider = document.getElementById('volume-slider');
@@ -186,22 +162,36 @@
 
         function onPlayerReady() {
             renderPlaylist();
-            loadSong(currentSongIndex);
+            loadSong(currentSongIndex, false); // Muat lagu pertama tanpa langsung memutarnya
             setupEventListeners();
             player.setVolume(100);
             volumeSlider.value = 100;
         }
         
         function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.PLAYING) {
-                isPlaying = true; playPauseIcon.className = 'fas fa-pause'; albumArtEl.classList.add('playing');
+            const state = event.data;
+            isPlaying = (state === YT.PlayerState.PLAYING);
+
+            if (isPlaying) {
+                albumArtEl.classList.add('playing');
                 progressUpdateInterval = setInterval(updateProgress, 250);
             } else {
-                isPlaying = false; playPauseIcon.className = 'fas fa-play'; albumArtEl.classList.remove('playing');
+                albumArtEl.classList.remove('playing');
                 clearInterval(progressUpdateInterval);
             }
-            if (event.data == YT.PlayerState.ENDED) {
-                if (isLooping) { player.seekTo(0); player.playVideo(); } else { playNext(); }
+
+            // ✨ BAGIAN INI YANG DIPERBAIKI ✨
+            // Jika lagu selesai dimuat (cued), langsung putar.
+            if (state === YT.PlayerState.CUED) {
+                 player.playVideo();
+            }
+
+            if (state === YT.PlayerState.ENDED) {
+                if (isLooping) {
+                    player.seekTo(0);
+                } else {
+                    playNext();
+                }
             }
             updateUI(songPlaylist[currentSongIndex]);
         }
@@ -216,7 +206,7 @@
             progressBar.addEventListener('input', seekTo);
             playlistEl.addEventListener('click', (e) => {
                 const songItem = e.target.closest('li');
-                if(songItem) {
+                if (songItem) {
                     const songIndex = parseInt(songItem.dataset.index);
                     if (songIndex !== currentSongIndex) {
                         loadSong(songIndex);
@@ -232,13 +222,7 @@
             songPlaylist.forEach((song, index) => {
                 const li = document.createElement('li');
                 li.dataset.index = index;
-                li.innerHTML = `
-                    <div class="song-details">
-                        <span class="song-title">${song.title}</span>
-                        <span class="song-artist">${song.artist}</span>
-                    </div>
-                    <i class="fa-solid fa-play"></i>
-                `;
+                li.innerHTML = `<div class="song-details"><span class="song-title">${song.title}</span><span class="song-artist">${song.artist}</span></div><i class="fa-solid fa-play"></i>`;
                 playlistEl.appendChild(li);
             });
         }
@@ -246,13 +230,12 @@
         function loadSong(index) {
             currentSongIndex = index;
             const song = songPlaylist[index];
-            player.loadVideoById(song.videoId);
+            player.cueVideoById(song.videoId); // Gunakan cueVideoById agar state CUED terpicu
             updateUI(song);
         }
 
         function updateUI(song) {
-            songTitleEl.textContent = song.title;
-            songArtistEl.textContent = song.artist;
+            songTitleEl.textContent = song.title; songArtistEl.textContent = song.artist;
             document.title = `${song.title} - ${song.artist}`;
             albumArtEl.src = `https://i.ytimg.com/vi/${song.videoId}/hqdefault.jpg`;
             faviconEl.href = `https://i.ytimg.com/vi/${song.videoId}/hqdefault.jpg`;
@@ -261,6 +244,7 @@
                 li.classList.toggle('active-song', idx === currentSongIndex);
                 li.querySelector('i').className = (idx === currentSongIndex && isPlaying) ? 'fa-solid fa-compact-disc fa-spin' : 'fa-solid fa-play';
             });
+            playPauseIcon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
         }
 
         function togglePlayPause() { if (isPlaying) { player.pauseVideo(); } else { player.playVideo(); } }
