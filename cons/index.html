@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Player</title>
-    <link id="favicon" rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <title>YouTube Music Player</title>
+    <link rel="icon" href="https://www.youtube.com/s/desktop/014dbbed/img/favicon.ico">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
 
     <style>
-        /* CSS-nya masih sama seperti sebelumnya, modern dan simpel! (´• ω •`) ♡ */
+        /* Desainnya tetap sama, modern dan simpel! (b ᵔ▽ᵔ)b */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
         :root {
@@ -19,7 +17,7 @@
             --player-background: #1e1e1e;
             --primary-text-color: #ffffff;
             --secondary-text-color: #b3b3b3;
-            --accent-color: #1DB954;
+            --accent-color: #FF0000; /* Warna khas YouTube */
             --border-radius: 12px;
             --box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
         }
@@ -47,6 +45,14 @@
             text-align: center;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #youtube-player-container {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
         }
 
         .album-art {
@@ -56,18 +62,19 @@
             margin: 0 auto 25px auto;
             object-fit: cover;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            /* Gambar placeholder default */
             background-color: #333;
+        }
+        
+        #song-title, #song-artist {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         #song-title {
             font-size: 1.5em;
             font-weight: 600;
             margin: 0 0 5px 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            min-height: 1.5em; /* Menjaga layout tetap stabil saat loading */
         }
 
         #song-artist {
@@ -75,7 +82,6 @@
             font-weight: 400;
             color: var(--secondary-text-color);
             margin-bottom: 30px;
-            min-height: 1em; /* Menjaga layout tetap stabil */
         }
         
         .controls {
@@ -102,7 +108,7 @@
 
         .play-btn:hover {
             transform: scale(1.1);
-            background-color: #1ed760;
+            background-color: #cc0000;
         }
         
         .progress-container {
@@ -111,31 +117,8 @@
         }
 
         #progress-bar {
-            -webkit-appearance: none;
-            appearance: none;
             width: 100%;
-            height: 8px;
-            background: #444;
-            border-radius: 5px;
-            outline: none;
             cursor: pointer;
-        }
-
-        #progress-bar::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            background: var(--primary-text-color);
-            border-radius: 50%;
-        }
-
-        #progress-bar::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            background: var(--primary-text-color);
-            border-radius: 50%;
-            border: none;
         }
         
         .time-display {
@@ -145,20 +128,21 @@
             color: var(--secondary-text-color);
             padding: 0 5px;
         }
+
     </style>
 </head>
 <body>
 
     <div class="music-container">
-        <img src="https://i.scdn.co/image/ab67616d0000b2737441994643920353b3a3959c" alt="Album Art" id="album-art" class="album-art">
+        <div id="youtube-player-container"></div>
         
-        <h2 id="song-title">Memuat lagu...</h2>
-        <p id="song-artist">Tunggu sebentar ya...</p>
-
-        <audio id="audio-player"></audio>
+        <img src="" alt="Album Art" id="album-art" class="album-art">
+        
+        <h2 id="song-title">Memuat...</h2>
+        <p id="song-artist">Tunggu sebentar...</p>
 
         <div class="progress-container">
-            <input type="range" id="progress-bar" value="0">
+            <input type="range" id="progress-bar" value="0" step="0.1">
         </div>
         <div class="time-display">
             <span id="current-time">0:00</span>
@@ -173,8 +157,10 @@
     </div>
 
     <script>
-        // Ambil semua elemen yang kita butuhkan
-        const audioPlayer = document.getElementById('audio-player');
+        // --- ✅ LINK YOUTUBE SUDAH DIGANTI SESUAI PERMINTAANMU ---
+        const youtubeUrl = "https://www.youtube.com/watch?v=v6ryoI1OYms&list=RDv6ryoI1OYms&index=1&ab_channel=Nh%E1%BA%ADtLinh%C4%90%E1%BA%B7ngHo%C3%A0ng";
+        // -------------------------------------------------------------
+
         const playPauseBtn = document.getElementById('play-pause-btn');
         const playPauseIcon = document.getElementById('play-pause-icon');
         const progressBar = document.getElementById('progress-bar');
@@ -183,99 +169,98 @@
         const songTitleEl = document.getElementById('song-title');
         const songArtistEl = document.getElementById('song-artist');
         const albumArtEl = document.getElementById('album-art');
-        const faviconEl = document.getElementById('favicon');
 
-        // Link Google Drive kamu
-        // Formatnya diubah agar bisa dibaca langsung
-        const googleDriveId = "1CgSIJWX3Kbei46Zg-qAFZYaGflMNsnon";
-        const audioUrl = `https://drive.google.com/uc?export=download&id=${googleDriveId}`;
-        
-        // Atur sumber audio player
-        audioPlayer.src = audioUrl;
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-        // Gunakan jsmediatags untuk membaca metadata
-        window.jsmediatags.read(audioUrl, {
-            onSuccess: function(tag) {
-                console.log(tag);
-                const tags = tag.tags;
-
-                // Update Judul dan Artis
-                const title = tags.title || "Judul Tidak Ditemukan";
-                const artist = tags.artist || "Artis Tidak Ditemukan";
-                
-                songTitleEl.textContent = title;
-                songArtistEl.textContent = artist;
-                document.title = `${title} - ${artist}`; // Update judul tab browser
-
-                // Update Gambar Album dan Favicon
-                if (tags.picture) {
-                    const { data, format } = tags.picture;
-                    let base64String = "";
-                    for (let i = 0; i < data.length; i++) {
-                        base64String += String.fromCharCode(data[i]);
-                    }
-                    const imageUrl = `data:${format};base64,${window.btoa(base64String)}`;
-                    albumArtEl.src = imageUrl;
-                    faviconEl.href = imageUrl; // Update ikon tab browser
-                } else {
-                    // Jika tidak ada gambar, pakai gambar default
-                    albumArtEl.src = "https://i.scdn.co/image/ab67616d0000b2737441994643920353b3a3959c";
-                }
-            },
-            onError: function(error) {
-                console.log('Gagal membaca metadata:', error.type, error.info);
-                // Jika gagal, tampilkan nama file sebagai judul
-                songTitleEl.textContent = "Komang";
-                songArtistEl.textContent = "Raim Laode";
-                document.title = "Music Player";
-            }
-        });
-
+        let player;
         let isPlaying = false;
+        let progressUpdateInterval;
+
+        function onYouTubeIframeAPIReady() {
+            const videoId = getYouTubeID(youtubeUrl);
+            player = new YT.Player('youtube-player-container', {
+                height: '0',
+                width: '0',
+                videoId: videoId,
+                playerVars: { 'playsinline': 1 },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            updateSongInfo();
+            playPauseBtn.addEventListener('click', togglePlayPause);
+            progressBar.addEventListener('input', seekTo);
+        }
+
+        function updateSongInfo() {
+            const videoData = player.getVideoData();
+            const videoId = videoData.video_id;
+            
+            songTitleEl.textContent = videoData.title;
+            songArtistEl.textContent = videoData.author;
+            document.title = videoData.title;
+            
+            albumArtEl.src = `https://img.youtube.com/vi/$${videoId}/hqdefault.jpg`;
+        }
+        
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING) {
+                isPlaying = true;
+                playPauseIcon.classList.remove('fa-play');
+                playPauseIcon.classList.add('fa-pause');
+                progressUpdateInterval = setInterval(updateProgress, 250);
+            } else {
+                isPlaying = false;
+                playPauseIcon.classList.remove('fa-pause');
+                playPauseIcon.classList.add('fa-play');
+                clearInterval(progressUpdateInterval);
+            }
+        }
 
         function togglePlayPause() {
             if (isPlaying) {
-                audioPlayer.pause();
-                playPauseIcon.classList.remove('fa-pause');
-                playPauseIcon.classList.add('fa-play');
+                player.pauseVideo();
             } else {
-                audioPlayer.play();
-                playPauseIcon.classList.remove('fa-play');
-                playPauseIcon.classList.add('fa-pause');
+                player.playVideo();
             }
-            isPlaying = !isPlaying;
         }
 
         function formatTime(seconds) {
+            seconds = Math.round(seconds);
             const minutes = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
+            const secs = seconds % 60;
             return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
         function updateProgress() {
-            const { duration, currentTime } = audioPlayer;
-            const progressPercent = (currentTime / duration) * 100;
-            progressBar.value = isNaN(progressPercent) ? 0 : progressPercent;
-
+            const duration = player.getDuration();
+            const currentTime = player.getCurrentTime();
+            
+            durationEl.textContent = formatTime(duration);
             currentTimeEl.textContent = formatTime(currentTime);
-            if (!isNaN(duration)) {
-                durationEl.textContent = formatTime(duration);
-            }
+            
+            const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+            progressBar.value = progressPercent;
         }
         
-        function setProgress(e) {
-            const duration = audioPlayer.duration;
-            if(!isNaN(duration)) {
-               audioPlayer.currentTime = (progressBar.value * duration) / 100;
-            }
+        function seekTo() {
+            const duration = player.getDuration();
+            const newTime = duration * (progressBar.value / 100);
+            player.seekTo(newTime, true);
         }
 
-        // Event Listeners
-        playPauseBtn.addEventListener('click', togglePlayPause);
-        audioPlayer.addEventListener('timeupdate', updateProgress);
-        audioPlayer.addEventListener('loadedmetadata', updateProgress);
-        progressBar.addEventListener('input', setProgress);
-
+        function getYouTubeID(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
     </script>
 </body>
 </html>
