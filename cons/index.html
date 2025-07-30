@@ -7,7 +7,7 @@
     <link id="favicon" rel="icon" href="data:;base64,iVBORw0KGgo=">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        /* CSS Lengkap - Tidak ada perubahan dari versi responsif sebelumnya */
+        /* CSS Lengkap */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
         :root{--background-color:#121212;--player-background:#1e1e1e;--primary-text-color:#ffffff;--secondary-text-color:#b3b3b3;--accent-color:#4285F4;--highlight-color:#2a2a2a;--border-radius:12px;}
         body{background-color:var(--background-color);color:var(--primary-text-color);font-family:'Poppins',sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;padding:20px;box-sizing:border-box;}
@@ -78,12 +78,10 @@
 
     <script>
         const songPlaylist = [
-            // Kamu bisa menambahkan lagu lain di sini
             { title: "Komang", artist: "Raim Laode", driveId: '1CgSIJWX3Kbei46Zg-qAFZYaGflMNsnon' },
-            { title: "Lagu Lain", artist: "Artis Lain", driveId: 'GANTI_DENGAN_ID_DARI_GOOGLE_DRIVE' },
+            { title: "Komang (Contoh)", artist: "Raim Laode", driveId: '1CgSIJWX3Kbei46Zg-qAFZYaGflMNsnon' },
         ];
 
-        // Mendefinisikan semua elemen
         const audioPlayer = document.getElementById('audio-player');
         const playPauseBtn = document.getElementById('play-pause-btn');
         const playPauseIcon = document.getElementById('play-pause-icon');
@@ -102,7 +100,6 @@
 
         let currentSongIndex = 0;
 
-        // Fungsi untuk memuat lagu
         function loadSong(index) {
             currentSongIndex = index;
             const song = songPlaylist[index];
@@ -112,7 +109,6 @@
             updatePlaylistUI();
         }
 
-        // Fungsi untuk memutar atau menjeda
         function togglePlayPause() {
             if (audioPlayer.paused) {
                 audioPlayer.play();
@@ -133,7 +129,6 @@
             audioPlayer.play();
         }
 
-        // Update UI saat lagu diputar/dijeda
         audioPlayer.addEventListener('play', () => {
             playPauseIcon.className = 'fas fa-pause';
             albumArtEl.classList.add('playing');
@@ -146,7 +141,6 @@
             updatePlaylistUI();
         });
         
-        // Update progress bar
         audioPlayer.addEventListener('timeupdate', () => {
             const { duration, currentTime } = audioPlayer;
             if (duration) {
@@ -156,30 +150,25 @@
             }
         });
         
-        // Pindah lagu saat progress bar digeser
         progressBar.addEventListener('input', () => {
             audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration;
         });
 
-        // Fungsi loop
         loopBtn.addEventListener('click', () => {
             audioPlayer.loop = !audioPlayer.loop;
             loopBtn.classList.toggle('active', audioPlayer.loop);
         });
         
-        // Pindah ke lagu selanjutnya jika sudah selesai
         audioPlayer.addEventListener('ended', () => {
             if (!audioPlayer.loop) {
                 playNext();
             }
         });
 
-        // Kontrol volume
         volumeSlider.addEventListener('input', (e) => {
             audioPlayer.volume = e.target.value;
         });
 
-        // Render daftar putar
         function renderPlaylist() {
             playlistEl.innerHTML = '';
             songPlaylist.forEach((song, index) => {
@@ -194,7 +183,6 @@
             });
         }
         
-        // Update UI daftar putar
         function updatePlaylistUI() {
             document.querySelectorAll('#playlist li').forEach((li, idx) => {
                 li.classList.toggle('active-song', idx === currentSongIndex);
@@ -209,7 +197,6 @@
 
         function formatTime(s) { const m=Math.floor(s/60),c=Math.floor(s%60); return `${m}:${c<10?'0':''}${c}`; }
         
-        // Inisialisasi
         renderPlaylist();
         loadSong(0);
 
