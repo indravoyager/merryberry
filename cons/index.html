@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Music Player</title>
+    <title>Google Drive Playlist Player</title>
     <link id="favicon" rel="icon" href="data:;base64,iVBORw0KGgo=">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
     <style>
-        /* ... CSS LENGKAP ... (sama seperti sebelumnya, tidak ada perubahan) */
+        /* CSS Lengkap - Tidak ada perubahan dari versi responsif sebelumnya */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-        :root{--background-color:#121212;--player-background:#1e1e1e;--primary-text-color:#ffffff;--secondary-text-color:#b3b3b3;--accent-color:#1DB954;--highlight-color:#2a2a2a;--border-radius:12px;}
+        :root{--background-color:#121212;--player-background:#1e1e1e;--primary-text-color:#ffffff;--secondary-text-color:#b3b3b3;--accent-color:#4285F4;--highlight-color:#2a2a2a;--border-radius:12px;}
         body{background-color:var(--background-color);color:var(--primary-text-color);font-family:'Poppins',sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;padding:20px;box-sizing:border-box;}
         .main-wrapper{display:flex;flex-direction:row;gap:20px;width:100%;max-width:800px;align-items:flex-start;}
         .music-container,.playlist-container{background-color:var(--player-background);border-radius:var(--border-radius);padding:25px 30px;width:100%;box-sizing:border-box;box-shadow:0 4px 30px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1);}
         .music-container{text-align:center;flex-shrink:0;width:380px;}
         .playlist-container{flex-grow:1;max-height:480px;}
-        #youtube-player-container{position:absolute;top:-9999px;left:-9999px;}
         @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
         .album-art{width:200px;height:200px;margin:0 auto 25px auto;object-fit:cover;background-color:#333;border-radius:50%;border:8px solid #282828;box-shadow:0 0 15px rgba(0,0,0,0.6);animation:spin 10s linear infinite;animation-play-state:paused;}
         .album-art.playing{animation-play-state:running;}
@@ -38,7 +36,7 @@
         #playlist{list-style:none;padding:0;margin:0;max-height:350px;overflow-y:auto;}
         #playlist li{padding:12px 15px;border-radius:8px;margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background-color .2s ease;}
         #playlist li:hover{background-color:var(--highlight-color);}
-        #playlist li.active-song{background-color:var(--accent-color);color:black;font-weight:600;}
+        #playlist li.active-song{background-color:var(--accent-color);color:white;font-weight:600;}
         #playlist .song-details{display:flex;flex-direction:column;text-align:left;}
         #playlist .song-title{font-size:1em;}
         #playlist .song-artist{font-size:0.8em;opacity:.7;}
@@ -49,12 +47,15 @@
     
     <div class="main-wrapper">
         <div class="music-container">
-            <div id="youtube-player-container"></div>
-            <img src="" alt="Album Art" id="album-art" class="album-art">
-            <h2 id="song-title">Memuat...</h2>
-            <p id="song-artist">Tunggu sebentar...</p>
-            <div class="progress-container"><input type="range" id="progress-bar" value="0" step="0.1"></div>
+            <audio id="audio-player" crossorigin="anonymous"></audio>
+            
+            <img src="https://ssl.gstatic.com/docs/doclist/images/mediatype/icon_1_audio_x128.png" alt="Album Art" id="album-art" class="album-art">
+            <h2 id="song-title">Pilih Lagu</h2>
+            <p id="song-artist">dari Daftar Putar</p>
+
+            <div class="progress-container"><input type="range" id="progress-bar" value="0"></div>
             <div class="time-display"><span id="current-time">0:00</span><span id="duration">0:00</span></div>
+
             <div class="all-controls">
                 <div class="main-controls">
                     <button id="prev-btn" class="control-btn"><i class="fa-solid fa-backward-step"></i></button>
@@ -64,7 +65,7 @@
                 </div>
                 <div class="volume-container">
                     <button id="volume-icon" class="control-btn"><i class="fa-solid fa-volume-high"></i></button>
-                    <input type="range" id="volume-slider" min="0" max="100" value="100" class="control-btn">
+                    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1" class="control-btn">
                 </div>
             </div>
         </div>
@@ -76,8 +77,142 @@
     </div>
 
     <script>
-        // ... JavaScript LENGKAP ... (sama seperti sebelumnya, tidak ada perubahan)
-        const songPlaylist=[{title:"The Day You and the Stars Disappeared",artist:"Honkai Impact 3rd",videoId:"L2kse_J0L0I"},{title:"Consequently",artist:"Hifuu Club Activity Record",videoId:"sL2bIm_aBAs"}];const playPauseBtn=document.getElementById("play-pause-btn"),playPauseIcon=document.getElementById("play-pause-icon"),prevBtn=document.getElementById("prev-btn"),nextBtn=document.getElementById("next-btn"),loopBtn=document.getElementById("loop-btn"),volumeIcon=document.getElementById("volume-icon"),volumeSlider=document.getElementById("volume-slider"),progressBar=document.getElementById("progress-bar"),currentTimeEl=document.getElementById("current-time"),durationEl=document.getElementById("duration"),songTitleEl=document.getElementById("song-title"),songArtistEl=document.getElementById("song-artist"),albumArtEl=document.getElementById("album-art"),faviconEl=document.getElementById("favicon"),playlistEl=document.getElementById("playlist");const tag=document.createElement("script");tag.src="https://www.youtube.com/iframe_api";const firstScriptTag=document.getElementsByTagName("script")[0];firstScriptTag.parentNode.insertBefore(tag,firstScriptTag);let player,progressUpdateInterval,currentSongIndex=0,isPlaying=!1,isLooping=!1;function onYouTubeIframeAPIReady(){player=new YT.Player("youtube-player-container",{height:"0",width:"0",playerVars:{playsinline:1},events:{onReady:onPlayerReady,onStateChange:onPlayerStateChange}})}function onPlayerReady(){renderPlaylist(),loadSong(currentSongIndex),setupEventListeners(),player.setVolume(100),volumeSlider.value=100}function onPlayerStateChange(e){isPlaying=e.data===YT.PlayerState.PLAYING,isPlaying?(albumArtEl.classList.add("playing"),progressUpdateInterval=setInterval(updateProgress,250)):(albumArtEl.classList.remove("playing"),clearInterval(progressUpdateInterval)),e.data===YT.PlayerState.ENDED&&(isLooping?player.seekTo(0):playNext()),updateUI()}function setupEventListeners(){playPauseBtn.addEventListener("click",togglePlayPause),prevBtn.addEventListener("click",playPrev),nextBtn.addEventListener("click",playNext),loopBtn.addEventListener("click",toggleLoop),volumeSlider.addEventListener("input",changeVolume),volumeIcon.addEventListener("click",toggleMute),progressBar.addEventListener("input",seekTo),playlistEl.addEventListener("click",e=>{const t=e.target.closest("li");if(t){const e=parseInt(t.dataset.index);e!==currentSongIndex?loadSongAndPlay(e):togglePlayPause()}})}function renderPlaylist(){playlistEl.innerHTML="",songPlaylist.forEach((e,t)=>{const n=document.createElement("li");n.dataset.index=t,n.innerHTML=`<div class="song-details"><span class="song-title">${e.title}</span><span class="song-artist">${e.artist}</span></div><i class="fa-solid fa-play"></i>`,playlistEl.appendChild(n)})}function loadSong(e){currentSongIndex=e;const t=songPlaylist[e];player.cueVideoById(t.videoId),updateUI()}function loadSongAndPlay(e){currentSongIndex=e;const t=songPlaylist[e];player.loadVideoById(t.videoId),updateUI()}function updateUI(){const e=songPlaylist[currentSongIndex];songTitleEl.textContent=e.title,songArtistEl.textContent=e.artist,document.title=`${e.title} - ${e.artist}`,albumArtEl.src=`https://i.ytimg.com/vi/${e.videoId}/hqdefault.jpg`,faviconEl.href=`https://i.ytimg.com/vi/${e.videoId}/hqdefault.jpg`,document.querySelectorAll("#playlist li").forEach((t,n)=>{t.classList.toggle("active-song",n===currentSongIndex),t.querySelector("i").className=n===currentSongIndex&&isPlaying?"fa-solid fa-compact-disc fa-spin":"fa-solid fa-play"}),playPauseIcon.className=isPlaying?"fas fa-pause":"fas fa-play"}function togglePlayPause(){isPlaying?player.pauseVideo():player.playVideo()}function playNext(){loadSongAndPlay((currentSongIndex+1)%songPlaylist.length)}function playPrev(){loadSongAndPlay((currentSongIndex-1+songPlaylist.length)%songPlaylist.length)}function toggleLoop(){isLooping=!isLooping,loopBtn.classList.toggle("active",isLooping)}function changeVolume(){player.setVolume(volumeSlider.value),updateVolumeIcon(volumeSlider.value)}function toggleMute(){player.isMuted()?(player.unMute(),volumeSlider.value=player.getVolume()):(player.mute(),volumeSlider.value=0),updateVolumeIcon(volumeSlider.value)}function updateVolumeIcon(e){const t=volumeIcon.querySelector("i");0==e?t.className="fa-solid fa-volume-xmark":e<=50?t.className="fa-solid fa-volume-low":t.className="fa-solid fa-volume-high"}function seekTo(){player.seekTo(player.getDuration()*progressBar.value/100,!0)}function updateProgress(){const e=player.getDuration(),t=player.getCurrentTime();e>0&&(durationEl.textContent=formatTime(e),currentTimeEl.textContent=formatTime(t),progressBar.value=t/e*100)}function formatTime(e){const t=Math.floor(e/60),n=Math.floor(e%60);return`${t}:${n<10?"0":""}${n}`}
+        const songPlaylist = [
+            // Kamu bisa menambahkan lagu lain di sini
+            { title: "Komang", artist: "Raim Laode", driveId: '1CgSIJWX3Kbei46Zg-qAFZYaGflMNsnon' },
+            { title: "Lagu Lain", artist: "Artis Lain", driveId: 'GANTI_DENGAN_ID_DARI_GOOGLE_DRIVE' },
+        ];
+
+        // Mendefinisikan semua elemen
+        const audioPlayer = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const playPauseIcon = document.getElementById('play-pause-icon');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const loopBtn = document.getElementById('loop-btn');
+        const volumeIcon = document.getElementById('volume-icon');
+        const volumeSlider = document.getElementById('volume-slider');
+        const progressBar = document.getElementById('progress-bar');
+        const currentTimeEl = document.getElementById('current-time');
+        const durationEl = document.getElementById('duration');
+        const songTitleEl = document.getElementById('song-title');
+        const songArtistEl = document.getElementById('song-artist');
+        const albumArtEl = document.getElementById('album-art');
+        const playlistEl = document.getElementById('playlist');
+
+        let currentSongIndex = 0;
+
+        // Fungsi untuk memuat lagu
+        function loadSong(index) {
+            currentSongIndex = index;
+            const song = songPlaylist[index];
+            songTitleEl.textContent = song.title;
+            songArtistEl.textContent = song.artist;
+            audioPlayer.src = `https://drive.google.com/uc?export=download&id=${song.driveId}`;
+            updatePlaylistUI();
+        }
+
+        // Fungsi untuk memutar atau menjeda
+        function togglePlayPause() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+            } else {
+                audioPlayer.pause();
+            }
+        }
+        
+        function playNext() {
+            currentSongIndex = (currentSongIndex + 1) % songPlaylist.length;
+            loadSong(currentSongIndex);
+            audioPlayer.play();
+        }
+
+        function playPrev() {
+            currentSongIndex = (currentSongIndex - 1 + songPlaylist.length) % songPlaylist.length;
+            loadSong(currentSongIndex);
+            audioPlayer.play();
+        }
+
+        // Update UI saat lagu diputar/dijeda
+        audioPlayer.addEventListener('play', () => {
+            playPauseIcon.className = 'fas fa-pause';
+            albumArtEl.classList.add('playing');
+            updatePlaylistUI();
+        });
+
+        audioPlayer.addEventListener('pause', () => {
+            playPauseIcon.className = 'fas fa-play';
+            albumArtEl.classList.remove('playing');
+            updatePlaylistUI();
+        });
+        
+        // Update progress bar
+        audioPlayer.addEventListener('timeupdate', () => {
+            const { duration, currentTime } = audioPlayer;
+            if (duration) {
+                progressBar.value = (currentTime / duration) * 100;
+                currentTimeEl.textContent = formatTime(currentTime);
+                durationEl.textContent = formatTime(duration);
+            }
+        });
+        
+        // Pindah lagu saat progress bar digeser
+        progressBar.addEventListener('input', () => {
+            audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration;
+        });
+
+        // Fungsi loop
+        loopBtn.addEventListener('click', () => {
+            audioPlayer.loop = !audioPlayer.loop;
+            loopBtn.classList.toggle('active', audioPlayer.loop);
+        });
+        
+        // Pindah ke lagu selanjutnya jika sudah selesai
+        audioPlayer.addEventListener('ended', () => {
+            if (!audioPlayer.loop) {
+                playNext();
+            }
+        });
+
+        // Kontrol volume
+        volumeSlider.addEventListener('input', (e) => {
+            audioPlayer.volume = e.target.value;
+        });
+
+        // Render daftar putar
+        function renderPlaylist() {
+            playlistEl.innerHTML = '';
+            songPlaylist.forEach((song, index) => {
+                const li = document.createElement('li');
+                li.dataset.index = index;
+                li.innerHTML = `<div class="song-details"><span class="song-title">${song.title}</span><span class="song-artist">${song.artist}</span></div><i class="fa-solid fa-play"></i>`;
+                li.addEventListener('click', () => {
+                    loadSong(index);
+                    audioPlayer.play();
+                });
+                playlistEl.appendChild(li);
+            });
+        }
+        
+        // Update UI daftar putar
+        function updatePlaylistUI() {
+            document.querySelectorAll('#playlist li').forEach((li, idx) => {
+                li.classList.toggle('active-song', idx === currentSongIndex);
+                const icon = li.querySelector('i');
+                if (idx === currentSongIndex && !audioPlayer.paused) {
+                    icon.className = 'fa-solid fa-compact-disc fa-spin';
+                } else {
+                    icon.className = 'fa-solid fa-play';
+                }
+            });
+        }
+
+        function formatTime(s) { const m=Math.floor(s/60),c=Math.floor(s%60); return `${m}:${c<10?'0':''}${c}`; }
+        
+        // Inisialisasi
+        renderPlaylist();
+        loadSong(0);
+
     </script>
 </body>
 </html>
