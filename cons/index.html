@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Playlist Player</title>
+    <title>Responsive Music Player</title>
     <link id="favicon" rel="icon" href="data:;base64,iVBORw0KGgo=">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
@@ -15,7 +15,7 @@
             --player-background: #1e1e1e;
             --primary-text-color: #ffffff;
             --secondary-text-color: #b3b3b3;
-            --accent-color: #1DB954; /* Ganti warna aksen jadi hijau Spotify */
+            --accent-color: #1DB954;
             --highlight-color: #2a2a2a;
             --border-radius: 12px;
         }
@@ -33,25 +33,38 @@
             box-sizing: border-box;
         }
 
-        .container {
+        /* -- ✨ KODE BARU: WRAPPER UNTUK LAYOUT RESPONSIVE ✨ -- */
+        .main-wrapper {
             display: flex;
-            flex-direction: column;
+            flex-direction: row; /* Default untuk desktop: berdampingan */
             gap: 20px;
             width: 100%;
-            max-width: 380px;
+            max-width: 800px;
+            align-items: flex-start;
         }
 
-        .music-container, .playlist-container {
+        .music-container {
             background-color: var(--player-background);
             border-radius: var(--border-radius);
             padding: 25px 30px;
-            width: 100%;
             box-sizing: border-box;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            flex-shrink: 0; /* Agar player tidak menyusut */
+            width: 380px;
         }
 
-        .music-container { text-align: center; }
+        .playlist-container {
+            background-color: var(--player-background);
+            border-radius: var(--border-radius);
+            padding: 25px 30px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex-grow: 1; /* Agar mengisi sisa ruang */
+            max-height: 480px; /* Batasi tinggi playlist */
+        }
         
         #youtube-player-container { position: absolute; top: -9999px; left: -9999px; }
 
@@ -85,24 +98,34 @@
         .volume-container { display: flex; align-items: center; gap: 8px; }
         #volume-slider { width: 70px; }
 
-        /* -- ✨ KODE BARU: DAFTAR MUSIK ✨ -- */
         .playlist-container h3 { margin-top: 0; font-size: 1em; color: var(--secondary-text-color); text-align: left;}
-        #playlist { list-style: none; padding: 0; margin: 0; max-height: 200px; overflow-y: auto; }
-        #playlist li {
-            padding: 12px 15px; border-radius: 8px; margin-bottom: 8px; cursor: pointer;
-            display: flex; justify-content: space-between; align-items: center;
-            transition: background-color 0.2s ease;
-        }
+        #playlist { list-style: none; padding: 0; margin: 0; max-height: 350px; overflow-y: auto; }
+        #playlist li { padding: 12px 15px; border-radius: 8px; margin-bottom: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background-color 0.2s ease; }
         #playlist li:hover { background-color: var(--highlight-color); }
         #playlist li.active-song { background-color: var(--accent-color); color: black; font-weight: 600; }
-        #playlist .song-details { display: flex; flex-direction: column; }
+        #playlist .song-details { display: flex; flex-direction: column; text-align: left; }
         #playlist .song-title { font-size: 1em; }
         #playlist .song-artist { font-size: 0.8em; opacity: 0.7; }
+
+        /* -- ✨ KODE BARU: MEDIA QUERY UNTUK MOBILE ✨ -- */
+        @media (max-width: 768px) {
+            .main-wrapper {
+                flex-direction: column; /* Ubah jadi tumpukan ke bawah */
+                max-width: 380px;
+            }
+            .music-container {
+                width: 100%;
+            }
+            .playlist-container {
+                width: 100%;
+                max-height: 250px; /* Sesuaikan tinggi untuk mobile */
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="main-wrapper">
         <div class="music-container">
             <div id="youtube-player-container"></div>
             <img src="" alt="Album Art" id="album-art" class="album-art">
@@ -133,18 +156,13 @@
     </div>
 
     <script>
-        // -- ✨ DAFTAR MUSIKMU ✨ --
-        // Kamu bisa menambah, mengubah, atau menghapus lagu di sini
-        // Cukup cari ID video YouTube (bagian setelah "watch?v=")
+        // -- ✨ DAFTAR MUSIK BARU SESUAI PERMINTAANMU ✨ --
         const songPlaylist = [
-            { title: "Sial", artist: "Mahalini", videoId: 'L-uAk_Q_9sY' },
-            { title: "Komang", artist: "Raim Laode", videoId: 'e_sIgoQ4j9w' },
-            { title: "Nanti Kita Seperti Ini", artist: "Batas Senja", videoId: 'w9i-z253WpM' },
-            { title: "Dandelions", artist: "Ruth B.", videoId: 'P1vH3U_2Pmg' },
-            { title: "As It Was", artist: "Harry Styles", videoId: 'H5v3kku4y6Q' }
+            { title: "The day you and the stars disappeared", artist: "Honkai Impact 3rd", videoId: 'L2kse_J0L0I' },
+            { title: "Consequently", artist: "Nhật Linh Đặng Hoàng", videoId: 'sL2bIm_aBAs' }
         ];
 
-        // --- Sisanya biarkan sihirku yang bekerja (´｡• ω •｡`) ---
+        // --- Sisanya adalah kode JavaScript yang sama, tidak perlu diubah ---
         const playPauseBtn = document.getElementById('play-pause-btn'), playPauseIcon = document.getElementById('play-pause-icon');
         const prevBtn = document.getElementById('prev-btn'), nextBtn = document.getElementById('next-btn'), loopBtn = document.getElementById('loop-btn');
         const volumeIcon = document.getElementById('volume-icon'), volumeSlider = document.getElementById('volume-slider');
@@ -170,6 +188,7 @@
             renderPlaylist();
             loadSong(currentSongIndex);
             setupEventListeners();
+            player.setVolume(100);
             volumeSlider.value = 100;
         }
         
@@ -184,6 +203,7 @@
             if (event.data == YT.PlayerState.ENDED) {
                 if (isLooping) { player.seekTo(0); player.playVideo(); } else { playNext(); }
             }
+            updateUI(songPlaylist[currentSongIndex]);
         }
         
         function setupEventListeners() {
@@ -198,7 +218,11 @@
                 const songItem = e.target.closest('li');
                 if(songItem) {
                     const songIndex = parseInt(songItem.dataset.index);
-                    loadSong(songIndex);
+                    if (songIndex !== currentSongIndex) {
+                        loadSong(songIndex);
+                    } else {
+                        togglePlayPause();
+                    }
                 }
             });
         }
@@ -235,7 +259,7 @@
             
             document.querySelectorAll('#playlist li').forEach((li, idx) => {
                 li.classList.toggle('active-song', idx === currentSongIndex);
-                li.querySelector('i').className = (idx === currentSongIndex && isPlaying) ? 'fa-solid fa-pause' : 'fa-solid fa-play';
+                li.querySelector('i').className = (idx === currentSongIndex && isPlaying) ? 'fa-solid fa-compact-disc fa-spin' : 'fa-solid fa-play';
             });
         }
 
@@ -244,8 +268,8 @@
         function playPrev() { loadSong((currentSongIndex - 1 + songPlaylist.length) % songPlaylist.length); }
         function toggleLoop() { isLooping = !isLooping; loopBtn.classList.toggle('active', isLooping); }
         function changeVolume() { player.setVolume(volumeSlider.value); updateVolumeIcon(volumeSlider.value); }
-        function toggleMute() { player.isMuted() ? player.unMute() : player.mute(); updateVolumeIcon(player.isMuted() ? 0 : player.getVolume()); }
-        function updateVolumeIcon(volume) { /* ... fungsi volume dari sebelumnya ... */ }
+        function toggleMute() { if(player.isMuted()){ player.unMute(); volumeSlider.value = player.getVolume(); } else { player.mute(); volumeSlider.value = 0; } updateVolumeIcon(volumeSlider.value); }
+        function updateVolumeIcon(volume) { const icon = volumeIcon.querySelector('i'); if (volume == 0) icon.className = 'fa-solid fa-volume-xmark'; else if (volume <= 50) icon.className = 'fa-solid fa-volume-low'; else icon.className = 'fa-solid fa-volume-high'; }
         function seekTo() { player.seekTo(player.getDuration() * (progressBar.value / 100), true); }
         function updateProgress() { const d = player.getDuration(), c = player.getCurrentTime(); if(d>0) { durationEl.textContent = formatTime(d); currentTimeEl.textContent = formatTime(c); progressBar.value = (c/d)*100;} }
         function formatTime(s) { const m=Math.floor(s/60),c=Math.floor(s%60); return `${m}:${c<10?'0':''}${c}`; }
