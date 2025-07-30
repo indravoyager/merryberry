@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
-        /* CSS-nya masih sama, tidak ada perubahan */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
         :root{--background-color:#121212;--player-background:#1e1e1e;--primary-text-color:#ffffff;--secondary-text-color:#b3b3b3;--accent-color:#1DB954;--highlight-color:#2a2a2a;--border-radius:12px;}
         body{background-color:var(--background-color);color:var(--primary-text-color);font-family:'Poppins',sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;padding:20px;box-sizing:border-box;}
@@ -46,9 +45,11 @@
     </style>
 </head>
 <body>
+    
     <div class="main-wrapper">
         <div class="music-container">
             <div id="youtube-player-container"></div>
+            
             <img src="" alt="Album Art" id="album-art" class="album-art">
             <h2 id="song-title">Memuat...</h2>
             <p id="song-artist">Tunggu sebentar...</p>
@@ -77,13 +78,12 @@
     </div>
 
     <script>
-        // DAFTAR LAGU
         const songPlaylist = [
-            { title: "The day you and the stars disappeared", artist: "Honkai Impact 3rd", videoId: 'L2kse_J0L0I' },
-            { title: "Consequently", artist: "Nhật Linh Đặng Hoàng", videoId: 'sL2bIm_aBAs' }
+            { title: "The Day You and the Stars Disappeared", artist: "Honkai Impact 3rd", videoId: 'L2kse_J0L0I' },
+            { title: "Consequently", artist: "Hifuu Club Activity Record", videoId: 'sL2bIm_aBAs' }
         ];
 
-        // SEKARANG SEMUA ELEMEN PASTI DITEMUKAN
+        // Mendefinisikan elemen SETELAH HTML-nya pasti ada
         const playPauseBtn = document.getElementById('play-pause-btn');
         const playPauseIcon = document.getElementById('play-pause-icon');
         const prevBtn = document.getElementById('prev-btn');
@@ -110,7 +110,6 @@
         let currentSongIndex = 0;
         let isPlaying = false;
         let isLooping = false;
-        let hasUserInteracted = false; // Lacak interaksi pertama pengguna
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player-container', {
@@ -121,19 +120,16 @@
 
         function onPlayerReady() {
             renderPlaylist();
-            loadSong(currentSongIndex); 
+            // Muat lagu pertama, tapi jangan langsung diputar. Menunggu klik dari pengguna.
+            loadSong(currentSongIndex, false); 
             setupEventListeners();
             player.setVolume(100);
             volumeSlider.value = 100;
-            // Pesan awal untuk memancing interaksi pengguna
-            songTitleEl.textContent = "Klik Play untuk Memulai";
-            songArtistEl.textContent = "Selamat Mendengarkan!";
         }
         
         function onPlayerStateChange(event) {
-            const state = event.data;
-            isPlaying = (state === YT.PlayerState.PLAYING);
-
+            isPlaying = (event.data === YT.PlayerState.PLAYING);
+            
             if (isPlaying) {
                 albumArtEl.classList.add('playing');
                 progressUpdateInterval = setInterval(updateProgress, 250);
@@ -142,18 +138,10 @@
                 clearInterval(progressUpdateInterval);
             }
 
-            // Putar otomatis jika sudah ada interaksi atau lagu baru di-load
-            if (state === YT.PlayerState.CUED && hasUserInteracted) {
-                 player.playVideo();
-            }
-
-            if (state === YT.PlayerState.ENDED) {
+            if (event.data === YT.PlayerState.ENDED) {
                 if (isLooping) { player.seekTo(0); } else { playNext(); }
             }
-            // Hanya update UI jika ada lagu yang valid
-            if(songPlaylist[currentSongIndex]){
-                 updateUI(songPlaylist[currentSongIndex]);
-            }
+            updateUI();
         }
         
         function setupEventListeners() {
@@ -165,12 +153,11 @@
             volumeIcon.addEventListener('click', toggleMute);
             progressBar.addEventListener('input', seekTo);
             playlistEl.addEventListener('click', (e) => {
-                hasUserInteracted = true;
                 const songItem = e.target.closest('li');
                 if (songItem) {
                     const songIndex = parseInt(songItem.dataset.index);
                     if (songIndex !== currentSongIndex) {
-                        loadSong(songIndex);
+                        loadSongAndPlay(songIndex);
                     } else {
                         togglePlayPause();
                     }
@@ -188,18 +175,26 @@
             });
         }
 
+        // Fungsi untuk memuat lagu (tanpa memutar)
         function loadSong(index) {
             currentSongIndex = index;
             const song = songPlaylist[index];
-            player.cueVideoById(song.videoId);
-            updateUI(song);
+            player.cueVideoById(song.videoId); 
+            updateUI();
+        }
+        
+        // Fungsi untuk memuat DAN memutar lagu
+        function loadSongAndPlay(index) {
+            currentSongIndex = index;
+            const song = songPlaylist[index];
+            player.loadVideoById(song.videoId); // loadVideoById akan langsung memutar
+            updateUI();
         }
 
-        function updateUI(song) {
-            if (hasUserInteracted) {
-                songTitleEl.textContent = song.title; 
-                songArtistEl.textContent = song.artist;
-            }
+        function updateUI() {
+            const song = songPlaylist[currentSongIndex];
+            songTitleEl.textContent = song.title; 
+            songArtistEl.textContent = song.artist;
             document.title = `${song.title} - ${song.artist}`;
             albumArtEl.src = `https://i.ytimg.com/vi/${song.videoId}/hqdefault.jpg`;
             faviconEl.href = `https://i.ytimg.com/vi/${song.videoId}/hqdefault.jpg`;
@@ -212,14 +207,10 @@
         }
 
         function togglePlayPause() { 
-            if (!hasUserInteracted) {
-                hasUserInteracted = true;
-                updateUI(songPlaylist[currentSongIndex]);
-            }
             if (isPlaying) { player.pauseVideo(); } else { player.playVideo(); } 
         }
-        function playNext() { hasUserInteracted = true; loadSong((currentSongIndex + 1) % songPlaylist.length); }
-        function playPrev() { hasUserInteracted = true; loadSong((currentSongIndex - 1 + songPlaylist.length) % songPlaylist.length); }
+        function playNext() { loadSongAndPlay((currentSongIndex + 1) % songPlaylist.length); }
+        function playPrev() { loadSongAndPlay((currentSongIndex - 1 + songPlaylist.length) % songPlaylist.length); }
         function toggleLoop() { isLooping = !isLooping; loopBtn.classList.toggle('active', isLooping); }
         function changeVolume() { player.setVolume(volumeSlider.value); updateVolumeIcon(volumeSlider.value); }
         function toggleMute() { if(player.isMuted()){ player.unMute(); volumeSlider.value = player.getVolume(); } else { player.mute(); volumeSlider.value = 0; } updateVolumeIcon(volumeSlider.value); }
