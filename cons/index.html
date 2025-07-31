@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Music Player</title>
+    <title>Audio Player</title>
     <style>
         :root {
             --bg-color: #181818;
@@ -15,7 +15,6 @@
             --active-bg-color: #383838;
             --accent-color: #3ea6ff;
         }
-
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
@@ -23,110 +22,28 @@
             color: var(--text-color);
             padding: 20px;
         }
-
         .container {
-            display: flex;
-            flex-direction: row;
-            gap: 20px;
-            max-width: 1200px;
+            max-width: 600px;
             margin: auto;
-        }
-
-        .main-content {
-            flex: 3;
             display: flex;
             flex-direction: column;
         }
-
+        /* PENTING: Bagian ini "menyembunyikan" video */
         .player-wrapper {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-            height: 0;
-            background-color: #000;
-        }
-
-        .player-wrapper iframe {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
         }
-        
-        /* === KONTROL PLAYER BARU === */
-        .controls-wrapper {
-            background-color: var(--widget-bg-color);
-            padding: 10px 15px;
-            border: 1px solid var(--border-color);
-            border-top: none;
-        }
-        
-        .progress-bar-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.8em;
-            color: var(--text-secondary-color);
-        }
-
-        .main-controls {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 10px;
-        }
-        
-        .left-controls, .right-controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .control-button {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            cursor: pointer;
-            font-size: 1.5em;
-            padding: 5px;
-        }
-        .control-button.active {
-            color: var(--accent-color);
-        }
-        
-        .volume-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        input[type="range"] {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            cursor: pointer;
-            background: #444;
-            height: 5px;
-            border-radius: 5px;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 15px;
-            height: 15px;
-            background: var(--text-color);
-            border-radius: 50%;
-        }
-        
-        /* === PLAYLIST DI SISI KANAN === */
         .playlist-wrapper {
-            flex: 2;
             background-color: var(--widget-bg-color);
-            height: 65vh;
+            height: 60vh;
             overflow-y: auto;
             border: 1px solid var(--border-color);
+            border-bottom: none;
         }
-        
         .playlist-header {
             padding: 15px;
             font-size: 1.2em;
@@ -136,7 +53,6 @@
             top: 0;
             background-color: var(--widget-bg-color);
         }
-
         .playlist-item {
             display: flex;
             align-items: center;
@@ -145,52 +61,82 @@
             border-bottom: 1px solid var(--border-color);
             gap: 12px;
         }
-
         .playlist-item:hover { background-color: var(--hover-bg-color); }
         .playlist-item.active { background-color: var(--active-bg-color); }
         .item-number { font-size: 0.9em; color: var(--text-secondary-color); }
         .item-title { flex-grow: 1; font-size: 0.9em; }
 
-        @media (max-width: 768px) {
-            .container { flex-direction: column; }
-            .playlist-wrapper { height: 40vh; }
+        .controls-wrapper {
+            background-color: var(--widget-bg-color);
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+        }
+        .progress-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8em;
+            color: var(--text-secondary-color);
+        }
+        .main-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .left-controls, .right-controls { display: flex; align-items: center; gap: 15px; }
+        .control-button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 1.5em;
+            padding: 5px;
+        }
+        .control-button.active { color: var(--accent-color); }
+        .volume-container { display: flex; align-items: center; gap: 8px; }
+        input[type="range"] {
+            -webkit-appearance: none; appearance: none;
+            width: 100%; cursor: pointer; background: #444; height: 5px; border-radius: 5px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 15px; height: 15px; background: var(--text-color); border-radius: 50%;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="main-content">
-            <div class="player-wrapper">
-                <div id="player"></div>
-            </div>
-            <div class="controls-wrapper">
-                <div class="progress-bar-container">
-                    <span id="current-time">0:00</span>
-                    <input type="range" id="progress-bar" value="0" min="0" max="100">
-                    <span id="duration">0:00</span>
-                </div>
-                <div class="main-controls">
-                    <div class="left-controls">
-                        <button id="prev-btn" class="control-button">⏮</button>
-                        <button id="play-pause-btn" class="control-button">▶</button>
-                        <button id="next-btn" class="control-button">⏭</button>
-                    </div>
-                    <div class="right-controls">
-                         <div class="volume-container">
-                             <button id="mute-btn" class="control-button">🔊</button>
-                             <input type="range" id="volume-bar" value="100" min="0" max="100">
-                         </div>
-                        <button id="loop-btn" class="control-button">🔁</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
         <div class="playlist-wrapper">
             <div class="playlist-header">Daftar Putar</div>
             <div id="playlist-items"></div>
         </div>
+        <div class="controls-wrapper">
+            <div class="progress-bar-container">
+                <span id="current-time">0:00</span>
+                <input type="range" id="progress-bar" value="0" min="0" max="100">
+                <span id="duration">0:00</span>
+            </div>
+            <div class="main-controls">
+                <div class="left-controls">
+                    <button id="prev-btn" class="control-button">⏮</button>
+                    <button id="play-pause-btn" class="control-button">▶</button>
+                    <button id="next-btn" class="control-button">⏭</button>
+                </div>
+                <div class="right-controls">
+                     <div class="volume-container">
+                         <button id="mute-btn" class="control-button">🔊</button>
+                         <input type="range" id="volume-bar" value="100" min="0" max="100">
+                     </div>
+                    <button id="loop-btn" class="control-button">🔁</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="player-wrapper">
+        <div id="player"></div>
     </div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
@@ -199,7 +145,8 @@
         const API_KEY = 'AIzaSyANobRzgpApB7IgKVh6Ud5Y4t_-m7phWAc';
         const PLAYLIST_ID = 'PLYlXDssRVFTqqr14FolR8omVbBHsav3-K&si=ieNVTkGFku5-k3dn';
 
-        // Elemen HTML
+        // Semua kode JavaScript dari sebelumnya bisa disalin ke sini,
+        // karena logikanya tidak berubah sama sekali.
         const playlistContainer = document.getElementById('playlist-items');
         const playPauseBtn = document.getElementById('play-pause-btn');
         const prevBtn = document.getElementById('prev-btn');
@@ -211,7 +158,6 @@
         const currentTimeEl = document.getElementById('current-time');
         const durationEl = document.getElementById('duration');
 
-        // Variabel Global
         let player;
         let videos = [];
         let progressInterval;
@@ -219,7 +165,7 @@
         
         function onYouTubeIframeAPIReady() { fetchPlaylist(); }
 
-        async function fetchPlaylist() { /* ... kode fetch playlist sama seperti sebelumnya ... */ 
+        async function fetchPlaylist() {
             const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${PLAYLIST_ID}&key=${API_KEY}`;
             try {
                 const response = await fetch(url);
@@ -235,7 +181,7 @@
             }
         }
 
-        function displayPlaylist() { /* ... kode display playlist sama seperti sebelumnya ... */ 
+        function displayPlaylist() {
             playlistContainer.innerHTML = '';
             videos.forEach((item, index) => {
                 if (!item.snippet.title) return;
@@ -256,16 +202,11 @@
         function initializePlayer(firstVideoId) {
             player = new YT.Player('player', {
                 height: '100%', width: '100%', videoId: firstVideoId,
-                playerVars: { 'playsinline': 1, 'controls': 0 }, // Sembunyikan kontrol bawaan YouTube
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
+                playerVars: { 'playsinline': 1, 'controls': 0 },
+                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
             });
         }
         
-        // --- LOGIKA BARU UNTUK KONTROL PLAYER ---
-
         function onPlayerReady(event) {
             updateActiveItem(player.getVideoData().video_id);
             volumeBar.value = player.getVolume();
@@ -273,7 +214,6 @@
         }
 
         function onPlayerStateChange(event) {
-            // Update Tombol Play/Pause
             if (event.data == YT.PlayerState.PLAYING) {
                 playPauseBtn.innerHTML = '❚❚';
                 startProgressBar();
@@ -281,47 +221,29 @@
                 playPauseBtn.innerHTML = '▶';
                 clearInterval(progressInterval);
             }
-
-            // Logika Loop dan Lagu Selanjutnya
             if (event.data == YT.PlayerState.ENDED) {
-                if (isLooping) {
-                    player.seekTo(0);
-                } else {
-                    playNext();
-                }
+                if (isLooping) player.seekTo(0); else playNext();
             }
         }
         
         function setupEventListeners() {
             playPauseBtn.addEventListener('click', () => {
                 const playerState = player.getPlayerState();
-                if (playerState == YT.PlayerState.PLAYING) player.pauseVideo();
-                else player.playVideo();
+                if (playerState == YT.PlayerState.PLAYING) player.pauseVideo(); else player.playVideo();
             });
-            
             prevBtn.addEventListener('click', playPrev);
             nextBtn.addEventListener('click', playNext);
-
             loopBtn.addEventListener('click', () => {
                 isLooping = !isLooping;
                 loopBtn.classList.toggle('active', isLooping);
             });
-
             muteBtn.addEventListener('click', () => {
-                if (player.isMuted()) {
-                    player.unMute();
-                    muteBtn.innerHTML = '🔊';
-                } else {
-                    player.mute();
-                    muteBtn.innerHTML = '🔇';
-                }
+                if (player.isMuted()) { player.unMute(); muteBtn.innerHTML = '🔊'; } 
+                else { player.mute(); muteBtn.innerHTML = '🔇'; }
             });
-
             volumeBar.addEventListener('input', (e) => player.setVolume(e.target.value));
-
             progressBar.addEventListener('input', (e) => {
-                const duration = player.getDuration();
-                const newTime = duration * (e.target.value / 100);
+                const newTime = player.getDuration() * (e.target.value / 100);
                 player.seekTo(newTime);
             });
         }
@@ -345,15 +267,14 @@
         }
 
         function startProgressBar() {
-            clearInterval(progressInterval); // Hapus interval lama jika ada
+            clearInterval(progressInterval);
             progressInterval = setInterval(() => {
                 const currentTime = player.getCurrentTime();
                 const duration = player.getDuration();
-                const progress = (currentTime / duration) * 100;
-                progressBar.value = progress;
+                progressBar.value = (currentTime / duration) * 100;
                 currentTimeEl.textContent = formatTime(currentTime);
                 durationEl.textContent = formatTime(duration);
-            }, 500); // Update setiap 0.5 detik
+            }, 500);
         }
         
         function formatTime(time) {
@@ -362,7 +283,7 @@
             return `${minutes}:${seconds}`;
         }
 
-        function updateActiveItem(videoId) { /* ... kode update item aktif sama seperti sebelumnya ... */
+        function updateActiveItem(videoId) {
             document.querySelectorAll('.playlist-item').forEach(item => {
                 item.classList.remove('active');
             });
