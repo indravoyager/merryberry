@@ -3,55 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pemutar Playlist</title>
+    <title>Pemutar Playlist Kustom</title>
     <style>
+        :root {
+            --bg-color: #181818;
+            --widget-bg-color: #212121;
+            --text-color: #ffffff;
+            --text-secondary-color: #aaaaaa;
+            --border-color: #383838;
+            --hover-bg-color: #303030;
+            --active-bg-color: #383838;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            padding: 20px;
-            background-color: #ffffff; /* Latar belakang putih polos */
-            color: #000000;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
         }
-        h1 {
-            font-weight: 600;
-            margin-bottom: 20px;
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            max-width: 1200px;
+            margin: auto;
         }
-        .player-container {
+
+        .player-wrapper {
+            flex: 3; /* Player takes more space */
             position: relative;
-            width: 100%;
-            max-width: 800px;
-            padding-bottom: 56.25%; /* Rasio video 16:9 */
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
             height: 0;
-            border: 1px solid #e0e0e0; /* Garis batas tipis */
+            background-color: #000;
         }
-        .player-container iframe {
+
+        .player-wrapper iframe {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
         }
+
+        .playlist-wrapper {
+            flex: 2; /* Playlist takes less space */
+            background-color: var(--widget-bg-color);
+            height: 60vh; /* Adjust height as needed */
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+        
+        .playlist-header {
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background-color: var(--widget-bg-color);
+        }
+
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            gap: 15px;
+        }
+
+        .playlist-item:hover {
+            background-color: var(--hover-bg-color);
+        }
+        
+        .playlist-item.active {
+            background-color: var(--active-bg-color);
+        }
+
+        .playlist-item img {
+            width: 120px;
+            height: 68px;
+            object-fit: cover;
+        }
+
+        .playlist-item .title {
+            flex-grow: 1;
+            font-size: 0.9em;
+        }
+
+        /* Responsive Layout for smaller screens */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .player-wrapper {
+                padding-bottom: 56.25%; /* Keep aspect ratio */
+            }
+            .playlist-wrapper {
+                height: 40vh; /* Adjust height for mobile */
+            }
+        }
     </style>
 </head>
 <body>
 
-    <h1>Playlist Musik</h1>
-
-    <div class="player-container">
-        <iframe 
-            width="560" 
-            height="315" 
-            src="https://youtube.com/playlist?list=PLYlXDssRVFTqqr14FolR8omVbBHsav3-K&si=ieNVTkGFku5-k3dn" 
-            title="YouTube video player" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-            allowfullscreen>
-        </iframe>
+    <div class="container">
+        <div class="player-wrapper">
+            <div id="player"></div>
+        </div>
+        <div class="playlist-wrapper">
+            <div class="playlist-header">Daftar Putar</div>
+            <div id="playlist-items"></div>
+        </div>
     </div>
 
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        // Konfigurasi - WAJIB DIISI!
+        const API_KEY = 'AIzaSyANobRzgpApB7IgKVh6Ud5Y4t_-m7phWAc';
+        const PLAYLIST_ID = 'PLYlXDssRVFTqqr14FolR8omVbBHsav3-K&si=ieNVTkGFku5-k3dn'; // Contoh: PL...
+
+        // Elemen HTML
+        const playlistContainer = document.getElementById('playlist-items');
+        let player;
+        let videos = [];
+
+        // 1. Fungsi ini dipanggil setelah API Player siap
+        function onYouTubeIframeAPIReady() {
+            fetchPlaylist();
+        }
+
+        // 2. Mengambil data dari playlist menggunakan YouTube Data API
+        async function fetchPlaylist() {
+            const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${PLAYLIST_ID}&key=${API_KEY}`;
+            
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Gagal mengambil data playlist. Cek API Key dan Playlist ID.');
+                }
+                const data = await response.json();
+                videos = data.items.filter(item => item.snippet.thumbnails.medium); // Filter video tanpa thumbnail
+                
+                if (videos.length > 0) {
+                    displayPlaylist();
+                    initializePlayer(videos[0].snippet.resourceId.videoId);
+                } else {
+                    playlistContainer.innerHTML = 'Playlist kosong atau tidak ditemukan.';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                playlistContainer.innerHTML = `<div style="padding: 20px; color: #ff8a80;">${error.message}</div>`;
+            }
+        }
+
+        // 3. Menampilkan daftar video ke halaman
+        function displayPlaylist() {
+            playlistContainer.innerHTML = ''; // Kosongkan dulu
+            videos.forEach((item, index) => {
+                const videoId = item.snippet.resourceId.videoId;
+                const title = item.snippet.title;
+                const thumbnailUrl = item.snippet.thumbnails.medium.url;
+
+                const div = document.createElement('div');
+                div.className = 'playlist-item';
+                div.dataset.videoId = videoId;
+                div.innerHTML = `
+                    <img src="${thumbnailUrl}" alt="${title}">
+                    <div class="title">${title}</div>
+                `;
+
+                div.addEventListener('click', () => {
+                    player.loadVideoById(videoId);
+                    updateActiveItem(videoId);
+                });
+
+                playlistContainer.appendChild(div);
+            });
+        }
+
+        // 4. Inisialisasi YouTube Player
+        function initializePlayer(firstVideoId) {
+            player = new YT.Player('player', {
+                height: '100%',
+                width: '100%',
+                videoId: firstVideoId,
+                playerVars: {
+                    'playsinline': 1
+                },
+                events: {
+                    'onReady': () => updateActiveItem(firstVideoId),
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+        
+        // 5. Otomatis putar lagu selanjutnya dan update highlight
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.ENDED) {
+                const currentVideoId = player.getVideoData().video_id;
+                const currentIndex = videos.findIndex(v => v.snippet.resourceId.videoId === currentVideoId);
+                const nextIndex = (currentIndex + 1) % videos.length; // Loop kembali ke awal
+                const nextVideoId = videos[nextIndex].snippet.resourceId.videoId;
+                player.loadVideoById(nextVideoId);
+                updateActiveItem(nextVideoId);
+            }
+        }
+
+        // 6. Memberi highlight pada video yang sedang aktif
+        function updateActiveItem(videoId) {
+            document.querySelectorAll('.playlist-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            const activeItem = document.querySelector(`.playlist-item[data-video-id="${videoId}"]`);
+            if (activeItem) {
+                activeItem.classList.add('active');
+            }
+        }
+    </script>
 </body>
 </html>
