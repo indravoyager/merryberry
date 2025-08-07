@@ -1,0 +1,16 @@
+body {
+    background-color: #000; /* Mengatur background menjadi hitam */
+    color: #fff; /* Mengatur warna teks menjadi putih */
+    font-family: 'Courier New', Courier, monospace; /* Menggunakan font monospasi */
+    display: flex; /* Menggunakan flexbox untuk memposisikan konten */
+    justify-content: center; /* Memposisikan konten secara horizontal di tengah */
+    align-items: center; /* Memposisikan konten secara vertikal di tengah */
+    height: 100vh; /* Mengatur tinggi body agar memenuhi seluruh viewport */
+    margin: 0; /* Menghilangkan margin default pada body */
+}
+
+.ascii-art {
+    white-space: pre; /* Memastikan spasi dan baris baru dipertahankan */
+    max-width: 100%; /* Memastikan gambar tidak melebihi lebar layar */
+    overflow-x: auto; /* Menambahkan scroll horizontal jika gambar terlalu lebar */
+}
