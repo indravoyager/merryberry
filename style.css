@@ -1,16 +1,34 @@
 body {
-    background-color: #000; /* Mengatur background menjadi hitam */
-    color: #fff; /* Mengatur warna teks menjadi putih */
-    font-family: 'Courier New', Courier, monospace; /* Menggunakan font monospasi */
-    display: flex; /* Menggunakan flexbox untuk memposisikan konten */
-    justify-content: center; /* Memposisikan konten secara horizontal di tengah */
-    align-items: center; /* Memposisikan konten secara vertikal di tengah */
-    height: 100vh; /* Mengatur tinggi body agar memenuhi seluruh viewport */
-    margin: 0; /* Menghilangkan margin default pada body */
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
 }
 
-.ascii-art {
-    white-space: pre; /* Memastikan spasi dan baris baru dipertahankan */
-    max-width: 100%; /* Memastikan gambar tidak melebihi lebar layar */
-    overflow-x: auto; /* Menambahkan scroll horizontal jika gambar terlalu lebar */
+.background-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('march 7.png');
+    background-size: cover;
+    background-position: center;
+    filter: blur(10px); /* Anda bisa menyesuaikan nilai blur ini */
+    z-index: -1;
+}
+
+.content {
+    text-align: center;
+}
+
+.content img {
+    max-width: 80%; /* Menyesuaikan ukuran gambar agar responsif */
+    height: auto;
+    display: block;
+    margin: 0 auto;
 }
