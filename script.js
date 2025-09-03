@@ -4,28 +4,22 @@ document.addEventListener('DOMContentLoaded', () => {
       themeMode: 'dark',
       alpha: false,
       swatches: [
-        '#bb86fc',
-        '#4ca537',
-        '#d25796',
-        '#03dac6',
-        '#cf6679',
-        '#ffffff',
-        '#000000',
+        '#bb86fc', '#4ca537', '#d25796', '#03dac6',
+        '#cf6679', '#ffffff', '#000000',
       ],
     });
 
-    // --- Variabel untuk elemen-elemen penting ---
+    // --- Variabel Elemen Penting ---
     const imageUpload = document.getElementById('imageUpload');
-    const imagePreviewContainer = document.getElementById('imagePreview');
     const previewCanvas = document.getElementById('previewCanvas');
-    const placeholderText = imagePreviewContainer.querySelector('p');
+    const placeholderText = document.querySelector('#imagePreview p');
     const downloadButton = document.getElementById('downloadButton');
     const gradientBar = document.getElementById('gradientBar');
     const colorStopsContainer = document.getElementById('colorStopsContainer');
     const reverseButton = document.getElementById('reverseButton');
     const preset1Button = document.getElementById('preset1Button');
 
-    // --- Pengaturan awal ---
+    // --- Pengaturan Awal ---
     const ctx = previewCanvas.getContext('2d');
     let originalImageData = null;
     let activeStop = null;
@@ -35,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { color: '#ffffff', position: 100 }
     ];
 
-    // --- Fungsi-fungsi ---
+    // --- Fungsi-Fungsi ---
     const renderGradientBar = () => {
         colorStops.sort((a, b) => a.position - b.position);
         const gradientString = colorStops.map(stop => `${stop.color} ${stop.position}%`).join(', ');
@@ -52,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
             stopElement.dataset.index = index;
             
             stopElement.setAttribute('data-coloris', '');
-            stopElement.value = stop.color;
 
             const marker = document.createElement('div');
             marker.className = 'color-stop-marker';
@@ -123,20 +116,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- KUMPULAN EVENT LISTENERS ---
     function setupEventListeners() {
-        // **BAGIAN YANG DIPERBAIKI**
-        // Listener ini sekarang menangkap elemen yang benar dan mengupdate gambar secara real-time.
+        // Event listener REAL-TIME dari Coloris saat warna diubah
         document.addEventListener('coloris:pick', event => {
             const newColor = event.detail.color;
-            // Dulu: event.target (ini salah)
-            // Sekarang: event.detail.instance.el (ini yang benar!)
             const stopElement = event.detail.instance.el;
             const index = stopElement.dataset.index;
 
             if (index !== undefined) {
                 colorStops[index].color = newColor;
                 stopElement.style.backgroundColor = newColor;
-                
-                // Panggil fungsi update secara langsung untuk efek real-time
                 renderGradientBar();
                 applyGradientMap(); 
             }
@@ -165,7 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         gradientBar.addEventListener('click', (e) => {
             if (e.target.closest('.color-stop')) return;
-            
             const rect = gradientBar.getBoundingClientRect();
             const position = ((e.clientX - rect.left) / rect.width) * 100;
             const newColor = getColorAtPosition(position);
