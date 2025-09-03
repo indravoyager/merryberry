@@ -141,7 +141,7 @@ header h1 span {
 
 .gradient-editor {
     position: relative;
-    padding-bottom: 30px; /* Space for color pickers */
+    padding-bottom: 20px;
 }
 
 .gradient-bar {
@@ -160,10 +160,10 @@ header h1 span {
     height: 16px;
     border-radius: 50%;
     border: 2px solid white;
-    cursor: grab;
     transform: translateX(-50%);
     box-shadow: 0 2px 5px rgba(0,0,0,0.5);
     z-index: 5;
+    cursor: pointer; /* Ubah cursor menjadi pointer untuk klik */
 }
 
 .color-stop.active {
@@ -181,6 +181,28 @@ header h1 span {
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
     border-top: 6px solid white;
+    cursor: grab; /* Cursor untuk drag hanya di marker */
+}
+
+.gradient-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.75rem;
+}
+
+.action-button {
+    flex-grow: 1;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    background-color: #333;
+    color: var(--text-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.action-button:hover {
+    background-color: #444;
 }
 
 /* Responsive Design */
