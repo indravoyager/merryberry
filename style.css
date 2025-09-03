@@ -162,7 +162,6 @@ header h1 span {
     border: 2px solid white;
     transform: translateX(-50%);
     box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-    z-index: 5;
     cursor: pointer;
 }
 
@@ -207,7 +206,6 @@ header h1 span {
     border-color: #555;
 }
 
-/* --- GAYA BARU UNTUK PRESET VISUAL --- */
 #preset1Button {
     background: linear-gradient(to right, #4ca537, #d25796);
     color: white;
@@ -219,7 +217,6 @@ header h1 span {
     filter: brightness(1.2);
     border-color: rgba(255, 255, 255, 0.5);
 }
-
 
 /* Responsive Design */
 @media (max-width: 768px) {
