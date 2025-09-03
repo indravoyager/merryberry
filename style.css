@@ -163,7 +163,7 @@ header h1 span {
     transform: translateX(-50%);
     box-shadow: 0 2px 5px rgba(0,0,0,0.5);
     z-index: 5;
-    cursor: pointer; /* Ubah cursor menjadi pointer untuk klik */
+    cursor: pointer;
 }
 
 .color-stop.active {
@@ -181,7 +181,7 @@ header h1 span {
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
     border-top: 6px solid white;
-    cursor: grab; /* Cursor untuk drag hanya di marker */
+    cursor: grab;
 }
 
 .gradient-actions {
@@ -198,12 +198,28 @@ header h1 span {
     color: var(--text-color);
     border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
+    font-weight: 500;
 }
 
 .action-button:hover {
     background-color: #444;
+    border-color: #555;
 }
+
+/* --- GAYA BARU UNTUK PRESET VISUAL --- */
+#preset1Button {
+    background: linear-gradient(to right, #4ca537, #d25796);
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+#preset1Button:hover {
+    filter: brightness(1.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
