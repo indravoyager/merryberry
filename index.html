@@ -3,13 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tampilan Gambar</title>
+    <title>Gradient Map Generator</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="background-container"></div>
-    <div class="content">
-        <img src="march 7.png" alt="Gambar utama di tengah">
+    <h1>💖 Gradient Map Generator 💖</h1>
+    <div class="container">
+        <div class="image-container">
+            <img id="myImage" src="https://images.unsplash.com/photo-1621538392171-8b211f597951?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Original Image">
+        </div>
+        <div class="controls">
+            <div class="color-picker-group">
+                <label for="color1">Warna 1 (Gelap):</label>
+                <input type="color" id="color1" value="#000000">
+            </div>
+            <div class="color-picker-group">
+                <label for="color2">Warna 2 (Terang):</label>
+                <input type="color" id="color2" value="#ffffff">
+            </div>
+        </div>
     </div>
+    <script src="script.js"></script>
 </body>
 </html>
