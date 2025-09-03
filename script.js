@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ctx = previewCanvas.getContext('2d');
     let originalImageData = null;
     let activeStop = null;
-    let pickrInstances = []; // Array untuk menyimpan semua instance picker
+    let pickrInstances = [];
 
     let colorStops = [
         { color: '#000000', position: 0 },
@@ -27,9 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gradientBar.style.background = `linear-gradient(to right, ${gradientString})`;
     };
     
-    // ** FUNGSI RENDER DITULIS ULANG UNTUK PICKR **
     const renderColorStops = () => {
-        // Hancurkan instance Pickr yang lama sebelum membuat yang baru
         pickrInstances.forEach(p => p.destroyAndRemove());
         pickrInstances = [];
         colorStopsContainer.innerHTML = '';
@@ -60,35 +58,19 @@ document.addEventListener('DOMContentLoaded', () => {
             stopElement.appendChild(marker);
             colorStopsContainer.appendChild(stopElement);
 
-            // Membuat instance Pickr untuk setiap stop
             const pickr = Pickr.create({
-                el: stopElement,
-                theme: 'monolith',
-                default: stop.color,
+                el: stopElement, theme: 'monolith', default: stop.color,
                 components: {
-                    preview: true,
-                    opacity: false,
-                    hue: true,
-                    interaction: {
-                        hex: true,
-                        input: true,
-                        clear: false,
-                        save: true
-                    }
+                    preview: true, opacity: false, hue: true,
+                    interaction: { hex: true, input: true, clear: false, save: true }
                 }
             });
-
-            // Menyimpan instance untuk manajemen
             pickrInstances.push(pickr);
 
-            // Event listener saat warna berubah (real-time)
             pickr.on('change', (color, source, instance) => {
                 const newColor = color.toHEXA().toString();
-                // Update tampilan handle secara langsung
                 instance.getRoot().button.style.color = newColor;
-                // Update data
                 colorStops[index].color = newColor;
-                // Update visual gradien dan gambar
                 renderGradientBar();
                 applyGradientMap();
             });
@@ -125,8 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let startStop = colorStops[0], endStop = colorStops[colorStops.length - 1];
         for (let i = 0; i < colorStops.length - 1; i++) {
             if (position >= colorStops[i].position && position <= colorStops[i + 1].position) {
-                startStop = colorStops[i]; endStop = colorStops[i + 1];
-                break;
+                startStop = colorStops[i]; endStop = colorStops[i + 1]; break;
             }
         }
         const startColor = hexToRgb(startStop.color), endColor = hexToRgb(endStop.color);
@@ -138,26 +119,62 @@ document.addEventListener('DOMContentLoaded', () => {
         return { r, g, b };
     };
     
-    // Setup Event Listeners
-    imageUpload.addEventListener('change', (e) => {
-        const file = e.target.files[0]; if (!file) return;
+    // --- **FUNGSI UPLOAD GAMBAR YANG DIPERBAIKI DAN DIBERI LOG** ---
+    function handleImageUpload(event) {
+        console.log("1. File dipilih, fungsi handleImageUpload berjalan.");
+        const file = event.target.files[0];
+        
+        if (!file) {
+            console.error("Upload dibatalkan: Tidak ada file yang dipilih.");
+            return;
+        }
+        console.log("2. File ditemukan:", file.name);
+
         const reader = new FileReader();
-        reader.onload = (event) => {
+
+        reader.onload = (e) => {
+            console.log("3. FileReader selesai membaca file.");
             const img = new Image();
+
             img.onload = () => {
-                placeholderText.style.display = 'none';
-                previewCanvas.style.display = 'block';
-                previewCanvas.width = img.width;
-                previewCanvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
-                originalImageData = ctx.getImageData(0, 0, img.width, img.height);
-                downloadButton.disabled = false;
-                applyGradientMap();
+                console.log("4. Gambar berhasil dimuat ke memori, ukurannya:", img.width, "x", img.height);
+                try {
+                    placeholderText.style.display = 'none';
+                    previewCanvas.style.display = 'block';
+                    previewCanvas.width = img.width;
+                    previewCanvas.height = img.height;
+                    console.log("5. Canvas disiapkan dan ditampilkan.");
+                    
+                    ctx.drawImage(img, 0, 0);
+                    console.log("6. Gambar digambar ke canvas.");
+                    
+                    originalImageData = ctx.getImageData(0, 0, img.width, img.height);
+                    console.log("7. Pixel data gambar asli berhasil diambil.");
+                    
+                    downloadButton.disabled = false;
+                    applyGradientMap();
+                    console.log("8. Proses selesai! Gambar seharusnya muncul.");
+                } catch (error) {
+                    console.error("Terjadi error saat menampilkan gambar di canvas:", error);
+                }
             };
-            img.src = event.target.result;
+            
+            img.onerror = () => {
+                console.error("ERROR: Gagal memuat file gambar. Mungkin file rusak atau bukan format gambar.");
+            };
+
+            img.src = e.target.result;
         };
+
+        reader.onerror = () => {
+            console.error("ERROR: FileReader gagal membaca file.");
+        };
+
         reader.readAsDataURL(file);
-    });
+    }
+
+    // --- Setup Event Listeners ---
+    imageUpload.addEventListener('change', handleImageUpload);
 
     gradientBar.addEventListener('click', (e) => {
         if (e.target.closest('.color-stop') || e.target.closest('.pcr-app')) return;
@@ -176,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
         position = Math.max(0, Math.min(100, position));
         const index = activeStop.dataset.index;
         colorStops[index].position = position;
-        activeStop.style.left = `${position}%`; // Update posisi visual saat drag
+        activeStop.style.left = `${position}%`;
         renderGradientBar();
         applyGradientMap();
     });
