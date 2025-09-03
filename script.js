@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("HALO MUTSUMI-CHAN! Script Debug v3 sudah dimuat.");
+
     // --- Inisialisasi Pustaka Coloris ---
     Coloris({
       themeMode: 'dark',
@@ -31,12 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Fungsi-Fungsi ---
     const renderGradientBar = () => {
+        console.log("Memperbarui bar gradien...");
         colorStops.sort((a, b) => a.position - b.position);
         const gradientString = colorStops.map(stop => `${stop.color} ${stop.position}%`).join(', ');
         gradientBar.style.background = `linear-gradient(to right, ${gradientString})`;
     };
     
     const renderColorStops = () => {
+        console.log("Membuat ulang handle warna...");
         colorStopsContainer.innerHTML = '';
         colorStops.forEach((stop, index) => {
             const stopElement = document.createElement('div');
@@ -44,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
             stopElement.style.left = `${stop.position}%`;
             stopElement.style.backgroundColor = stop.color;
             stopElement.dataset.index = index;
-            
             stopElement.setAttribute('data-coloris', '');
 
             const marker = document.createElement('div');
@@ -77,8 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const applyGradientMap = () => {
-        if (!originalImageData) return;
-
+        if (!originalImageData) {
+            console.log("APPLY GRADIENT MAP DIBATALKAN: Tidak ada gambar.");
+            return;
+        }
+        console.log("MENERAPKAN GRADIENT MAP KE GAMBAR!");
         const newImageData = new ImageData(new Uint8ClampedArray(originalImageData.data), originalImageData.width, originalImageData.height);
         const data = newImageData.data;
 
@@ -90,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             data[i] = newColor.r; data[i + 1] = newColor.g; data[i + 2] = newColor.b;
         }
         ctx.putImageData(newImageData, 0, 0);
+        console.log("SELESAI MENERAPKAN GRADIENT MAP.");
     };
     
     const hexToRgb = (hex) => {
@@ -114,22 +121,26 @@ document.addEventListener('DOMContentLoaded', () => {
         return { r, g, b };
     };
     
-    // --- KUMPULAN EVENT LISTENERS ---
     function setupEventListeners() {
-        // Event listener REAL-TIME dari Coloris saat warna diubah
         document.addEventListener('coloris:pick', event => {
+            console.log("--- EVENT COLORIS TERDETEKSI! ---");
             const newColor = event.detail.color;
             const stopElement = event.detail.instance.el;
             const index = stopElement.dataset.index;
+            console.log("Warna Baru:", newColor, "| Index Stop:", index);
 
             if (index !== undefined) {
+                console.log("Index valid, memperbarui warna...");
                 colorStops[index].color = newColor;
                 stopElement.style.backgroundColor = newColor;
                 renderGradientBar();
                 applyGradientMap(); 
+            } else {
+                console.error("ERROR: Index stop tidak ditemukan!");
             }
         });
 
+        // ... Sisa event listener lainnya tidak berubah ...
         imageUpload.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
