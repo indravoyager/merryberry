@@ -1,239 +1,51 @@
-:root {
-    --bg-color: #121212;
-    --surface-color: #1e1e1e;
-    --primary-color: #bb86fc;
-    --text-color: #e0e0e0;
-    --border-color: #333;
-    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Map Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+    <header>
+        <h1><span>Gradient</span> Map Generator</h1>
+    </header>
 
-body {
-    font-family: var(--font-family);
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    overflow-x: hidden;
-}
+    <main class="main-container">
+        <div class="controls">
+            <div class="control-group">
+                <h2>1. Upload Gambar</h2>
+                <label for="imageUpload" class="custom-button" id="uploadButton">
+                    Pilih File
+                    <input type="file" id="imageUpload" accept="image/*">
+                </label>
+            </div>
+            
+            <div class="control-group">
+                <h2>2. Atur Gradien</h2>
+                <div class="gradient-editor">
+                    <div class="gradient-bar" id="gradientBar"></div>
+                    <div id="colorStopsContainer"></div>
+                </div>
+                <div class="gradient-actions">
+                    <button id="reverseButton" class="action-button">Reverse</button>
+                    <button id="preset1Button" class="action-button">Preset 1</button>
+                </div>
+            </div>
 
-header {
-    padding: 1.5rem;
-    text-align: center;
-    border-bottom: 1px solid var(--border-color);
-}
+            <div class="control-group">
+                <h2>3. Simpan Hasil</h2>
+                <button id="downloadButton" class="custom-button secondary" disabled>Download Gambar</button>
+            </div>
+        </div>
+        
+        <div class="image-preview" id="imagePreview">
+            <p>Upload gambar untuk memulai</p>
+            <canvas id="previewCanvas"></canvas>
+        </div>
+    </main>
 
-header h1 {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    letter-spacing: 1px;
-}
-
-header h1 span {
-    font-weight: 300;
-    color: var(--text-color);
-}
-
-.main-container {
-    display: flex;
-    flex-grow: 1;
-    padding: 2rem;
-    gap: 2rem;
-}
-
-.controls {
-    width: 350px;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    padding-right: 2rem;
-    border-right: 1px solid var(--border-color);
-}
-
-.image-preview {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--surface-color);
-    border-radius: 12px;
-    min-height: 400px;
-    overflow: hidden;
-    padding: 1rem;
-}
-
-.image-preview p {
-    color: #777;
-}
-
-#previewCanvas {
-    display: none;
-    max-width: 100%;
-    max-height: 70vh;
-    object-fit: contain;
-    border-radius: 8px;
-}
-
-.control-group {
-    background: var(--surface-color);
-    padding: 1.5rem;
-    border-radius: 12px;
-}
-
-.control-group h2 {
-    font-size: 1rem;
-    font-weight: 500;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.75rem;
-}
-
-.custom-button {
-    display: inline-block;
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: none;
-    border-radius: 8px;
-    background-color: var(--primary-color);
-    color: #000;
-    font-weight: 600;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.custom-button:hover {
-    background-color: #a053f5;
-}
-
-.custom-button:active {
-    transform: scale(0.98);
-}
-
-.custom-button.secondary {
-     background-color: #333;
-     color: var(--text-color);
-}
-
-.custom-button.secondary:hover {
-    background-color: #444;
-}
-
-#uploadButton {
-    position: relative;
-}
-
-#imageUpload {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
-}
-
-.gradient-editor {
-    position: relative;
-    padding-bottom: 20px;
-}
-
-.gradient-bar {
-    width: 100%;
-    height: 30px;
-    border-radius: 5px;
-    border: 1px solid var(--border-color);
-    cursor: pointer;
-    position: relative;
-}
-
-.color-stop {
-    position: absolute;
-    top: -5px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    border: 2px solid white;
-    transform: translateX(-50%);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-    z-index: 5;
-    cursor: pointer;
-}
-
-.color-stop.active {
-    z-index: 10;
-    transform: translateX(-50%) scale(1.2);
-}
-
-.color-stop-marker {
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 6px solid white;
-    cursor: grab;
-}
-
-.gradient-actions {
-    margin-top: 1rem;
-    display: flex;
-    gap: 0.75rem;
-}
-
-.action-button {
-    flex-grow: 1;
-    padding: 0.5rem;
-    border: 1px solid var(--border-color);
-    background-color: #333;
-    color: var(--text-color);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-weight: 500;
-}
-
-.action-button:hover {
-    background-color: #444;
-    border-color: #555;
-}
-
-/* --- GAYA BARU UNTUK PRESET VISUAL --- */
-#preset1Button {
-    background: linear-gradient(to right, #4ca537, #d25796);
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
-    border-color: rgba(255, 255, 255, 0.25);
-}
-
-#preset1Button:hover {
-    filter: brightness(1.2);
-    border-color: rgba(255, 255, 255, 0.5);
-}
-
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .main-container {
-        flex-direction: column;
-        padding: 1rem;
-        gap: 1.5rem;
-    }
-    .controls {
-        width: 100%;
-        border-right: none;
-        padding-right: 0;
-    }
-    header {
-        padding: 1rem;
-    }
-}
+    <script src="script.js"></script>
+</body>
+</html>
