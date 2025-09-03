@@ -21,8 +21,15 @@
                 <label for="color2">Warna 2 (Terang):</label>
                 <input type="color" id="color2" value="#ffffff">
             </div>
+            <div class="button-group">
+                <label for="imageUpload" class="upload-button">Upload Gambar</label>
+                <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                <button id="downloadButton" class="download-button">Download Gambar</button>
+            </div>
         </div>
     </div>
+    <canvas id="hiddenCanvas" style="display: none;"></canvas>
+
     <script src="script.js"></script>
 </body>
 </html>
