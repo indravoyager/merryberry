@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- Inisialisasi Pustaka Coloris ---
     Coloris({
-      themeMode: 'dark', // Agar cocok dengan tema gelap kita
-      alpha: false,      // Kita tidak butuh slider transparansi
-      swatches: [        // Contoh warna yang bisa dipilih cepat
+      themeMode: 'dark',
+      alpha: false,
+      swatches: [
         '#bb86fc',
         '#4ca537',
         '#d25796',
@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
         gradientBar.style.background = `linear-gradient(to right, ${gradientString})`;
     };
     
-    // ** FUNGSI DIPERBARUI TOTAL DENGAN COLORIS **
     const renderColorStops = () => {
         colorStopsContainer.innerHTML = '';
         colorStops.forEach((stop, index) => {
@@ -50,9 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
             stopElement.className = 'color-stop';
             stopElement.style.left = `${stop.position}%`;
             stopElement.style.backgroundColor = stop.color;
-            stopElement.dataset.index = index; // Penting untuk tahu stop mana yang diubah
+            stopElement.dataset.index = index;
             
-            // Atribut ini akan memberi tahu Coloris untuk mengambil alih
             stopElement.setAttribute('data-coloris', '');
             stopElement.value = stop.color;
 
@@ -125,20 +123,22 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- KUMPULAN EVENT LISTENERS ---
     function setupEventListeners() {
-        // Event listener khusus dari Coloris saat warna berubah
+        // **BAGIAN YANG DIPERBAIKI**
+        // Listener ini sekarang menangkap elemen yang benar dan mengupdate gambar secara real-time.
         document.addEventListener('coloris:pick', event => {
             const newColor = event.detail.color;
-            const stopElement = event.target;
+            // Dulu: event.target (ini salah)
+            // Sekarang: event.detail.instance.el (ini yang benar!)
+            const stopElement = event.detail.instance.el;
             const index = stopElement.dataset.index;
 
             if (index !== undefined) {
-                // Update warna di array data kita
                 colorStops[index].color = newColor;
-                // Update warna background lingkaran secara langsung
                 stopElement.style.backgroundColor = newColor;
-                // Update bar gradien dan gambar
+                
+                // Panggil fungsi update secara langsung untuk efek real-time
                 renderGradientBar();
-                applyGradientMap();
+                applyGradientMap(); 
             }
         });
 
