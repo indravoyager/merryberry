@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,28 +7,40 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>💖 Gradient Map Generator 💖</h1>
-    <div class="container">
-        <div class="image-container">
-            <img id="myImage" src="https://images.unsplash.com/photo-1621538392171-8b211f597951?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Original Image">
-        </div>
+
+    <header>
+        <h1><span>Gradient</span> Map Generator</h1>
+    </header>
+
+    <main class="main-container">
         <div class="controls">
-            <div class="color-picker-group">
-                <label for="color1">Warna 1 (Gelap):</label>
-                <input type="color" id="color1" value="#000000">
+            <div class="control-group">
+                <h2>1. Upload Gambar</h2>
+                <label for="imageUpload" class="custom-button" id="uploadButton">
+                    Pilih File
+                    <input type="file" id="imageUpload" accept="image/*">
+                </label>
             </div>
-            <div class="color-picker-group">
-                <label for="color2">Warna 2 (Terang):</label>
-                <input type="color" id="color2" value="#ffffff">
+            
+            <div class="control-group">
+                <h2>2. Atur Gradien</h2>
+                 <div class="gradient-editor">
+                    <div class="gradient-bar" id="gradientBar"></div>
+                    <div id="colorStopsContainer"></div>
+                </div>
             </div>
-            <div class="button-group">
-                <label for="imageUpload" class="upload-button">Upload Gambar</label>
-                <input type="file" id="imageUpload" accept="image/*" style="display: none;">
-                <button id="downloadButton" class="download-button">Download Gambar</button>
+
+            <div class="control-group">
+                <h2>3. Simpan Hasil</h2>
+                <button id="downloadButton" class="custom-button secondary" disabled>Download Gambar</button>
             </div>
         </div>
-    </div>
-    <canvas id="hiddenCanvas" style="display: none;"></canvas>
+        
+        <div class="image-preview" id="imagePreview">
+            <p>Upload gambar untuk memulai</p>
+            <canvas id="previewCanvas"></canvas>
+        </div>
+    </main>
 
     <script src="script.js"></script>
 </body>
