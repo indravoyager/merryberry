@@ -1,4 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Inisialisasi Pustaka Coloris ---
+    Coloris({
+      themeMode: 'dark', // Agar cocok dengan tema gelap kita
+      alpha: false,      // Kita tidak butuh slider transparansi
+      swatches: [        // Contoh warna yang bisa dipilih cepat
+        '#bb86fc',
+        '#4ca537',
+        '#d25796',
+        '#03dac6',
+        '#cf6679',
+        '#ffffff',
+        '#000000',
+      ],
+    });
+
     // --- Variabel untuk elemen-elemen penting ---
     const imageUpload = document.getElementById('imageUpload');
     const imagePreviewContainer = document.getElementById('imagePreview');
@@ -26,7 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const gradientString = colorStops.map(stop => `${stop.color} ${stop.position}%`).join(', ');
         gradientBar.style.background = `linear-gradient(to right, ${gradientString})`;
     };
-
+    
+    // ** FUNGSI DIPERBARUI TOTAL DENGAN COLORIS **
     const renderColorStops = () => {
         colorStopsContainer.innerHTML = '';
         colorStops.forEach((stop, index) => {
@@ -34,14 +50,18 @@ document.addEventListener('DOMContentLoaded', () => {
             stopElement.className = 'color-stop';
             stopElement.style.left = `${stop.position}%`;
             stopElement.style.backgroundColor = stop.color;
+            stopElement.dataset.index = index; // Penting untuk tahu stop mana yang diubah
             
+            // Atribut ini akan memberi tahu Coloris untuk mengambil alih
+            stopElement.setAttribute('data-coloris', '');
+            stopElement.value = stop.color;
+
             const marker = document.createElement('div');
             marker.className = 'color-stop-marker';
             
             marker.addEventListener('mousedown', (e) => {
                 e.stopPropagation();
                 activeStop = stopElement;
-                activeStop.dataset.index = index;
                 activeStop.classList.add('active');
                 document.body.style.cursor = 'grabbing';
             });
@@ -53,25 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     updateGradientAndApply();
                 }
             });
-
-            const colorInput = document.createElement('input');
-            colorInput.type = 'color';
-            colorInput.value = stop.color;
-            colorInput.style.opacity = 0;
-            colorInput.style.position = 'absolute';
-            colorInput.style.cursor = 'pointer';
-            colorInput.style.width = '100%';
-            colorInput.style.height = '100%';
             
-            colorInput.addEventListener('input', (e) => {
-                stop.color = e.target.value;
-                updateGradientAndApply();
-            });
-            
-            stopElement.addEventListener('click', () => colorInput.click());
-
             stopElement.appendChild(marker);
-            stopElement.appendChild(colorInput);
             colorStopsContainer.appendChild(stopElement);
         });
     };
@@ -120,8 +123,25 @@ document.addEventListener('DOMContentLoaded', () => {
         return { r, g, b };
     };
     
-    // --- KUMPULAN EVENT LISTENERS (BAGIAN YANG DIPERBAIKI) ---
+    // --- KUMPULAN EVENT LISTENERS ---
     function setupEventListeners() {
+        // Event listener khusus dari Coloris saat warna berubah
+        document.addEventListener('coloris:pick', event => {
+            const newColor = event.detail.color;
+            const stopElement = event.target;
+            const index = stopElement.dataset.index;
+
+            if (index !== undefined) {
+                // Update warna di array data kita
+                colorStops[index].color = newColor;
+                // Update warna background lingkaran secara langsung
+                stopElement.style.backgroundColor = newColor;
+                // Update bar gradien dan gambar
+                renderGradientBar();
+                applyGradientMap();
+            }
+        });
+
         imageUpload.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -144,8 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         gradientBar.addEventListener('click', (e) => {
-            // Hindari menambah stop baru jika mengklik stop yang sudah ada
-            if (e.target.classList.contains('color-stop') || e.target.classList.contains('color-stop-marker')) return;
+            if (e.target.closest('.color-stop')) return;
             
             const rect = gradientBar.getBoundingClientRect();
             const position = ((e.clientX - rect.left) / rect.width) * 100;
