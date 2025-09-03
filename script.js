@@ -12,7 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Pengaturan Awal ---
     const ctx = previewCanvas.getContext('2d');
     let originalImageData = null;
-    let activeStop = null;
+    let activeStopElement = null; // Menyimpan elemen DOM yang sedang aktif
+    let activeStopIndex = -1;    // Menyimpan index dari colorStop yang aktif
     let pickrInstances = [];
 
     let colorStops = [
@@ -28,74 +29,96 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     const renderColorStops = () => {
-        pickrInstances.forEach(p => p.destroyAndRemove());
-        pickrInstances = [];
-        colorStopsContainer.innerHTML = '';
+        // Hancurkan Pickr lama hanya jika ada perubahan signifikan pada jumlah/urutan stop
+        const currentStopCount = colorStopsContainer.children.length;
+        if (currentStopCount !== colorStops.length || pickrInstances.length === 0) {
+            pickrInstances.forEach(p => p.destroyAndRemove());
+            pickrInstances = [];
+            colorStopsContainer.innerHTML = '';
 
-        colorStops.forEach((stop, index) => {
-            const stopElement = document.createElement('div');
-            stopElement.className = 'color-stop';
-            stopElement.style.left = `${stop.position}%`;
-            
-            const marker = document.createElement('div');
-            marker.className = 'color-stop-marker';
-            
-            marker.addEventListener('mousedown', (e) => {
-                e.stopPropagation();
-                activeStop = stopElement;
-                activeStop.dataset.index = index;
-                activeStop.classList.add('active');
+            colorStops.forEach((stop, index) => {
+                const stopElement = document.createElement('div');
+                stopElement.className = 'color-stop';
+                stopElement.style.left = `${stop.position}%`;
+                // Menambahkan transisi untuk posisi
+                stopElement.style.transition = 'left 0.1s ease-out'; 
+                
+                const marker = document.createElement('div');
+                marker.className = 'color-stop-marker';
+                
+                marker.addEventListener('mousedown', (e) => {
+                    e.stopPropagation(); // Mencegah event lain yang tidak perlu
+                    activeStopElement = stopElement;
+                    activeStopIndex = index;
+                    activeStopElement.classList.add('active');
+                    document.body.style.cursor = 'grabbing';
+                    // Hapus transisi saat dragging agar lebih responsif
+                    activeStopElement.style.transition = 'none'; 
+                });
+
+                stopElement.addEventListener('dblclick', (e) => {
+                    e.stopPropagation();
+                    if (colorStops.length > 2) {
+                        colorStops.splice(index, 1);
+                        updateGradientAndApply();
+                    }
+                });
+                
+                stopElement.appendChild(marker);
+                colorStopsContainer.appendChild(stopElement);
+
+                const pickr = Pickr.create({
+                    el: stopElement, theme: 'monolith', default: stop.color,
+                    components: {
+                        preview: true, opacity: false, hue: true,
+                        interaction: { hex: true, input: true, clear: false, save: true }
+                    }
+                });
+                pickrInstances.push(pickr);
+
+                pickr.on('change', (color, source, instance) => {
+                    const newColor = color.toHEXA().toString();
+                    instance.getRoot().button.style.background = newColor; // Set background, bukan color
+                    colorStops[index].color = newColor;
+                    renderGradientBar();
+                    applyGradientMap();
+                });
             });
-
-            stopElement.addEventListener('dblclick', (e) => {
-                e.stopPropagation();
-                if (colorStops.length > 2) {
-                    colorStops.splice(index, 1);
-                    updateGradientAndApply();
+        } else {
+            // Jika tidak ada perubahan jumlah stop, hanya update posisi dan warna
+            colorStops.forEach((stop, index) => {
+                const stopElement = colorStopsContainer.children[index];
+                if (stopElement && stopElement !== activeStopElement) { // Jangan update elemen yang sedang di-drag
+                    stopElement.style.left = `${stop.position}%`;
+                    stopElement.style.transition = 'left 0.1s ease-out'; // Kembali pakai transisi
                 }
+                pickrInstances[index].setColor(stop.color, false); // Update warna di pickr tanpa memicu event 'change'
             });
-            
-            stopElement.appendChild(marker);
-            colorStopsContainer.appendChild(stopElement);
-
-            const pickr = Pickr.create({
-                el: stopElement, theme: 'monolith', default: stop.color,
-                components: {
-                    preview: true, opacity: false, hue: true,
-                    interaction: { hex: true, input: true, clear: false, save: true }
-                }
-            });
-            pickrInstances.push(pickr);
-
-            pickr.on('change', (color, source, instance) => {
-                const newColor = color.toHEXA().toString();
-                instance.getRoot().button.style.color = newColor;
-                colorStops[index].color = newColor;
-                renderGradientBar();
-                applyGradientMap();
-            });
-        });
+        }
     };
     
+    // updateGradientAndApply dipanggil saat ada perubahan besar (tambah/hapus stop, reverse, preset)
     const updateGradientAndApply = () => {
         renderGradientBar();
-        renderColorStops();
+        renderColorStops(); // Memanggil renderColorStops yang akan menangani Pickr
         applyGradientMap();
     };
 
     const applyGradientMap = () => {
         if (!originalImageData) return;
-        const newImageData = new ImageData(new Uint8ClampedArray(originalImageData.data), originalImageData.width, originalImageData.height);
-        const data = newImageData.data;
+        requestAnimationFrame(() => { // Menggunakan requestAnimationFrame untuk rendering yang lebih smooth
+            const newImageData = new ImageData(new Uint8ClampedArray(originalImageData.data), originalImageData.width, originalImageData.height);
+            const data = newImageData.data;
 
-        for (let i = 0; i < data.length; i += 4) {
-            const r = data[i], g = data[i + 1], b = data[i + 2];
-            const grayscale = 0.299 * r + 0.587 * g + 0.114 * b;
-            const grayPercent = (grayscale / 255) * 100;
-            const newColor = getColorAtPosition(grayPercent);
-            data[i] = newColor.r; data[i + 1] = newColor.g; data[i + 2] = newColor.b;
-        }
-        ctx.putImageData(newImageData, 0, 0);
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i], g = data[i + 1], b = data[i + 2];
+                const grayscale = 0.299 * r + 0.587 * g + 0.114 * b;
+                const grayPercent = (grayscale / 255) * 100;
+                const newColor = getColorAtPosition(grayPercent);
+                data[i] = newColor.r; data[i + 1] = newColor.g; data[i + 2] = newColor.b;
+            }
+            ctx.putImageData(newImageData, 0, 0);
+        });
     };
     
     const hexToRgb = (hex) => {
@@ -119,65 +142,43 @@ document.addEventListener('DOMContentLoaded', () => {
         return { r, g, b };
     };
     
-    // --- **FUNGSI UPLOAD GAMBAR YANG DIPERBAIKI DAN DIBERI LOG** ---
+    // --- Event Listeners ---
     function handleImageUpload(event) {
-        console.log("1. File dipilih, fungsi handleImageUpload berjalan.");
         const file = event.target.files[0];
-        
-        if (!file) {
-            console.error("Upload dibatalkan: Tidak ada file yang dipilih.");
-            return;
-        }
-        console.log("2. File ditemukan:", file.name);
-
+        if (!file) return;
         const reader = new FileReader();
 
         reader.onload = (e) => {
-            console.log("3. FileReader selesai membaca file.");
             const img = new Image();
-
             img.onload = () => {
-                console.log("4. Gambar berhasil dimuat ke memori, ukurannya:", img.width, "x", img.height);
-                try {
-                    placeholderText.style.display = 'none';
-                    previewCanvas.style.display = 'block';
-                    previewCanvas.width = img.width;
-                    previewCanvas.height = img.height;
-                    console.log("5. Canvas disiapkan dan ditampilkan.");
-                    
-                    ctx.drawImage(img, 0, 0);
-                    console.log("6. Gambar digambar ke canvas.");
-                    
-                    originalImageData = ctx.getImageData(0, 0, img.width, img.height);
-                    console.log("7. Pixel data gambar asli berhasil diambil.");
-                    
-                    downloadButton.disabled = false;
-                    applyGradientMap();
-                    console.log("8. Proses selesai! Gambar seharusnya muncul.");
-                } catch (error) {
-                    console.error("Terjadi error saat menampilkan gambar di canvas:", error);
-                }
+                placeholderText.style.display = 'none';
+                previewCanvas.style.display = 'block';
+                previewCanvas.width = img.width;
+                previewCanvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                originalImageData = ctx.getImageData(0, 0, img.width, img.height);
+                downloadButton.disabled = false;
+                applyGradientMap();
             };
-            
             img.onerror = () => {
                 console.error("ERROR: Gagal memuat file gambar. Mungkin file rusak atau bukan format gambar.");
+                alert("Gagal memuat gambar. Pastikan file valid.");
             };
-
             img.src = e.target.result;
         };
-
         reader.onerror = () => {
             console.error("ERROR: FileReader gagal membaca file.");
+            alert("Gagal membaca file.");
         };
-
         reader.readAsDataURL(file);
     }
 
-    // --- Setup Event Listeners ---
     imageUpload.addEventListener('change', handleImageUpload);
 
     gradientBar.addEventListener('click', (e) => {
+        // Hanya tambahkan stop jika mengklik area kosong di gradientBar, bukan di atas stop atau picker
         if (e.target.closest('.color-stop') || e.target.closest('.pcr-app')) return;
+
         const rect = gradientBar.getBoundingClientRect();
         const position = ((e.clientX - rect.left) / rect.width) * 100;
         const newColor = getColorAtPosition(position);
@@ -187,22 +188,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('mousemove', (e) => {
-        if (!activeStop) return;
+        if (!activeStopElement || activeStopIndex === -1) return;
+
         const rect = gradientBar.getBoundingClientRect();
-        let position = ((e.clientX - rect.left) / rect.width) * 100;
-        position = Math.max(0, Math.min(100, position));
-        const index = activeStop.dataset.index;
-        colorStops[index].position = position;
-        activeStop.style.left = `${position}%`;
+        let newPosition = ((e.clientX - rect.left) / rect.width) * 100;
+        newPosition = Math.max(0, Math.min(100, newPosition));
+
+        // Update posisi di data
+        colorStops[activeStopIndex].position = newPosition;
+        // Update posisi visual elemen DOM secara langsung
+        activeStopElement.style.left = `${newPosition}%`;
+
+        // Panggil render dan apply hanya untuk gradien dan gambar, bukan render ulang semua stop
         renderGradientBar();
         applyGradientMap();
     });
 
     document.addEventListener('mouseup', () => {
-        if (activeStop) {
-            activeStop.classList.remove('active');
+        if (activeStopElement) {
+            activeStopElement.classList.remove('active');
+            activeStopElement.style.transition = 'left 0.1s ease-out'; // Kembalikan transisi setelah selesai drag
         }
-        activeStop = null;
+        activeStopElement = null;
+        activeStopIndex = -1;
+        document.body.style.cursor = 'default';
+        // Pastikan posisi final di-render ulang Pickr-nya
+        renderColorStops(); 
     });
 
     downloadButton.addEventListener('click', () => {
