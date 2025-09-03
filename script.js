@@ -26,8 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const gradientString = colorStops.map(stop => `${stop.color} ${stop.position}%`).join(', ');
         gradientBar.style.background = `linear-gradient(to right, ${gradientString})`;
     };
-    
-    // ** FUNGSI DIPERBAIKI UNTUK MASALAH KLIK & GESER **
+
     const renderColorStops = () => {
         colorStopsContainer.innerHTML = '';
         colorStops.forEach((stop, index) => {
@@ -39,16 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const marker = document.createElement('div');
             marker.className = 'color-stop-marker';
             
-            // Event untuk menggeser (drag) hanya aktif di marker bawah
             marker.addEventListener('mousedown', (e) => {
                 e.stopPropagation();
                 activeStop = stopElement;
-                activeStop.dataset.index = index; // Simpan index di sini
+                activeStop.dataset.index = index;
                 activeStop.classList.add('active');
                 document.body.style.cursor = 'grabbing';
             });
 
-            // Event untuk hapus
             stopElement.addEventListener('dblclick', (e) => {
                 e.stopPropagation();
                 if (colorStops.length > 2) {
@@ -66,13 +63,11 @@ document.addEventListener('DOMContentLoaded', () => {
             colorInput.style.width = '100%';
             colorInput.style.height = '100%';
             
-            // Event untuk mengubah warna
             colorInput.addEventListener('input', (e) => {
                 stop.color = e.target.value;
                 updateGradientAndApply();
             });
             
-            // Event untuk membuka color picker saat lingkaran di-klik
             stopElement.addEventListener('click', () => colorInput.click());
 
             stopElement.appendChild(marker);
@@ -125,80 +120,84 @@ document.addEventListener('DOMContentLoaded', () => {
         return { r, g, b };
     };
     
-    // --- Event Listeners ---
-
-    imageUpload.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const img = new Image();
-            img.onload = () => {
-                placeholderText.style.display = 'none';
-                previewCanvas.style.display = 'block';
-                previewCanvas.width = img.width;
-                previewCanvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
-                originalImageData = ctx.getImageData(0, 0, img.width, img.height);
-                downloadButton.disabled = false;
-                applyGradientMap();
+    // --- KUMPULAN EVENT LISTENERS (BAGIAN YANG DIPERBAIKI) ---
+    function setupEventListeners() {
+        imageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    placeholderText.style.display = 'none';
+                    previewCanvas.style.display = 'block';
+                    previewCanvas.width = img.width;
+                    previewCanvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    originalImageData = ctx.getImageData(0, 0, img.width, img.height);
+                    downloadButton.disabled = false;
+                    applyGradientMap();
+                };
+                img.src = event.target.result;
             };
-            img.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-    });
-    
-    gradientBar.addEventListener('click', (e) => {
-        const rect = gradientBar.getBoundingClientRect();
-        const position = ((e.clientX - rect.left) / rect.width) * 100;
-        const newColor = getColorAtPosition(position);
-        const newColorHex = `#${newColor.r.toString(16).padStart(2, '0')}${newColor.g.toString(16).padStart(2, '0')}${newColor.b.toString(16).padStart(2, '0')}`;
-        colorStops.push({ color: newColorHex, position: position });
-        updateGradientAndApply();
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if (!activeStop) return;
-        const rect = gradientBar.getBoundingClientRect();
-        let position = ((e.clientX - rect.left) / rect.width) * 100;
-        position = Math.max(0, Math.min(100, position));
-        const index = activeStop.dataset.index;
-        colorStops[index].position = position;
-        updateGradientAndApply();
-    });
-
-    document.addEventListener('mouseup', () => {
-        if (activeStop) {
-            activeStop.classList.remove('active');
-        }
-        activeStop = null;
-        document.body.style.cursor = 'default';
-    });
-    
-    downloadButton.addEventListener('click', () => {
-        const link = document.createElement('a');
-        link.download = 'mutsumi-gradient-image.png';
-        link.href = previewCanvas.toDataURL('image/png');
-        link.click();
-    });
-
-    // ** FUNGSI BARU UNTUK TOMBOL REVERSE **
-    reverseButton.addEventListener('click', () => {
-        colorStops.forEach(stop => {
-            stop.position = 100 - stop.position;
+            reader.readAsDataURL(file);
         });
-        updateGradientAndApply();
-    });
 
-    // ** FUNGSI BARU UNTUK TOMBOL PRESET **
-    preset1Button.addEventListener('click', () => {
-        colorStops = [
-            { color: '#4ca537', position: 0 },
-            { color: '#d25796', position: 100 }
-        ];
-        updateGradientAndApply();
-    });
+        gradientBar.addEventListener('click', (e) => {
+            // Hindari menambah stop baru jika mengklik stop yang sudah ada
+            if (e.target.classList.contains('color-stop') || e.target.classList.contains('color-stop-marker')) return;
+            
+            const rect = gradientBar.getBoundingClientRect();
+            const position = ((e.clientX - rect.left) / rect.width) * 100;
+            const newColor = getColorAtPosition(position);
+            const newColorHex = `#${newColor.r.toString(16).padStart(2, '0')}${newColor.g.toString(16).padStart(2, '0')}${newColor.b.toString(16).padStart(2, '0')}`;
+            colorStops.push({ color: newColorHex, position: position });
+            updateGradientAndApply();
+        });
 
-    // --- Panggilan fungsi awal ---
+        document.addEventListener('mousemove', (e) => {
+            if (!activeStop) return;
+            const rect = gradientBar.getBoundingClientRect();
+            let position = ((e.clientX - rect.left) / rect.width) * 100;
+            position = Math.max(0, Math.min(100, position));
+            const index = activeStop.dataset.index;
+            colorStops[index].position = position;
+            updateGradientAndApply();
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (activeStop) {
+                activeStop.classList.remove('active');
+            }
+            activeStop = null;
+            document.body.style.cursor = 'default';
+        });
+
+        downloadButton.addEventListener('click', () => {
+            if(downloadButton.disabled) return;
+            const link = document.createElement('a');
+            link.download = 'mutsumi-gradient-image.png';
+            link.href = previewCanvas.toDataURL('image/png');
+            link.click();
+        });
+
+        reverseButton.addEventListener('click', () => {
+            colorStops.forEach(stop => {
+                stop.position = 100 - stop.position;
+            });
+            updateGradientAndApply();
+        });
+
+        preset1Button.addEventListener('click', () => {
+            colorStops = [
+                { color: '#4ca537', position: 0 },
+                { color: '#d25796', position: 100 }
+            ];
+            updateGradientAndApply();
+        });
+    }
+
+    // --- Inisialisasi ---
+    setupEventListeners();
     updateGradientAndApply();
 });
