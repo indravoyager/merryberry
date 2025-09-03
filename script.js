@@ -1,11 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Variabel untuk elemen-elemen penting ---
     const imageUpload = document.getElementById('imageUpload');
-    const imagePreview = document.getElementById('imagePreview');
+    const imagePreviewContainer = document.getElementById('imagePreview');
     const previewCanvas = document.getElementById('previewCanvas');
+    const placeholderText = imagePreviewContainer.querySelector('p'); // Teks "Upload gambar..."
     const downloadButton = document.getElementById('downloadButton');
     const gradientBar = document.getElementById('gradientBar');
     const colorStopsContainer = document.getElementById('colorStopsContainer');
 
+    // --- Pengaturan awal ---
     const ctx = previewCanvas.getContext('2d');
     let originalImageData = null;
     let activeStop = null;
@@ -15,12 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
         { color: '#ffffff', position: 100 }
     ];
 
+    // --- Fungsi-fungsi ---
+
+    // Fungsi untuk menggambar ulang bar gradien
     const renderGradientBar = () => {
         colorStops.sort((a, b) => a.position - b.position);
         const gradientString = colorStops.map(stop => `${stop.color} ${stop.position}%`).join(', ');
         gradientBar.style.background = `linear-gradient(to right, ${gradientString})`;
     };
 
+    // Fungsi untuk menggambar ulang handle (lingkaran) warna
     const renderColorStops = () => {
         colorStopsContainer.innerHTML = '';
         colorStops.forEach((stop, index) => {
@@ -68,12 +75,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
     
+    // Fungsi untuk update gradien dan menerapkan ke gambar
     const updateGradientAndApply = () => {
         renderGradientBar();
         renderColorStops();
         applyGradientMap();
     };
 
+    // Fungsi inti: Menerapkan efek gradient map ke gambar
     const applyGradientMap = () => {
         if (!originalImageData) return;
 
@@ -134,6 +143,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return { r, g, b };
     };
     
+    // --- Event Listeners (Yang menangani aksi pengguna) ---
+
+    // Saat pengguna memilih file gambar
     imageUpload.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -141,15 +153,18 @@ document.addEventListener('DOMContentLoaded', () => {
             reader.onload = (event) => {
                 const img = new Image();
                 img.onload = () => {
+                    // **BAGIAN PENTING YANG DIPERBAIKI:**
+                    // Menampilkan canvas dan menyembunyikan teks placeholder
+                    placeholderText.style.display = 'none';
+                    previewCanvas.style.display = 'block';
+                    
+                    // Mengatur ukuran canvas sesuai gambar
                     previewCanvas.width = img.width;
                     previewCanvas.height = img.height;
                     ctx.drawImage(img, 0, 0);
                     originalImageData = ctx.getImageData(0, 0, img.width, img.height);
                     
-                    document.querySelector('#imagePreview p').style.display = 'none';
-                    previewCanvas.style.display = 'block';
                     downloadButton.disabled = false;
-                    
                     applyGradientMap();
                 };
                 img.src = event.target.result;
@@ -197,6 +212,6 @@ document.addEventListener('DOMContentLoaded', () => {
         link.click();
     });
 
-    // Initial render
+    // --- Panggilan fungsi awal ---
     updateGradientAndApply();
 });
